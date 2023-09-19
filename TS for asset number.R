@@ -66,17 +66,20 @@ asset_builder1 <- function(a, x, y, z){
   final_merge_test <- merge(x = ds_from_yahoo,
                             y = result_ts,
                             by = c("Date"))
+
+  # Total sum of stock
+  final_merge_test$total_sum <- final_merge_test[,2] * final_merge_test$Number
   
   # Display values
   return(final_merge_test)
 }
-# Other info to type
+# Other info
 start_date_port <- c("2022-07-09", "2022-09-10")
 end_date_port <- c("2022-09-09" , "2023-07-09")
 number_of_assets <- c(2, 3)
 
 # Test
-asset_builder1(a = "FL",
+port_asset1 <- asset_builder1(a = "FL",
                x = start_date_port,
                y = end_date_port,
                z = number_of_assets)
