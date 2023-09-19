@@ -1,14 +1,5 @@
-# Start dates
-start_date_port <- c("2022-07-09", "2022-09-10")
-
-# End dates
-end_date_port <- c("2022-09-09" , "2023-07-09")
-
-# Number of assets 
-number_of_assets <- c(2, 3)
-
 # Function
-asset_builder <- function(x, y, z){
+asset_builder1 <- function(a, x, y, z){
   
   # Add everything in one data frame
   experimental_df <- data.frame(x, y, z)
@@ -21,8 +12,8 @@ asset_builder <- function(x, y, z){
     
     # Extend time series
     Date_extension <- seq.Date(from = as.Date(experimental_df[n,1]),
-                                 to = as.Date(experimental_df[n,2]),
-                                 by = "day")
+                               to = as.Date(experimental_df[n,2]),
+                               by = "day")
     
     # Add number of assets for the following period
     ts_period <- data.frame(Date_extension, experimental_df[n,3])
@@ -34,10 +25,58 @@ asset_builder <- function(x, y, z){
     result_ts <- rbind(result_ts, ts_period)
   }
   
-  # Display series
-  return(result_ts)
+  # Get data 
+  asset_prices <- getSymbols(a,
+             from = x[1],
+             to = y[length(y)],
+             src = "yahoo",
+             auto.assign=FALSE)[,4]
+  
+  # Get rid of NAs
+  asset_prices <- asset_prices[apply(asset_prices,1,
+                                           function(x) all(!is.na(x))),]
+  # Put the tickers in data set
+  colnames(asset_prices) <- a
+  
+  # Make data discrete
+  asset_Returns <- ROC(asset_prices, type = "discrete")
+  
+  # Make it time series
+  asset_Returns <-as.timeSeries(asset_prices)
+  
+  # Subset dates from data set
+  dates_fr_yh <- rownames(asset_Returns)
+  
+  # Transform them into a date format
+  dates_fr_yh <- as.Date(dates_fr_yh)
+  
+  # Merge asset values with its dates
+  ds_from_yahoo <- data.frame(dates_fr_yh, asset_Returns)
+  
+  # Change column name to Date
+  colnames(ds_from_yahoo)[colnames(ds_from_yahoo) == 'dates_fr_yh'] <- 'Date'
+  
+  # Create index numbers for data set
+  index_for_fl <- index(ds_from_yahoo)
+  
+  # Join index as row names
+  rownames(ds_from_yahoo) <- index_for_fl
+  
+  # merge actual ownership period with
+  final_merge_test <- merge(x = ds_from_yahoo,
+                            y = result_ts,
+                            by = c("Date"))
+  
+  # Display values
+  return(final_merge_test)
 }
+# Other info to type
+start_date_port <- c("2022-07-09", "2022-09-10")
+end_date_port <- c("2022-09-09" , "2023-07-09")
+number_of_assets <- c(2, 3)
+
 # Test
-asset_builder(x = start_date_port,
-              y = end_date_port,
-              z = number_of_assets)
+asset_builder1(a = "FL",
+               x = start_date_port,
+               y = end_date_port,
+               z = number_of_assets)
