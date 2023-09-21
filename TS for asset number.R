@@ -33,7 +33,7 @@ asset_builder2 <- function(x){
     # Get data 
     asset_prices <- getSymbols(x[[1]][[m]],
                                from = x[[2]][[m]][[1]],
-                               to = x[[3]][[m]][[2]],
+                               to = x[[3]][[m]][[length(x[[2]][[m]])]],
                                src = "yahoo",
                                auto.assign=FALSE)[,4]
     
