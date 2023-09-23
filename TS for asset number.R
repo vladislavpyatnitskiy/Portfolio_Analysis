@@ -10,30 +10,39 @@ asset_builder2 <- function(x){
   result_ts <- NULL
   
   # For each asset
-  for (m in 1:length(x[[1]])){
-  
+  for (m in 1:(length(x[[1]]))){
+    
+    # Ticker
+    v_ticker <- x[[1]][[m]]
+    
+    v_start <- x[[2]][[m]]
+    
+    v_end <- x[[3]][[m]]
+    
+    v_number <- x[[4]][[m]]
+    
+    # Length of Dates and Numbers
+    v_len <- length(v_start)
+    
     # For each period
-    for (n in 1:length(df_nested_list[[2]][[1]])){
+    for (n in seq(v_len)){
       
       # Extend time series
-      Date_extension <- seq.Date(from = as.Date(x[[2]][[m]][[n]]),
-                                 to = as.Date(x[[3]][[m]][[n]]),
-                                 by = "day")
-      
-      # Add number of assets for the following period
-      ts_period <- data.frame(Date_extension, x[[4]][[m]][[n]])
-      
-      # Give column names to data set
-      colnames(ts_period) <- c("Date", "Number")
-      
-      # Glue time seried
-      result_ts <- rbind(result_ts, ts_period)
+      result_ts <- rbind(result_ts,
+                         data.frame(Date = seq.Date(from =
+                                                      as.Date(v_start[[n]]),
+                                                    to =
+                                                      as.Date(v_end[[n]]),
+                                                    by =
+                                                      "day"), Number =
+                                      v_number[[n]])
+      )
     }
     
     # Get data 
-    asset_prices <- getSymbols(x[[1]][[m]],
-                               from = x[[2]][[m]][[1]],
-                               to = x[[3]][[m]][[length(x[[2]][[m]])]],
+    asset_prices <- getSymbols(v_ticker,
+                               from = v_start[[1]],
+                               to = v_end[[v_len]],
                                src = "yahoo",
                                auto.assign=FALSE)[,4]
     
@@ -41,7 +50,7 @@ asset_builder2 <- function(x){
     asset_prices <- asset_prices[apply(asset_prices,1,
                                        function(x) all(!is.na(x))),]
     # Put the tickers in data set
-    colnames(asset_prices) <- x[[1]][[m]]
+    colnames(asset_prices) <- v_ticker
     
     # Make data discrete
     asset_Returns <- ROC(asset_prices, type = "discrete")
@@ -59,7 +68,8 @@ asset_builder2 <- function(x){
     ds_from_yahoo <- data.frame(dates_fr_yh, asset_Returns)
     
     # Change column name to Date
-    colnames(ds_from_yahoo)[colnames(ds_from_yahoo) == 'dates_fr_yh'] <- 'Date'
+    colnames(ds_from_yahoo)[colnames(ds_from_yahoo) ==
+                              'dates_fr_yh'] <- 'Date'
     
     # Create index numbers for data set
     index_for_fl <- index(ds_from_yahoo)
@@ -69,11 +79,19 @@ asset_builder2 <- function(x){
     
     # merge actual ownership period with
     final_m_t <- merge(x = ds_from_yahoo,
-                              y = result_ts,
-                              by = c("Date"))
+                       y = result_ts,
+                       by = c("Date"))
     
     # Create variable with total sum of asset
     final_m_t$total_sum <- final_m_t[,2] * final_m_t$Number
+    
+    # Add Ticker to Number
+    colnames(final_m_t)[colnames(final_m_t) ==
+                          'Number'] <- sprintf("%s Number", v_ticker)
+    
+    # Add Ticker to Total
+    colnames(final_m_t)[colnames(final_m_t) ==
+                          'total_sum'] <- sprintf("%s Total", v_ticker)
     
     # If it is first column
     if (is.null(result_df)){ 
@@ -84,10 +102,10 @@ asset_builder2 <- function(x){
       
       # Or merge it with previously processed column
       result_df <- merge(x = result_df,
-            y = final_m_t,
-            by = "Date",
-            all = TRUE)          
-        }
+                         y = final_m_t,
+                         by = "Date",
+                         all = TRUE)          
+    }
   }
   
   # Substitute NAs with Zero values
