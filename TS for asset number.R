@@ -5,37 +5,36 @@ asset_builder2 <- function(x){
   
   # Create variable to contain variables of all assets
   result_df <- NULL
-  
-  # Create variable to contain data of single asset
-  result_ts <- NULL
-  
+
   # For each asset
-  for (m in 1:(length(x[[1]]))){
+  for (m in seq(x[,1])){
     
     # Ticker
     v_ticker <- x[[1]][[m]]
     
+    # Start date
     v_start <- x[[2]][[m]]
     
+    # End date
     v_end <- x[[3]][[m]]
     
+    # Asset number
     v_number <- x[[4]][[m]]
     
     # Length of Dates and Numbers
     v_len <- length(v_start)
     
+    # Create variable to contain data of single asset
+    result_ts <- NULL
+    
     # For each period
     for (n in seq(v_len)){
       
-      # Extend time series
-      result_ts <- rbind(result_ts,
-                         data.frame(Date = seq.Date(from =
-                                                      as.Date(v_start[[n]]),
-                                                    to =
-                                                      as.Date(v_end[[n]]),
-                                                    by =
-                                                      "day"), Number =
-                                      v_number[[n]])
+      # Extend time series and add asset number
+      result_ts <- rbind(result_ts, data.frame(Date =
+                                seq.Date(from = as.Date(v_start[[n]]),
+                                         to = as.Date(v_end[[n]]),
+                                         by = "day"), Number = v_number[[n]])
       )
     }
     
@@ -87,7 +86,7 @@ asset_builder2 <- function(x){
     
     # Add Ticker to Number
     colnames(final_m_t)[colnames(final_m_t) ==
-                          'Number'] <- sprintf("%s Number", v_ticker)
+                              'Number'] <- sprintf("%s Number", v_ticker)
     
     # Add Ticker to Total
     colnames(final_m_t)[colnames(final_m_t) ==
