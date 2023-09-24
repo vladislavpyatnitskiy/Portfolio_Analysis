@@ -110,6 +110,12 @@ asset_builder2 <- function(x){
   # Substitute NAs with Zero values
   result_df[is.na(result_df)] <- 0
   
+  # Put Dates in index
+  rownames(result_df) <- result_df$Date
+  
+  # Subset Time Series from data set 
+  result_df <- result_df[,-1]
+  
   # Display values
   return(result_df)
 }
