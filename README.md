@@ -12,4 +12,4 @@ Week by week, this repository will be filled with more advanced script.
 
 Current section scripts require quantmod and timeSeries packages.
 
-https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
