@@ -9,3 +9,5 @@ The truth is all of them are terrible. They do not give sufficient info about po
 Surfing internet I came to idea to create if not an app but script to facilitate portfolio tracking.
 
 Week by week, this repository will be filled with more advanced script.
+
+Current section scripts require quantmod and timeSeries packages.
