@@ -116,6 +116,14 @@ asset_builder2 <- function(x){
   # Subset Time Series from data set 
   result_df <- result_df[,-1]
   
+  # Total amount of investments
+  result_df$Total <- rowSums(result_df[,
+                       c(seq(ncol(result_df)/3) * 3)],
+          na.rm=TRUE)
+  
+  # Make it time series
+  result_df <- as.timeSeries(result_df)
+  
   # Display values
   return(result_df)
 }
