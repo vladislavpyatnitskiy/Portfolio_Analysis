@@ -12,6 +12,11 @@ Week by week, this repository will be filled with more advanced script.
 
 Current section scripts require quantmod and timeSeries packages.
 
+Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
 
+Portfolio Performance Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Performance.jpeg?raw=true)
+
+Portfolio's Correlation Heatmap
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Correlations.jpeg?raw=true)
