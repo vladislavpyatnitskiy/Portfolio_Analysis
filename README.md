@@ -20,3 +20,6 @@ Portfolio Performance Tracking
 
 Portfolio's Correlation Heatmap
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Correlations.jpeg?raw=true)
+
+Plot Portfolio with Benchmarks / Indices to visually compare performances
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Comparison%20Plot.jpeg?raw=true)
