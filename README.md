@@ -27,3 +27,6 @@ Portfolio's Correlation Heatmap
 
 Plot Portfolio with Benchmarks / Indices to visually compare performances
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Comparison%20Plot.jpeg?raw=true)
+
+Scatter Plot for Securities
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Scatter%20Plot.jpeg?raw=true)
