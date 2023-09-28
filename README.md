@@ -14,7 +14,7 @@ Having worked in trading and systems analytics, I came to idea to create if not 
 
 Week by week, this repository will be filled with more advanced script.
 
-Current section scripts require quantmod and timeSeries packages.
+Current section scripts require quantmod, timeSeries, ggplot2 and ggrepel packages.
 
 Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
