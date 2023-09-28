@@ -30,3 +30,6 @@ Plot Portfolio with Benchmarks / Indices to visually compare performances
 
 Scatter Plot for Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Scatter%20Plot.jpeg?raw=true)
+
+Barplot for Securities
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Barplot.jpeg?raw=true)
