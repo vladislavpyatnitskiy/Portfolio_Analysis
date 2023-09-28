@@ -33,3 +33,6 @@ Scatter Plot for Securities
 
 Barplot for Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Barplot.jpeg?raw=true)
+
+Portfolio Returns QQ Plot
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20QQ%20Plot.jpeg?raw=true)
