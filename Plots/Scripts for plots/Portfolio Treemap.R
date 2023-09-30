@@ -5,10 +5,10 @@ library(treemap)
 portfolio_treemap <- function(x){
   
   # Take total values
-  t_m_values <- df_portfolio[,3 + 3 * seq(31, from = 0)]
+  t_m_values <- x[,3 + 3 * seq(31, from = 0)]
   
   # Give them names of the assets
-  colnames(t_m_values) <- colnames(df_portfolio[,1 + 3 * seq(31, from = 0)])
+  colnames(t_m_values) <- colnames(x[,1 + 3 * seq(31, from = 0)])
   
   # Create vector to contain names of securities
   t_m_group <- c(colnames(t_m_values))
