@@ -2,7 +2,7 @@
 
 One of the main issues of being investor is how to track your securities. 
 
-Some investors use apps from their brokers, others prefer third parties sites.
+Some investors use apps from their brokers, others prefer third party sites.
 
 The truth is all of them are terrible. They do not give sufficient info about portfolio, but just weights and basic graph. The ones that bring some insights to your portoflio either cost a lot or technically complicated and visually disgusting. 
 
