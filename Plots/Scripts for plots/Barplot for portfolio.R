@@ -54,10 +54,36 @@ brplt3 <- function(x, main = NULL, col = "blue"){
           las=1,
           col = col,
           main = main,
-          sub = "Source: Yahoo! Finance",
           xlab = "Returns",
-          ylab = ""
+          ylab = "",
+          xlim = c(round(min(values_for_brplt), 1),
+                   round(max(values_for_brplt), 1))
   )
+  
+  # Create line going through bars to facilitate link between bar & ticker
+  abline(h = barplot(values_for_brplt,
+                     names.arg = tickers_for_barplot,
+                     horiz = T,
+                     las=1,
+                     col = col,
+                     main = main,
+                     xlab = "Returns",
+                     ylab = "",
+                     xlim = c(round(min(values_for_brplt), 1),
+                              round(max(values_for_brplt), 1))
+  ), col = "grey", lty = 2)
+  
+  # Add grey lines for fast visual percentage calculation
+  for (n in seq(round(min(values_for_brplt), 1),
+                round(max(values_for_brplt), 1), by = 0.1)){ 
+    abline(v = n, col = "grey", lty = 2) }
+  
+  # Modify axis so intervals between them is 0.1
+  axis(side=1, at=seq(round(min(values_for_brplt), 1),
+                      round(max(values_for_brplt), 1), by = 0.1), las = 1)
+  
+  # Make borders for plot
+  box()
 }
 # Test
 brplt3(df_portfolio, main = "Securities Performance")
