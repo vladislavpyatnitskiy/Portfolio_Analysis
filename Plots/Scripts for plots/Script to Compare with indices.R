@@ -1,5 +1,6 @@
 # Function to plot portfolio performance with indices
-comp_plot_with_indices <- function(x, main = NULL){
+comp_plot_with_indices <- function(x, main = NULL, benchmark = "^GSPC",
+                                   benchnames = "S&P 500", lwd = 1){
   
   # First date
   start_date <- rownames(x)[1]
@@ -26,7 +27,7 @@ comp_plot_with_indices <- function(x, main = NULL){
   rownames(x) <- index_for_prtfl
   
   # Vector with tickers
-  tickers_for_indices <- c("^GSPC", "^DJI", "^IXIC")
+  tickers_for_indices <- benchmark
   
   # Create an empty variable
   portfolioPrices <- NULL
@@ -45,7 +46,7 @@ comp_plot_with_indices <- function(x, main = NULL){
   portfolioPrices <- portfolioPrices[apply(portfolioPrices,1,
                                            function(x) all(!is.na(x))),]
   # Put the tickers in data set
-  colnames(portfolioPrices) <- c("S&P 500", "Dow Jones", "NASDAQ")
+  colnames(portfolioPrices) <- benchnames
   
   # Make data discrete
   portfolioReturns <- ROC(portfolioPrices, type = "discrete")
@@ -90,12 +91,16 @@ comp_plot_with_indices <- function(x, main = NULL){
        ylim = c(min(df_x_indcs), max(df_x_indcs)),
        main = main,
        xlab = "Trading Days",
-       ylab = "Returns",
-       las = 1)
+       ylab = "Returns (%)",
+       las = 1,
+       lwd = lwd)
+  
+  # Add grey dotted horizontal lines
+  for (n in seq(-1, 1, 0.05)){ abline(h = n, col = "grey", lty = 2) }
   
   # Plot indices
   for (n in 2:(ncol(df_x_indcs))){
-    lines(df_x_indcs[,n], col = n)}
+    lines(df_x_indcs[,n], col = n,  lwd = lwd,)}
   
   # Add legend
   legend("bottomright", colnames(df_x_indcs),
@@ -103,4 +108,8 @@ comp_plot_with_indices <- function(x, main = NULL){
 }
 # Test
 comp_plot_with_indices(returns_df,
-                       main = "Portfolio vs Major Indices")
+                       main = "Portfolio vs Major Indices",
+                       benchmark = c("^GSPC", "^DJI", "^IXIC", "^FTSE"),
+                       benchnames = c("S&P 500", "Dow Jones", "NASDAQ",
+                                      "FTSE 100"),
+                       lwd = 2)
