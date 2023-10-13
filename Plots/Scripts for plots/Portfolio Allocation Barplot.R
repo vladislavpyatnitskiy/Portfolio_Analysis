@@ -33,6 +33,11 @@ weights_brplt <- function(x, main = "Portfolio", col = "blue"){
   
   # Add line for median percentage
   abline(h = median(pct), col = "green", lwd = 3)
+
+  # Add legend with mean and median
+  legend("topright", legend = c((paste("Mean:",mean(pct))), paste("Median:",
+                                                      round(median(pct),3))),
+         fill = c("red", "green"), cex = 0.75)
   
   # Set up borders
   box()
