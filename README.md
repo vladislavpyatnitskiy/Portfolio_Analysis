@@ -1,4 +1,5 @@
 # Portfolio Analysis
+_______________________________________________________________
 
 One of the main issues of being investor is how to track your securities. 
 
@@ -13,35 +14,56 @@ However, I personally think that there should not be the trade off between conve
 Having worked in trading and systems analytics, I came to idea to create if not an app but script to facilitate portfolio tracking. Current R and Python packages are not sufficient enough to obtain info and analysis, but they are powerful enough to build the right package for investing purposes.
 
 Week by week, this repository will be filled with more advanced script.
+_______________________________________________________________
 
-Current section scripts require quantmod, timeSeries, ggplot2 and ggrepel packages.
+Requirements:
+
+• quantmod
+
+• timeSeries
+
+• ggplot2
+
+• ggrepel
+_______________________________________________________________
+
+Current Data Visualisation Script Capabilities:
 
 Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
+_______________________________________________________________
 
 Portfolio Performance Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Performance.jpeg?raw=true)
+_______________________________________________________________
 
 Bar Plot with Portfolio Weights 
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
+_______________________________________________________________
 
 Stacked Bar Plot
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot.jpeg?raw=true)
+_______________________________________________________________
 
 Portfolio's Correlation Heatmap
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Correlations.jpeg?raw=true)
+_______________________________________________________________
 
 Plot Portfolio with Benchmarks / Indices to visually compare performances
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Comparison%20Plot.jpeg?raw=true)
+_______________________________________________________________
 
 Scatter Plot for Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Scatter%20Plot.jpeg?raw=true)
+_______________________________________________________________
 
 Treemap for Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Treemap%20Plot.jpeg?raw=true)
+_______________________________________________________________
 
 Barplot for Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Barplot.jpeg?raw=true)
+_______________________________________________________________
 
 Portfolio Returns QQ Plot
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20QQ%20Plot.jpeg?raw=true)
