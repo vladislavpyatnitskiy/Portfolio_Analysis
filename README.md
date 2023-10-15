@@ -16,6 +16,9 @@ Having worked in trading and systems analytics, I came to idea to create if not 
 Week by week, this repository will be filled with more advanced script.
 _______________________________________________________________
 
+Today my R script enables to get info about portfolio including weights, prices, number and total amount of assets. This is suffiicient to get necessary statistics and find useful insights.
+_______________________________________________________________
+
 Requirements:
 
 • quantmod
