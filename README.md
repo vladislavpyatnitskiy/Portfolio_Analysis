@@ -70,3 +70,7 @@ _______________________________________________________________
 
 Portfolio Returns QQ Plot
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20QQ%20Plot.jpeg?raw=true)
+_______________________________________________________________
+
+Portfolio Histogram
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Histogram.png?raw=true)
