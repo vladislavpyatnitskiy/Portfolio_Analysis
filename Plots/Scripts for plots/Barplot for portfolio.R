@@ -71,12 +71,12 @@ brplt3 <- function(x, main = NULL, col = "blue"){
                      ylab = "",
                      xlim = c(round(min(values_for_brplt), 1),
                               round(max(values_for_brplt), 1))
-  ), col = "grey", lty = 2)
+  ), col = "grey", lty = 3)
   
   # Add grey lines for fast visual percentage calculation
   for (n in seq(round(min(values_for_brplt), 1),
                 round(max(values_for_brplt), 1), by = 0.1)){ 
-    abline(v = n, col = "grey", lty = 2) }
+    abline(v = n, col = "grey", lty = 3) }
   
   # Modify axis so intervals between them is 0.1
   axis(side=1, at=seq(round(min(values_for_brplt), 1),
