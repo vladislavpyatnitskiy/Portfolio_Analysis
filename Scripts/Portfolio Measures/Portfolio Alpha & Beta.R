@@ -1,4 +1,4 @@
-# Function to get beta of portfolio
+# Function to get alpha and beta of portfolio
 coefs_for_portfolio <- function(x, bnchmrk = "^GSPC"){
   
   # First date
@@ -16,20 +16,14 @@ coefs_for_portfolio <- function(x, bnchmrk = "^GSPC"){
   # Rename columns once again
   colnames(x) <- c("Date", "Portfolio")
   
-  # Create index numbers for data set
-  index_for_prtfl <- index(portfolio_r_nms)
-  
-  # Join index as row names
-  rownames(x) <- index_for_prtfl
-  
-  # Vector with tickers
-  tickers_for_indices <- c(bnchmrk)
+  # Create index numbers for data set and join index as row names
+  rownames(x) <- seq(nrow(x))
   
   # Create an empty variable
   portfolioPrices <- NULL
   
   # Loop for data extraction
-  for (Ticker in tickers_for_indices)
+  for (Ticker in bnchmrk)
     
     # When both start date and end date are defined
     portfolioPrices <- cbind(portfolioPrices,
@@ -42,7 +36,7 @@ coefs_for_portfolio <- function(x, bnchmrk = "^GSPC"){
   portfolioPrices <- portfolioPrices[apply(portfolioPrices,1,
                                            function(x) all(!is.na(x))),]
   # Put the tickers in data set
-  colnames(portfolioPrices) <- c(bnchmrk)
+  colnames(portfolioPrices) <- bnchmrk
   
   # Make data discrete
   portfolioReturns <- ROC(portfolioPrices, type = "discrete")
@@ -66,38 +60,24 @@ coefs_for_portfolio <- function(x, bnchmrk = "^GSPC"){
   colnames(portfolioReturns)[colnames(portfolioReturns) ==
                                'indices_r_nms'] <- 'Date'
   
-  # Create index numbers for data set
-  index_for_indcs <- index(indices_r_nms)
+  # Create index numbers for data set and join index as row names
+  rownames(portfolioReturns) <- seq(nrow(portfolioPrices))
   
-  # Join index as row names
-  rownames(portfolioReturns) <- index_for_indcs
-  
-  # Merge 
-  df_x_indcs <- merge(x, portfolioReturns, by = "Date")
-  
-  # Make it time series
-  df_x_indcs <- as.timeSeries(df_x_indcs)
-
-  # Calculate Betas
-  beta_value <- apply(df_x_indcs[,1],
-             2,
-             function(col) ((lm((col) ~ df_x_indcs[,2]))$coefficients[2]))
+  # Merge and make it time series
+  df_x_indcs <- as.timeSeries(merge(x, portfolioReturns, by = "Date"))
   
   # Calculate Betas
-  alpha_value <- apply(df_x_indcs[,1],
-                      2,
+  beta_value <- apply(df_x_indcs[,1],2,
                       function(col) ((lm((col) ~
-                                           df_x_indcs[,2]))$coefficients[1]))
-  # Round values
-  beta_value <- round(beta_value, 2)
-  alpha_value <- round(alpha_value * 100, 2)
+                                           df_x_indcs[,2]))$coefficients[2]))
+  # Calculate Betas
+  alpha_value <- apply(df_x_indcs[,1],2,
+                       function(col) ((lm((col) ~
+                                            df_x_indcs[,2]))$coefficients[1]))
   
-  # Make a string with info
-  p_info <- sprintf("Portfolio Alpha is %s %%, Beta is %s",
-          alpha_value, beta_value)
-  
-  # Display values
-  return(p_info)
+  # Round values, make a string with info and display values
+  return(sprintf("Portfolio Alpha is %s %%, Beta is %s",
+                 round(alpha_value * 100, 2), round(beta_value, 2)))
 }
 # Test
 coefs_for_portfolio(returns_df)
