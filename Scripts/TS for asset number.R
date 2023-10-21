@@ -34,17 +34,13 @@ asset_builder2 <- function(x){
       result_ts <- rbind(result_ts, data.frame(Date =
                                 seq.Date(from = as.Date(v_start[[n]]),
                                          to = as.Date(v_end[[n]]),
-                                         by = "day"), Number = v_number[[n]])
-      )
-    }
-    
+                                         by = "day"), Number = v_number[[n]]))}
     # Get data 
     asset_prices <- getSymbols(v_ticker,
                                from = v_start[[1]],
                                to = v_end[[v_len]],
                                src = "yahoo",
                                auto.assign=FALSE)[,4]
-    
     # Get rid of NAs
     asset_prices <- asset_prices[apply(asset_prices,1,
                                        function(x) all(!is.na(x))),]
@@ -57,29 +53,20 @@ asset_builder2 <- function(x){
     # Make it time series
     asset_Returns <-as.timeSeries(asset_prices)
     
-    # Subset dates from data set
-    dates_fr_yh <- rownames(asset_Returns)
-    
-    # Transform them into a date format
-    dates_fr_yh <- as.Date(dates_fr_yh)
+    # Subset dates from data set and transform them into a date format
+    dates_fr_yh <- as.Date(rownames(asset_Returns))
     
     # Merge asset values with its dates
     ds_from_yahoo <- data.frame(dates_fr_yh, asset_Returns)
     
     # Change column name to Date
-    colnames(ds_from_yahoo)[colnames(ds_from_yahoo) ==
-                              'dates_fr_yh'] <- 'Date'
+    colnames(ds_from_yahoo)[colnames(ds_from_yahoo) == 'dates_fr_yh'] <- 'Date'
     
-    # Create index numbers for data set
-    index_for_fl <- index(ds_from_yahoo)
-    
-    # Join index as row names
-    rownames(ds_from_yahoo) <- index_for_fl
+    # Create index numbers for data set and join as row names
+    rownames(ds_from_yahoo) <- seq(nrow(ds_from_yahoo))
     
     # merge actual ownership period with
-    final_m_t <- merge(x = ds_from_yahoo,
-                       y = result_ts,
-                       by = c("Date"))
+    final_m_t <- merge(x = ds_from_yahoo, y = result_ts, by = c("Date"))
     
     # Create variable with total sum of asset
     final_m_t$total_sum <- final_m_t[,2] * final_m_t$Number
@@ -92,20 +79,12 @@ asset_builder2 <- function(x){
     colnames(final_m_t)[colnames(final_m_t) ==
                           'total_sum'] <- sprintf("%s Total", v_ticker)
     
-    # If it is first column
-    if (is.null(result_df)){ 
-      
-      # Equal it to 
-      result_df = final_m_t  
-    } else {
+    # If it is first column, define it to new name
+    if (is.null(result_df)){ result_df = final_m_t } else {
       
       # Or merge it with previously processed column
-      result_df <- merge(x = result_df,
-                         y = final_m_t,
-                         by = "Date",
-                         all = TRUE)          
-    }
-  }
+      result_df <- merge(x = result_df, y = final_m_t, by = "Date",
+                         all = TRUE) } }
   
   # Substitute NAs with Zero values
   result_df[is.na(result_df)] <- 0
@@ -117,10 +96,8 @@ asset_builder2 <- function(x){
   result_df <- result_df[,-1]
   
   # Total amount of investments
-  result_df$Total <- rowSums(result_df[,
-                       c(seq(ncol(result_df)/3) * 3)],
-          na.rm=TRUE)
-  
+  result_df$Total <- rowSums(result_df[, c(seq(ncol(result_df)/3) * 3)],
+                             na.rm=TRUE)
   # Make it time series
   result_df <- as.timeSeries(result_df)
   
