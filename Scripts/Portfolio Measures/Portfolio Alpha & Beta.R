@@ -1,5 +1,5 @@
 # Function to get alpha and beta of portfolio
-coefs_for_portfolio <- function(x, bnchmrk = "^GSPC"){
+coefs_for_portfolio <- function(x, bnchmrk = "^GSPC", string = F){
   
   # First date
   start_date <- rownames(x)[1]
@@ -74,10 +74,15 @@ coefs_for_portfolio <- function(x, bnchmrk = "^GSPC"){
   alpha_value <- apply(df_x_indcs[,1],2,
                        function(col) ((lm((col) ~
                                             df_x_indcs[,2]))$coefficients[1]))
-  
-  # Round values, make a string with info and display values
-  return(sprintf("Portfolio Alpha is %s %%, Beta is %s",
-                 round(alpha_value * 100, 2), round(beta_value, 2)))
+  # Choose either string or table
+  if (isTRUE(string)) { 
+    
+    # Round values, make a string with info and display values
+    return(sprintf("Portfolio Alpha is %s %%, Beta is %s",
+                   round(alpha_value * 100, 2), round(beta_value, 2))) } else {
+                     
+    # Round values, make a table with info and display values                   
+    return(rbind(alpha_value, beta_value)) }
 }
 # Test
-coefs_for_portfolio(returns_df)
+coefs_for_portfolio(returns_df, string = T)
