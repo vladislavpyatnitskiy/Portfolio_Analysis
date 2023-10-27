@@ -1,67 +1,43 @@
 # Libraries
-lapply(c("quantmod",
-         "timeSeries",
-         "ggplot2",
-         "ggrepel"),
-       require,
-       character.only = TRUE)
+lapply(c("quantmod", "timeSeries", "ggplot2", "ggrepel"),
+       require, character.only = TRUE)
 
-# Function to create scatter plot for portfolio's securities
-scatter_plot_portfolio <- function(x){
+# Scatter plot of portfolio's securities
+p.scatter.plt <- function(x, main = NULL, xlab = NULL, ylab = NULL){
   
   # Select securities columns
   x <- x[,1 + 3 * seq(31, from = 0)]
   
   # Empty variable to contain values
-  scatter_plot_df <- NULL
+  df.scatter <- NULL
   
   # For each security in data frame
-  for (n in 1:ncol(x)){
+  for (n in 1:ncol(x)){ s <- x[,n]
     
-    # Define column
-    security <- x[,n]
-    
-    # Define rows with zeros
-    security1 <- apply(security, 1, function(row) all(row !=0 ))
-    
-    # Reduce rows with zeros
-    security2 <- security[security1,]
-    
-    # Calculate logs
-    security2 <- diff(log(security2))[-1,]
-    
-    # Calculate standard deviation
-    security_sd <- sd(security2) * 1000
-    
-    # Calculate return
-    security_return <- (exp(sum(security2)) - 1) * 100
+    # Clean data to reduce NA and calculate return for ownership period  
+    s.adj <- diff(log(s[apply(s, 1, function(row) all(row !=0 )),]))[-1,]
     
     # Join standard deviation with return
-    values_for_scatter <- cbind(security_sd, security_return)
+    v.scatter <- cbind(sd(s.adj) * 1000, (exp(sum(s.adj)) - 1) * 100)
     
-    # Give column names to data frame
-    colnames(values_for_scatter) <- c("Risk", "Return")
-    
-    # Give row names to data frame
-    rownames(values_for_scatter) <- colnames(security)
+    # Give column and row names to data frame
+    colnames(v.scatter) <- c("Risk", "Return")
+    rownames(v.scatter) <- colnames(s)
     
     # Join measures for all tickers
-    scatter_plot_df <- rbind(scatter_plot_df, values_for_scatter) 
-  }
-  
-  # Convert to data frame for ggplot2
-  scatter_plot_df <- as.data.frame(scatter_plot_df)
+    df.scatter <- rbind.data.frame(df.scatter, v.scatter) }
   
   # Plot
-  ggplot(scatter_plot_df, 
-         mapping = aes(x = scatter_plot_df[,1],
-                              y = scatter_plot_df[,2])) +
+  ggplot(df.scatter, 
+         mapping = aes(x = df.scatter[,1],
+                       y = df.scatter[,2])) +
     geom_point() +
-    geom_text_repel(aes(label = rownames(scatter_plot_df))) +
-    labs(title = "Securities Performance",
-         x = "Security Risk (Standard Deviation)",
-         y = "Security Return (%)") +
+    geom_text_repel(aes(label = rownames(df.scatter))) +
+    labs(title = main,
+         x = xlab,
+         y = ylab) +
     geom_smooth(method='lm', se=FALSE, col = "red")
 }
 # Test
-scatter_plot_portfolio(df_portfolio)
+p.scatter.plt(df_portfolio, main = "Securities Performance",
+              xlab = "Risk (Standard Deviation)", ylab = "Return (%)")
