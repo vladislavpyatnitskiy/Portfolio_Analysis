@@ -1,89 +1,58 @@
 # Function to generate barplot
-brplt3 <- function(x, main = NULL, col = "blue"){
+p.bar.plt <- function(x, main = NULL, col = "blue", v.bar.plt = NULL){
   
   # Subset values with secuirities' values
   x <- x[,1 + 3 * seq(31, from = 0)]
   
-  # Create empty variable to contain values
-  values_for_brplt <- NULL
-  
   # For each column in data set
-  for (n in 1:ncol(x)){
+  for (n in 1:ncol(x)){ s <- x[,n]
     
-    # Values for security
-    security <- x[,n]
+    # Clean data from NA & zeros and calculate logs
+    security <- diff(log(s[apply(s, 1, function(row) all(row !=0 )),]))[-1,]
     
-    # Find zeros in data set
-    security1 <- apply(security, 1, function(row) all(row !=0 ))
-    
-    # Reduce rows with zeros
-    security2 <- security[security1,]
-    
-    # Calculate logs
-    security2 <- diff(log(security2))[-1,]
-    
-    # Calculate return for the ownership period
-    security2 <- exp(sum(security2)) - 1
-    
-    # Put in newly created variable
-    values_for_brplt <- cbind(values_for_brplt, security2)
-  }
+    # Calculate return for the ownership period and put it in data frame
+    v.bar.plt <- cbind(v.bar.plt, exp(sum(security)) - 1) }
   
-  # Give column names
-  colnames(values_for_brplt) <- colnames(x)
+  colnames(v.bar.plt) <- colnames(x) # Give column names
   
-  # make data frame for column names
-  x1 <- as.data.frame(values_for_brplt)
+  # Sort values for column names and move names to new variable 
+  p.tickers <- colnames(sort(as.data.frame(v.bar.plt), decreasing = T))
   
-  # sort values for column names
-  x1 <- sort(x1, decreasing = T)
-  
-  # Move names to new variable 
-  tickers_for_barplot <- colnames(x1)
-  
-  # Make data numeric for barplot
-  values_for_brplt <- as.numeric(values_for_brplt)
-  
-  # Sort values for barplot
-  values_for_brplt <- sort(values_for_brplt, decreasing = T)
+  # Make data numeric for barplot and sort values for barplot
+  v.bar.plt <- sort(as.numeric(v.bar.plt), decreasing = T)
   
   # Create barplot
-  barplot(values_for_brplt,
-          names.arg = tickers_for_barplot,
+  barplot(v.bar.plt,
+          names.arg = p.tickers,
           horiz = T,
-          las=1,
+          las= 1,
           col = col,
           main = main,
           xlab = "Returns",
           ylab = "",
-          xlim = c(round(min(values_for_brplt), 1),
-                   round(max(values_for_brplt), 1))
-  )
+          xlim = c(round(min(v.bar.plt), 1), round(max(v.bar.plt), 1)))
   
   # Create line going through bars to facilitate link between bar & ticker
-  abline(h = barplot(values_for_brplt,
-                     names.arg = tickers_for_barplot,
+  abline(h = barplot(v.bar.plt,
+                     names.arg = p.tickers,
                      horiz = T,
                      las=1,
                      col = col,
                      main = main,
                      xlab = "Returns",
                      ylab = "",
-                     xlim = c(round(min(values_for_brplt), 1),
-                              round(max(values_for_brplt), 1))
-  ), col = "grey", lty = 3)
+                     xlim = c(round(min(v.bar.plt), 1),
+                              round(max(v.bar.plt), 1))),col = "grey",lty = 3)
   
   # Add grey lines for fast visual percentage calculation
-  for (n in seq(round(min(values_for_brplt), 1),
-                round(max(values_for_brplt), 1), by = 0.1)){ 
+  for (n in seq(round(min(v.bar.plt), 1), round(max(v.bar.plt), 1), by = .1)){ 
     abline(v = n, col = "grey", lty = 3) }
   
   # Modify axis so intervals between them is 0.1
-  axis(side=1, at=seq(round(min(values_for_brplt), 1),
-                      round(max(values_for_brplt), 1), by = 0.1), las = 1)
+  axis(side = 1, at = seq(round(min(v.bar.plt), 1),
+                          round(max(v.bar.plt), 1), by = .1), las = 1)
   
-  # Make borders for plot
-  box()
+  box() # Make borders for plot
 }
 # Test
-brplt3(df_portfolio, main = "Securities Performance")
+p.bar.plt(df_portfolio, main = "Securities Performance")
