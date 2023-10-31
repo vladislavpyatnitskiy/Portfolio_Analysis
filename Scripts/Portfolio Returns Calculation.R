@@ -1,55 +1,24 @@
 # Function to get portfolio returns
-portfolio_returns <- function(x){
+portfolio_returns <- function(x){ x <- x[,3 + 3 * seq(31, from = 0)] #x
   
-  # Select columns with total values and join them
-  x <- x[,3 + 3 * seq(31, from = 0)]
+  x1 <- t(x) # Transpose x1 and x
   
-  # Transpose
-  x1 <- t(x)
+  colnames(x1) <- rownames(x) # Make dates as column names x1 and x
   
-  # Make dates as column names
-  colnames(x1) <- rownames(x)
-  
-  # Define dataframe with value zero
-  df_p_l_returns <- as.data.frame(0)
+  r <- as.data.frame(0) # Define dataframe with value zero
   
   # Loop for portfolio log returns calculation
-  for (n in 2:ncol(x1)){
+  for (n in 2:ncol(x1)){ df2p <- x1[,(n-1):n] # x1 # Select two periods
     
-    # Select two periods
-    two_period_df <- x1[,(n-1):n]
-    
-    # Find zeros in data frame
-    f_value1 <- apply(two_period_df, 1, function(row) all(row !=0 ))
-    
-    # Get rid of rows containing zeros
-    s_value1 <- two_period_df[f_value1,]
-    
-    # Sum values for current period
-    num_f_t1 <- as.numeric(colSums(s_value1)[1])
-    
-    # Sum values for next period
-    num_f_t2 <- as.numeric(colSums(s_value1)[2])
-    
-    # Calculate return
-    p_l_value <- log(num_f_t2 / num_f_t1)
+    s <- df2p[apply(df2p, 1, function(row) all(row !=0 )),] # Remove zeros & NA
     
     # Add newly generated variable to data frame
-    df_p_l_returns <- rbind(df_p_l_returns, p_l_value)
-    
-  }
+    r <- rbind(r, log(as.numeric(colSums(s)[2]) / as.numeric(colSums(s)[1]))) }
   
-  # Give name to column
-  colnames(df_p_l_returns) <- "Returns"
+  colnames(r) <- "Returns" # Give name to column
+  rownames(r) <- rownames(df_exp_for_logs) # Return dates to index
   
-  # Return dates to index
-  rownames(df_p_l_returns) <- rownames(df_exp_for_logs)
-  
-  # Make it time series
-  df_p_l_returns <- as.timeSeries(df_p_l_returns)
-  
-  # Display data frame
-  return(df_p_l_returns)
+  as.timeSeries(r) # Make it time series
 }
 # Test
 returns_df <- portfolio_returns(df_portfolio)
