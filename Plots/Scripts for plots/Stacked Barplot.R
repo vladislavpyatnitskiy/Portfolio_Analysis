@@ -1,105 +1,56 @@
 # Libraries
 lapply(c("ggplot2", "tidyverse"), require, character.only = TRUE)
 
-# Function to generate Stacked Bar Plot
-stacked_barplot <- function(x){
-  
-  # Subset columns with total sum of securities
-  df_exp_forPort1 <-  x[,3 + 3 * seq(31, from = 0)]
+# Function to generate Stacked Bar Plot # Subset columns with total sum 
+p.bar.plt.stack <- function(x){ f.df <- x[,3 + 3 * seq(31, from = 0)]
   
   # Take column names with prices to put instead total sum column names
-  colnames(df_exp_forPort1) <- colnames(x[,1 + 3 * seq(31, from = 0)])  
+  colnames(f.df) <- colnames(x[,1 + 3 * seq(31, from = 0)])  
   
-  # Take dates from index column
-  rwnms <- rownames(df_exp_forPort1)
+  rwnms <- rownames(f.df) # Take dates from index column
   
-  # Make it in date format
-  rwnms <- as.Date(rwnms)
+  rwnms <- as.Date(rwnms) # Make it in date format
   
-  # Join it with main data set
-  df_exp_forPort1 <- data.frame(rwnms, df_exp_forPort1)
+  f.df <- data.frame(rwnms, f.df) # Join it with main data set
   
-  # Create sequence for index column
-  index_for_s_bplt <- seq(nrow(df_exp_forPort1))
+  rownames(f.df) <- seq(nrow(f.df)) # Create sequence for index column
   
-  # Put them in index column
-  rownames(df_exp_forPort1) <- index_for_s_bplt
+  p.df <- NULL # Define variable to contain values
   
-  # Define variable to contain values
-  df_f_mly_pct <- NULL
-  
-  # For each column with prices
-  for (n in 2:ncol(df_exp_forPort1)){
-    
-    # Define variable for loop
-    security <- df_exp_forPort1[,n]
+  for (n in 2:ncol(f.df)){ s <- f.df[,n] # Loop to make monthly data
     
     # Convert daily data to monthly
-    values_for_df <- tapply(security,
-                            format(as.Date(df_exp_forPort1[,1]),
-                                   "%Y-%m"), median)
+    v <- tapply(s, format(as.Date(f.df[,1]), "%Y-%m"), median)
     
-    # Take dates from index column
-    rwmns_ds <- rownames(values_for_df)
+    rwmns_ds <- rownames(v) # Take dates from index column
     
-    # Join with new data set
-    values_for_df <- data.frame(rwmns_ds, values_for_df)
+    v <- data.frame(rwmns_ds, v) # Join with new data set
     
-    # Generate sequence for index column
-    inx <- seq(nrow(values_for_df))
+    rownames(v) <- seq(nrow(v)) # Generate sequence for index column
     
-    # Put it in index column
-    rownames(values_for_df) <- inx
+    colnames(v)[colnames(v) == 'rwmns_ds'] <- 'Date' # Name column as Date
     
-    # Rename Date column to Date
-    colnames(values_for_df)[colnames(values_for_df) ==
-                              'rwmns_ds'] <- 'Date'
-    
-    # If defined empty variable is still empty
-    if (is.null(df_f_mly_pct)) {
-      
-      # Put new dataset there
-      df_f_mly_pct <- values_for_df
-      
-    } else {
-      
-      # Or else join with current one
-      df_f_mly_pct <- merge(x = df_f_mly_pct,
-                            y = values_for_df,
-                            by = "Date")}
-  }
-  # Convert to data frame format
-  df_f_mly_pct <- as.data.frame(df_f_mly_pct)
+    # If defined empty variable is still empty # Put new dataset there
+    if (is.null(p.df)){ p.df<-v } else { p.df <- merge(x=p.df,y=v,by="Date")} }
   
-  # Give column names
-  colnames(df_f_mly_pct) <- colnames(df_exp_forPort1)
+  p.df <- as.data.frame(p.df) # Convert to data frame format
   
-  # Rename date column again
-  colnames(df_f_mly_pct)[colnames(df_f_mly_pct) ==
-                           colnames(df_f_mly_pct[1])] <- 'Date'
+  colnames(p.df) <- colnames(f.df) # Give column names
   
-  # Calculate percentages
-  df_1_pct <- data.frame(df_f_mly_pct[,1],
-                         df_f_mly_pct[,2:ncol(df_f_mly_pct)] /
-                           rowSums(df_f_mly_pct[,2:ncol(df_f_mly_pct)]))
+  colnames(p.df)[colnames(p.df) == colnames(p.df[1])] <- 'Date' # Rename again
   
-  # Rename date column once again
-  colnames(df_1_pct)[colnames(df_1_pct) == colnames(df_1_pct[1])] <- 'Date'
+  p.df <- data.frame(p.df[,1],p.df[,2:ncol(p.df)]/rowSums(p.df[,2:ncol(p.df)]))
   
-  # Transpose
-  df_2_pct <- t(df_1_pct)
+  colnames(p.df)[colnames(p.df) == colnames(p.df[1])] <- 'Date' # Rename again
   
-  # Put dates to column names
-  colnames(df_2_pct) <- df_2_pct[1,]
+  p.df <- t(p.df) # Transpose
   
-  # Reduce dates from main data set
-  df_2_pct <- df_2_pct[-1,]
+  colnames(p.df) <- p.df[1,] # Put dates to column names
   
-  # Convert to data frame again
-  df_2_pct <- as.data.frame(df_2_pct)
+  p.df <- as.data.frame(p.df[-1,]) # Reduce dates from main data set
   
   # Convert for better read by ggplot
-  df2_upd = monthly_df2 %>% rownames_to_column("x") %>% gather(year, value, -x)
+  p.df = p.df %>% rownames_to_column("x") %>% gather(year, value, -x)
   
   # Colour set for plot
   colors37 = c("#466791","#60bf37","#953ada","#4fbe6c","#ce49d3","#a7b43d",
@@ -111,13 +62,10 @@ stacked_barplot <- function(x){
                "#bd5975")
   
   # Generate plot
-  ggplot(df2_upd, aes(x = year, y = value, fill = x)) + 
-    geom_bar(stat = "identity") +
+  ggplot(p.df, mapping = aes(x = year, y = value, fill = x)) + 
+    geom_bar(position = "fill", stat = "identity") +
     scale_fill_manual(values=colors37) + geom_col() +
-    labs(title = "Stacked Bar Plot",
-         x = "Months",
-         y = "Stakes",
-         fill = "Securities")
+    labs(title="Stacked Bar Plot", x="Months", y="Stakes", fill = "Securities")
 }  
 # Test
-stacked_barplot(df_portfolio)
+p.bar.plt.stack(df_portfolio)
