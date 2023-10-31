@@ -39,19 +39,6 @@ p.bar.plt.stack <- function(x){ f.df <- x[,3 + 3 * seq(31, from = 0)]
   
   colnames(p.df)[colnames(p.df) == colnames(p.df[1])] <- 'Date' # Rename again
   
-  p.df <- data.frame(p.df[,1],p.df[,2:ncol(p.df)]/rowSums(p.df[,2:ncol(p.df)]))
-  
-  colnames(p.df)[colnames(p.df) == colnames(p.df[1])] <- 'Date' # Rename again
-  
-  p.df <- t(p.df) # Transpose
-  
-  colnames(p.df) <- p.df[1,] # Put dates to column names
-  
-  p.df <- as.data.frame(p.df[-1,]) # Reduce dates from main data set
-  
-  # Convert for better read by ggplot
-  p.df = p.df %>% rownames_to_column("x") %>% gather(year, value, -x)
-  
   # Colour set for plot
   colors37 = c("#466791","#60bf37","#953ada","#4fbe6c","#ce49d3","#a7b43d",
                "#5a51dc","#d49f36","#552095","#507f2d","#db37aa","#84b67c",
@@ -61,11 +48,14 @@ p.bar.plt.stack <- function(x){ f.df <- x[,3 + 3 * seq(31, from = 0)]
                "#a79cd4","#71482c","#c689d0","#6b2940","#d593a7","#895c8b",
                "#bd5975")
   
+  # Convert for better read by ggplot
+  p.df<-p.df %>% pivot_longer(cols=-Date,names_to="Stock",values_to="Quantity")
+  
   # Generate plot
-  ggplot(p.df, mapping = aes(x = year, y = value, fill = x)) + 
-    geom_bar(position = "fill", stat = "identity") +
-    scale_fill_manual(values=colors37) + geom_col() +
-    labs(title="Stacked Bar Plot", x="Months", y="Stakes", fill = "Securities")
+  ggplot(p.df, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
+    geom_bar(position="fill",stat="identity") + 
+    labs(title="Stacked Bar Plot",x="Months",y="Stakes",fill="Securities") +
+    scale_fill_manual(values=colors37) 
 }  
 # Test
 p.bar.plt.stack(df_portfolio)
