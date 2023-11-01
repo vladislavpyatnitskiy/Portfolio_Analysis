@@ -1,115 +1,59 @@
 # Function to plot portfolio performance with indices
-comp_plot_with_indices <- function(x, main = NULL, benchmark = "^GSPC",
-                                   benchnames = "S&P 500", lwd = 1){
+comp.plt <- function(x,main=NULL,benchmark="^GSPC",benchnames="S&P 500",lwd=1){
   
-  # First date
-  start_date <- rownames(x)[1]
+  s <- rownames(x)[1] # Start Date
+  e <- rownames(x)[nrow(x)] # End Date
+  x <- apply(x, 2, function(col) exp(cumsum(col)) - 1) # Portfolio returns
   
-  # Last date
-  end_date <- rownames(x)[nrow(x)]
+  portfolio_r_nms <- rownames(x) # Subset dates from data set
   
-  # Calculate total returns for portfolio
-  x <- apply(x, 2, function(col) (exp(cumsum(col))-1))
+  x <- data.frame(portfolio_r_nms, x) # Join dates with logs
   
-  # Subset dates from data set
-  portfolio_r_nms <- rownames(x)
+  colnames(x) <- c("Date", "Portfolio") # Rename columns once again
   
-  # Join dates with logs
-  x <- data.frame(portfolio_r_nms, x)
+  rownames(x) <- index(portfolio_r_nms) # Create index numbers for data set
   
-  # Rename columns once again
-  colnames(x) <- c("Date", "Portfolio")
+  tickers_for_indices <- benchmark # Vector with tickers
   
-  # Create index numbers for data set
-  index_for_prtfl <- index(portfolio_r_nms)
+  p <- NULL # Create an empty variable
   
-  # Join index as row names
-  rownames(x) <- index_for_prtfl
-  
-  # Vector with tickers
-  tickers_for_indices <- benchmark
-  
-  # Create an empty variable
-  portfolioPrices <- NULL
-  
-  # Loop for data extraction
-  for (Ticker in tickers_for_indices)
+  for (Ticker in tickers_for_indices){ # Loop for data extraction
     
-      # When both start date and end date are defined
-      portfolioPrices <- cbind(portfolioPrices,
-                               getSymbols(Ticker,
-                                          from = start_date,
-                                          to = end_date,
-                                          src = "yahoo", 
-                                          auto.assign=FALSE)[,4])
-  # Get rid of NAs
-  portfolioPrices <- portfolioPrices[apply(portfolioPrices,1,
-                                           function(x) all(!is.na(x))),]
-  # Put the tickers in data set
-  colnames(portfolioPrices) <- benchnames
+    p <- cbind(p,getSymbols(Ticker,from=s,to=e,src="yahoo",auto.assign=F)[,4])}
   
-  # Make data discrete
-  portfolioReturns <- ROC(portfolioPrices, type = "discrete")
+  p <- p[apply(p,1,function(x) all(!is.na(x))),] # NA off
   
-  # Make it time series
-  portfolioReturns <-as.timeSeries(portfolioPrices)
+  colnames(p) <- benchnames # Put the tickers in data set
   
-  # Calculate returns
-  portfolioReturns <- diff(log(portfolioReturns))
+  r <- diff(log(as.timeSeries(p))) # Time Series Returns
   
-  # Equal first return to 0
-  portfolioReturns[1,] <- 0
+  r[1,] <- 0 # Equal first return to 0
   
-  # Calculate total returns
-  portfolioReturns <-apply(portfolioReturns,
-                           2, function(col) (exp(cumsum(col))-1))
+  r <- apply(r, 2, function(col) exp(cumsum(col))-1) # total returns
   
-  # Subset dates from data set
-  indices_r_nms <- rownames(portfolioReturns)
+  indices_r_nms <- rownames(r) # Subset dates from data set
   
-  # Join dates with logs
-  portfolioReturns <- data.frame(indices_r_nms, portfolioReturns)
+  r <- data.frame(indices_r_nms, r) # Join dates with logs
   
-  # Rename column containing Dates
-  colnames(portfolioReturns)[colnames(portfolioReturns) ==
-                               'indices_r_nms'] <- 'Date'
+  colnames(r)[colnames(r) == 'indices_r_nms'] <- 'Date' # Rename column Dates
   
-  # Create index numbers for data set
-  index_for_indcs <- index(indices_r_nms)
+  rownames(r) <- index(indices_r_nms) # Create index numbers for data set
   
-  # Join index as row names
-  rownames(portfolioReturns) <- index_for_indcs
+  i <- as.timeSeries(merge(x, r, by = "Date")) # Merge and make time series
   
-  # Merge 
-  df_x_indcs <- merge(x, portfolioReturns, by = "Date")
+  par(mar = c(3, 3, 3, 3), xpd = F) 
   
-  # Make it time series
-  df_x_indcs <- as.timeSeries(df_x_indcs)
-  
-  # Plot
-  plot(df_x_indcs[,1],
-       ylim = c(min(df_x_indcs), max(df_x_indcs)),
-       main = main,
-       xlab = "Trading Days",
-       ylab = "Returns (%)",
-       las = 1,
-       lwd = lwd)
+  plot(i[,1], ylim = c(min(i), max(i)), main = main, lwd = lwd, las = 1, # Plot
+       xlab = "Trading Days", ylab = "Returns (%)", type = "l", lty = 1)
   
   # Add grey dotted horizontal lines
-  for (n in seq(-1, 1, 0.05)){ abline(h = n, col = "grey", lty = 2) }
+  for (n in seq(-1, 1, .05)){ abline(h = n, col = "grey", lty = 3) }
   
-  # Plot indices
-  for (n in 2:(ncol(df_x_indcs))){
-    lines(df_x_indcs[,n], col = n,  lwd = lwd,)}
+  for (n in 2:(ncol(i))){ lines(i[,n], col = n, lwd = lwd,)} # Plot indices
   
-  # Add legend
-  legend("bottomright", colnames(df_x_indcs),
-         col=1:ncol(df_x_indcs), lty=1, cex=.65)
+  legend(x = "bottomright",colnames(i),col=1:ncol(i),lty=1,cex =.65,xpd=T)
 }
 # Test
-comp_plot_with_indices(returns_df,
-                       main = "Portfolio vs Major Indices",
-                       benchmark = c("^GSPC", "^DJI", "^IXIC", "^FTSE"),
-                       benchnames = c("S&P 500", "Dow Jones", "NASDAQ",
-                                      "FTSE 100"),
-                       lwd = 2)
+comp.plt(returns_df, main = "Portfolio vs Major Indices", lwd = 2,
+         benchmark = c("^GSPC", "^DJI", "^IXIC", "^FTSE"),
+         benchnames=c("S&P 500","Dow Jones","NASDAQ","FTSE 100"))
