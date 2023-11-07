@@ -1,88 +1,48 @@
 # Function to get alpha and beta of portfolio
-coefs_for_portfolio <- function(x, bnchmrk = "^GSPC", string = F){
+p.coefficients <- function(x, benchmark = "^GSPC", string = F){
   
-  # First date
-  start_date <- rownames(x)[1]
+  s <- rownames(x)[1] # First date
   
-  # Last date
-  end_date <- rownames(x)[nrow(x)]
+  e <- rownames(x)[nrow(x)] # Last date
   
-  # Subset dates from data set
-  portfolio_r_nms <- rownames(x)
+  p.names <- rownames(x) # Subset dates from data set
   
-  # Join dates with logs
-  x <- data.frame(portfolio_r_nms, x)
+  x <- data.frame(p.names, x) # Join dates with logs
   
-  # Rename columns once again
-  colnames(x) <- c("Date", "Portfolio")
+  colnames(x) <- c("Date", "Portfolio") # Rename columns once again
   
-  # Create index numbers for data set and join index as row names
-  rownames(x) <- seq(nrow(x))
+  rownames(x) <- seq(nrow(x)) # Index for data set and join index as row names
   
-  # Create an empty variable
-  portfolioPrices <- NULL
+  p <- NULL # Create an empty variable
   
-  # Loop for data extraction
-  for (Ticker in bnchmrk)
+  for (a in benchmark) # Loop for data extraction
     
-    # When both start date and end date are defined
-    portfolioPrices <- cbind(portfolioPrices,
-                             getSymbols(Ticker,
-                                        from = start_date,
-                                        to = end_date,
-                                        src = "yahoo", 
-                                        auto.assign=FALSE)[,4])
-  # Get rid of NAs
-  portfolioPrices <- portfolioPrices[apply(portfolioPrices,1,
-                                           function(x) all(!is.na(x))),]
-  # Put the tickers in data set
-  colnames(portfolioPrices) <- bnchmrk
+    p <- cbind(p,getSymbols(a,from=s,to=e,src="yahoo",auto.assign=F)[,4])
   
-  # Make data discrete
-  portfolioReturns <- ROC(portfolioPrices, type = "discrete")
+  p <- p[apply(p,1,function(x) all(!is.na(x))),] # Get rid of NA
   
-  # Make it time series
-  portfolioReturns <-as.timeSeries(portfolioPrices)
+  colnames(p) <- benchmark # Put the tickers in data set
   
-  # Calculate returns
-  portfolioReturns <- diff(log(portfolioReturns))
+  r <- diff(log(as.timeSeries(p))) # Make it time series & calculate returns
   
-  # Equal first value to zero
-  portfolioReturns[1,] <- 0
+  r[1,] <- 0 # Equal first value to zero
   
-  # Subset dates from data set
-  indices_r_nms <- rownames(portfolioReturns)
+  r.names <- rownames(r) # Subset dates from data set
   
-  # Join dates with logs
-  portfolioReturns <- data.frame(indices_r_nms, portfolioReturns)
+  r <- data.frame(r.names, r) # Join dates with logs
   
-  # Rename column containing Dates
-  colnames(portfolioReturns)[colnames(portfolioReturns) ==
-                               'indices_r_nms'] <- 'Date'
+  colnames(r)[colnames(r) == 'r.names'] <- 'Date' # Rename column with Dates
   
-  # Create index numbers for data set and join index as row names
-  rownames(portfolioReturns) <- seq(nrow(portfolioPrices))
+  rownames(r) <- seq(nrow(p)) # Index numbers for data set & join as row names
   
-  # Merge and make it time series
-  df_x_indcs <- as.timeSeries(merge(x, portfolioReturns, by = "Date"))
+  i <- as.timeSeries(merge(x,r,by = "Date")) # Join & make time series
   
-  # Calculate Betas
-  beta_value <- apply(df_x_indcs[,1],2,
-                      function(col) ((lm((col) ~
-                                           df_x_indcs[,2]))$coefficients[2]))
-  # Calculate Betas
-  alpha_value <- apply(df_x_indcs[,1],2,
-                       function(col) ((lm((col) ~
-                                            df_x_indcs[,2]))$coefficients[1]))
-  # Choose either string or table
-  if (isTRUE(string)) { 
-    
-    # Round values, make a string with info and display values
-    return(sprintf("Portfolio Alpha is %s %%, Beta is %s",
-                   round(alpha_value * 100, 2), round(beta_value, 2))) } else {
-                     
-    # Round values, make a table with info and display values                   
-    return(rbind(alpha_value, beta_value)) }
+  # Beta & Alpha
+  B<-round(apply(i[,1],2,function(col) ((lm((col)~i[,2]))$coefficients[2])),2)
+  A <- round(apply(i[,1],2,
+                   function(col) ((lm((col)~i[,2]))$coefficients[1]))*100,2)
+  
+  if (isTRUE(string)) { sprintf("Portfolio Alpha is %s %%, Beta is %s", A, B)
+    } else { return(rbind(A,B)) } # Choose either string or table
 }
-# Test
-coefs_for_portfolio(returns_df, string = T)
+p.coefficients(returns_df, string = T) # Test
