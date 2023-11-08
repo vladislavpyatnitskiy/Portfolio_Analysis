@@ -1,92 +1,57 @@
 # Function to convert portfolio prices to another currencies
-portfolio.currency.converter2 <- function(x, y){
+p.currency.converter2 <- function(x, y){
   
-  # Take column with total sum
-  portfolioPrices <- x[,ncol(x)]
+  p <- x[,ncol(x)] # Take column with total sum
   
-  # Subset dates from time series
-  trading_days1 <- rownames(portfolioPrices)
+  trading_days1 <- rownames(p) # Subset dates from time series
   
-  # Join both dates and prices as data frame
-  portfolioPrices <- data.frame(trading_days1, portfolioPrices)
+  p <- data.frame(trading_days1, p) # Join both dates and prices as data frame
   
-  # Rename column with trading dates as Date
-  colnames(portfolioPrices)[colnames(portfolioPrices) ==
-                              'trading_days1'] <- "Date"
+  colnames(p)[colnames(p) == 'trading_days1'] <- "Date" # Rename column
   
-  # Put sequence for row names
-  rownames(portfolioPrices) <- seq(nrow(portfolioPrices))
+  rownames(p) <- seq(nrow(p)) # Put sequence for row names
   
-  # Define start date
-  start_date <- rownames(x)[1]
+  s <- rownames(x)[1] # Define start date
   
-  # Create empty variable to contain data
-  currency_prices <- NULL
+  prices <- NULL # Create empty variable to contain data
   
-  # For each currency in data frame
-  for (currency in y){
+  for (c in y){ # For each currency in data frame download data
     
-    # Download data
-    currency_prices <- cbind(currency_prices, 
-                             getSymbols(currency,
-                                        from = start_date,
-                                        src = "yahoo",
-                                        auto.assign=FALSE)[,4]) }
-  # Get rid of NAs
-  currency_prices <- currency_prices[apply(currency_prices,1,
-                                           function(x) all(!is.na(x))),]
-  # Put the tickers in data set
-  colnames(currency_prices) <- y
+    prices<-cbind(prices,getSymbols(c,from=s,src="yahoo",auto.assign=F)[,4]) }
   
-  # Make data discrete
-  currency_Returns <- ROC(currency_prices, type = "discrete")
+  prices <- prices[apply(prices,1,function(x) all(!is.na(x))),] # Get rid of NA
   
-  # Make it time series
-  currency_Returns <-as.timeSeries(currency_prices)
+  colnames(prices) <- y # Put the tickers in data set
   
-  # Create empty variable to contain portfolio prices values in all currencies
-  currency_ts <- NULL
+  r.currency <-as.timeSeries(prices) # Make it time series
+  
+  c.ts <- NULL # For portfolio prices values in all currencies
   
   # For each currency in data set
-  for (n in 1:ncol(currency_Returns)){ each_currency <- currency_Returns[,n]
+  for (n in 1:ncol(r.currency)){ each_currency <- r.currency[,n]
   
-    # Subset dates from time series
-    trading_days2 <- rownames(each_currency)
+    days <- rownames(each_currency) # Subset dates from time series
     
-    # Join dates and prices 
-    each_currency1 <- data.frame(trading_days2, each_currency)
+    e.currency <- data.frame(days, each_currency) # Join dates & prices
     
-    # Rename column with trading dates as Date for currencies
-    colnames(each_currency1)[colnames(each_currency1) ==
-                              'trading_days2'] <- "Date"
+    colnames(e.currency)[colnames(e.currency)=='days']<-"Date" # Rename column
     
-    # Put sequence for row names
-    rownames(each_currency1) <- seq(nrow(each_currency1))
+    rownames(e.currency) <- seq(nrow(e.currency)) # Put sequence for row names
     
-    # Join them into one column
-    df_with_currencies <- merge(portfolioPrices, each_currency1, by = "Date")
+    c.df <- merge(p, e.currency, by = "Date") # Join them into one column
     
-    # Create new column
-    df_with_currencies$new_currency <- df_with_currencies[,2] *
-      df_with_currencies[,3]
+    c.df$new_currency <- c.df[,2] * c.df[,3] # Create new column
     
-    # Put sequence for rownames
-    rownames(df_with_currencies) <- df_with_currencies[,1]
+    rownames(c.df) <- c.df[,1] # Put sequence for row names
     
-    # Make it time series
-    df_with_currencies <- as.timeSeries(df_with_currencies)
+    c.df <- as.timeSeries(c.df) # Make time series
     
     # Rename to another currency name
-    colnames(df_with_currencies)[colnames(df_with_currencies) ==
-                                   'new_currency'] <- colnames(each_currency)
-    # Etiher fill
-    if (is.null(currency_ts)){ currency_ts <- df_with_currencies[,3] } else {
-      
-      # Or join time series
-      currency_ts <- cbind(currency_ts, df_with_currencies[,3]) } }
+    colnames(c.df)[colnames(c.df) == 'new_currency'] <- colnames(each_currency)
+    
+    # Either fill or join time series
+    if (is.null(c.ts)){ c.ts <- c.df[,3] } else { c.ts<-cbind(c.ts,c.df[,3])} }
   
-  # Display column
-  return(currency_ts)
+  return(c.ts) # Display column
 }
-# Test
-portfolio.currency.converter2(x = df_portfolio, y = c("EUR=X", "GBP=X"))
+p.currency.converter2(x = df_portfolio, y = c("EUR=X", "GBP=X")) # Test
