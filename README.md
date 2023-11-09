@@ -74,3 +74,7 @@ _______________________________________________________________
 
 Portfolio Histogram
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Histogram.png?raw=true)
+_______________________________________________________________
+
+Portfolio Boxplot
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Boxplot.png?raw=true)
