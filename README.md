@@ -44,7 +44,7 @@ Bar Plot with Portfolio Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
 _______________________________________________________________
 
-Stacked Bar Plot
+Stacked Bar Plot showing Securities Portions Dynamcis
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
@@ -56,15 +56,19 @@ Plot Portfolio with Benchmarks / Indices to visually compare performances
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Comparison%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-Scatter Plot for Securities
+Scatter Plot to compare Portfolio & Indices Performance 
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20&%20Indices%20Performance.png?raw=true)
+_______________________________________________________________
+
+Scatter Plot for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Scatter%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-Treemap for Securities
+Treemap for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Treemap%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-Barplot for Securities
+Barplot for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Barplot.jpeg?raw=true)
 _______________________________________________________________
 
@@ -76,5 +80,5 @@ Portfolio Histogram
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Histogram.png?raw=true)
 _______________________________________________________________
 
-Portfolio Boxplot
+Boxplot for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Boxplot.png?raw=true)
