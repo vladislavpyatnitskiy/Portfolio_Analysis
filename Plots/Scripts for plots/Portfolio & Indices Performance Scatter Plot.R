@@ -1,3 +1,6 @@
+# Libraries
+lapply(c("quantmod","timeSeries","ggplot2","ggrepel"),require,character.only=T)
+
 # Scatter plot of portfolio's securities
 p.scatter.plt.indices <- function(x, benchmark = "^GSPC", benchnames="S&P 500",
                                   main = NULL, xlab = NULL, ylab = NULL){
@@ -61,7 +64,8 @@ p.scatter.plt.indices <- function(x, benchmark = "^GSPC", benchnames="S&P 500",
   
   # Plot
   ggplot(data.frame(i), mapping = aes(x = i[,2], y = i[,1])) + geom_point() +
-    geom_text_repel(aes(label=rownames(i))) + labs(title=main,x=xlab,y=ylab)
+    theme_minimal() + geom_text_repel(aes(label=rownames(i))) +
+    labs(title=main,x=xlab,y=ylab)
 }
 # Test
 p.scatter.plt.indices(df_portfolio, benchmark = c("^GSPC", "^DJI", "^IXIC"),
