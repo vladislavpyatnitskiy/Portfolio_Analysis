@@ -16,7 +16,15 @@ Having worked in trading and systems analytics, I came to idea to create if not 
 Week by week, this repository will be filled with more advanced script.
 _______________________________________________________________
 
-Today my R script enables to get info about portfolio including weights, prices, number and total amount of assets. This is suffiicient to get necessary statistics and find useful insights.
+Today my R script enables to get the following info about portfolio:
+
+• Weights according to assets, their industries and sectors using pie plot; Barplot script enables to see securities dynamics and check Mean and Median of weights
+• Comparative plots to assess portfolio dynamics with becncmarks and securities between each other (Scatter Plot, Heatmap, Treemap, Boxplot) 
+• Non Visualisation Capabilities include calculation of Alpha & Beta of Portfolio, its value across multiple currencies, MVaR and Portfolio Risk. 
+
+My first goal is to write powerful scripts that enable to check most necessary info for investor.  
+
+Currently under development: stock fundamentals, more advanced plots, making script suitable for using via Git
 _______________________________________________________________
 
 Requirements:
@@ -28,6 +36,8 @@ Requirements:
 • ggplot2
 
 • ggrepel
+
+• rvest
 _______________________________________________________________
 
 Current Data Visualisation Script Capabilities:
