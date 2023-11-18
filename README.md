@@ -36,6 +36,10 @@ Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
 _______________________________________________________________
 
+Sector Weights
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20Plot%20with%20Sectors.png?raw=true)
+_______________________________________________________________
+
 Portfolio Performance Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Performance.jpeg?raw=true)
 _______________________________________________________________
