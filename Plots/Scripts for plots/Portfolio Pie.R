@@ -1,5 +1,5 @@
-# Function to facilitate Pie Plot generation
-portfolio_piePlot <- function(x, main = NULL, sub = NULL){
+# Function for Pie Plot generation
+p.pie.plt <- function(x, main = NULL, sub = NULL, radius = 1){
   
   # Subset tickers from price columns
   tickers <- colnames((x[,1 + 3 * seq(31, from = 0)]))
@@ -18,13 +18,8 @@ portfolio_piePlot <- function(x, main = NULL, sub = NULL){
                "#8c3025","#417d61","#862977","#bba672","#403367","#da8a6d",
                "#a79cd4","#71482c","#c689d0","#6b2940","#d593a7","#895c8b",
                "#bd5975")
-  
   # Pie Chart
-  pie(pct,
-      labels = c(sprintf("%s %s%%", tickers, pct)),
-      col = colors37,
-      main = main,
-      sub = sub) 
+  pie(pct, labels = c(sprintf("%s %s%%", tickers, pct)), col = colors37,
+      main = main, sub = sub, radius = radius) 
 }
-# Test
-portfolio_piePlot(df_portfolio, main = "Portfolio")
+p.pie.plt(df_portfolio, main = "Portfolio", radius = 1.5) # Test
