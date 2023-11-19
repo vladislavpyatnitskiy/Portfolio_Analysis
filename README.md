@@ -84,6 +84,10 @@ Scatter Plot for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Scatter%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
+Bubble Plot for Portfolio Securities 
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bubble%20Plot.png?raw=true)
+_______________________________________________________________
+
 Treemap for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Treemap%20Plot.jpeg?raw=true)
 _______________________________________________________________
