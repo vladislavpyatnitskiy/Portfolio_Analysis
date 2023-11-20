@@ -42,67 +42,74 @@ Requirements:
 • rvest
 _______________________________________________________________
 
-Current Data Visualisation Script Capabilities:
+## Current Data Analytics Script Capabilities:
 
-Asset Weights
+
+### Stock Fundamentals
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Fundamental%20ratios.png?raw=true)
+_______________________________________________________________
+
+## Current Data Visualisation Script Capabilities:
+
+### Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
 _______________________________________________________________
 
-Industry Weights
+### Industry Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20with%20industries.png?raw=true)
 _______________________________________________________________
 
-Sector Weights
+### Sector Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20Plot%20with%20Sectors.png?raw=true)
 _______________________________________________________________
 
-Portfolio Performance Tracking
+### Portfolio Performance Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Performance.jpeg?raw=true)
 _______________________________________________________________
 
-Bar Plot with Portfolio Weights 
+### Bar Plot with Portfolio Weights 
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
 _______________________________________________________________
 
-Stacked Bar Plot showing Securities Portions Dynamcis
+### Stacked Bar Plot showing Securities Portions Dynamcis
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-Portfolio's Correlation Heatmap
+### Portfolio's Correlation Heatmap
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Correlations.jpeg?raw=true)
 _______________________________________________________________
 
-Plot Portfolio with Benchmarks / Indices to visually compare performances
+### Plot Portfolio with Benchmarks / Indices to visually compare performances
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Comparison%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-Scatter Plot to compare Portfolio & Indices Performance 
+### Scatter Plot to compare Portfolio & Indices Performance 
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20&%20Indices%20Performance.png?raw=true)
 _______________________________________________________________
 
-Scatter Plot for Portfolio Securities
+### Scatter Plot for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Scatter%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-Bubble Plot for Portfolio Securities 
+### Bubble Plot for Portfolio Securities 
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bubble%20Plot.png?raw=true)
 _______________________________________________________________
 
-Treemap for Portfolio Securities
+### Treemap for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Treemap%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-Barplot for Portfolio Securities
+### Barplot for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Barplot.jpeg?raw=true)
 _______________________________________________________________
 
-Portfolio Returns QQ Plot
+### Portfolio Returns QQ Plot
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20QQ%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-Portfolio Histogram
+### Portfolio Histogram
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Histogram.png?raw=true)
 _______________________________________________________________
 
-Boxplot for Portfolio Securities
+### Boxplot for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Boxplot.png?raw=true)
