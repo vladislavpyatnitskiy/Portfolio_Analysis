@@ -1,6 +1,8 @@
 # Portfolio Analysis
 _______________________________________________________________
 
+## Repository Mission
+
 One of the main issues of being investor is how to track your securities. 
 
 Some investors use apps from their brokers, others prefer third party sites.
@@ -29,7 +31,7 @@ My first goal is to write powerful scripts that enable to check most necessary i
 Currently under development: stock fundamentals, more advanced plots, making script suitable for using via Git
 _______________________________________________________________
 
-Requirements:
+## Requirements:
 
 • quantmod
 
