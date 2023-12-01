@@ -69,6 +69,10 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Performance.jpeg?raw=true)
 _______________________________________________________________
 
+### Portfolio Volatility Tracking
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Volatility.png?raw=true)
+_______________________________________________________________
+
 ### Bar Plot with Portfolio Weights 
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
 _______________________________________________________________
