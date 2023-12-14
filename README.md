@@ -77,6 +77,10 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Drawdown.png?raw=true)
 _______________________________________________________________
 
+### Future Portfolio Performance by Monte Carlo Simulation
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Performance%20by%20Monte.png?raw=true)
+_______________________________________________________________
+
 ### Bar Plot with Portfolio Weights 
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
 _______________________________________________________________
