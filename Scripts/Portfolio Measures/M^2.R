@@ -1,4 +1,5 @@
-m.squared <- function(x, spx = "^GSPC", tr = "^TNX"){ # M squared for portfolio
+m.squared <- function(x, spx = c("^GSPC", "^IXIC", "^DJI"), tr = "^TNX",
+                      benchnames = NULL){ # M squared for portfolio
   
   y <- c(tr, spx) # Join treasuries and index data
   
@@ -17,7 +18,7 @@ m.squared <- function(x, spx = "^GSPC", tr = "^TNX"){ # M squared for portfolio
   
   p <- as.timeSeries(p) # Make it time series
   
-  i <- diff(log(p[,spx])) # make logs
+  i <- diff(log(p[, -which(names(p) == tr)])) # make logs
   
   i[1,] <- 0 # assign first value which is NA
   
@@ -25,10 +26,16 @@ m.squared <- function(x, spx = "^GSPC", tr = "^TNX"){ # M squared for portfolio
   
   x <- merge(x,i)[-nrow(x),] # Join portfolio and index data
   
-  msqr <- (exp(sum(x[,1])) - rf) * sd(x[,2])/sd(x[,1]) - (exp(sum(x[,2]) - rf))
+  l <- NULL # Set list for values
   
-  names(msqr) <- "M ^ 2" # Give name
+  for (n in 2:ncol(x)){ # Calculate ratios for each benchmark
   
-  msqr # Display value
+    l<-cbind(l,(exp(sum(x[,1]))-rf)*sd(x[,n])/sd(x[,1])-(exp(sum(x[,n])-rf))) }
+  
+  rownames(l) <- "M ^ 2" # Give name
+  
+  colnames(l) <- benchnames # Give bench names
+  
+  l # Display value
 }
-m.squared(returns_df) # Test
+m.squared(returns_df, benchnames = c("S&P 500", "NASDAQ", "Dow Jones")) # Test
