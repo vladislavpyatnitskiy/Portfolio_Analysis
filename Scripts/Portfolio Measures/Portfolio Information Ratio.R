@@ -1,4 +1,4 @@
-IR <- function(x, spx = "^GSPC"){ # Information Ratio
+IR <- function(x, spx = "^GSPC", benchnames = "S&P 500"){ # Information Ratio
   
   y <- c(spx) # Join treasuries and index data
   
@@ -18,7 +18,17 @@ IR <- function(x, spx = "^GSPC"){ # Information Ratio
   # Make time series, logs, join portfolio and index data
   x <- merge(x,diff(log(as.timeSeries(p)[,spx])))[-nrow(x),]
   
-  #(exp(sum(x[,1])) - exp(sum(x[,2][-1,]))) / sd(x[,1][-1,] - x[,2][-1,])
-  mean(x[,1][-1,] - x[,2][-1,]) / sd(x[,1][-1,] - x[,2][-1,])
+  l <- NULL # Set list for values
+  
+  for (n in 2:ncol(x)){ active.return <- x[,1][-1,]-x[,n][-1,]
+    
+    l <- cbind(l, mean(active.return) / sd(active.return)) }
+  
+  rownames(l) <- "IR" # Give name
+  
+  colnames(l) <- benchnames # Names of indices
+  
+  l # Display
 }
-IR(returns_df) # Test
+IR(returns_df, spx = c("^GSPC", "^IXIC", "^DJI"),
+   benchnames = c("S&P 500", "NASDAQ", "Dow Jones")) # Test
