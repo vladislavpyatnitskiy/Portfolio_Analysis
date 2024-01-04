@@ -1,6 +1,6 @@
-# Function to download fundamentals data for portfolio
+library("rvest") # Library
 
-p.fundamentals <- function(x, transpose = F){ # portfolio fundamentals
+p.fundamentals <- function(x, transpose = F, l = 1){ # portfolio fundamentals
   
   x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # portfolio tickers
   
@@ -12,31 +12,24 @@ p.fundamentals <- function(x, transpose = F){ # portfolio fundamentals
     
     s.page <- read_html(s) # Read HTML of page
     
-    s.yahoo <- s.page %>% html_nodes('table') %>% .[[1]] -> tab1 # Assign Table 
+    s.yahoo <- s.page %>% html_nodes('table') %>% .[[l]] -> tab # Assign Table 
     
-    s.header <- tab1 %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
+    y <- tab %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
     
-    df.f1 <- NULL # Create lists for ratio names and values
-    df.f2 <- NULL
+    df <- NULL # Create list for ratio names and values
     
-    for (n in 0:(length(s.header) / 2)){ 
-      
-      df.f1 <- rbind(df.f1, s.header[(1 + n * 2)]) # Ratio names
-      
-      df.f2 <- rbind(df.f2, s.header[(2 + n * 2)]) } # Ratio values
+    for (n in 0:(length(y)/2)){ df <- rbind(df, cbind(y[(1+n*2)], y[(2+n*2)]))} 
     
-    df.f3 <- data.frame(df.f1, df.f2) # Join 
+    df <- df[-nrow(df),] # Delete excessive row
     
-    df.f3 <- df.f3[-nrow(df.f3),] # Display
+    rownames(df) <- df[,1] # Assign row names
     
-    rownames(df.f3) <- df.f3[,1] # Assign row names
+    df <- subset(df, select = -c(1)) # Reduce excess column
     
-    df.f3 <- subset(df.f3, select = -c(1)) # Reduce excess column
+    colnames(df) <- j # Assign column name
     
-    colnames(df.f3) <- j # Assign column name
+    if (is.null(df.s)){ df.s <- df } else { df.s <- cbind(df.s, df) } }
     
-    if (is.null(df.s)){ df.s <- df.f3 } else { df.s <- cbind(df.s, df.f3) } }
-  
   if (isTRUE(transpose)){ t(df.s) } else { df.s } # Display
 }
-p.fundamentals(df_portfolio, transpose = T) # Test
+p.fundamentals(df_portfolio, transpose = T, l = 2) # Test
