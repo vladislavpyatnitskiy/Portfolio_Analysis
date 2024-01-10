@@ -4,17 +4,13 @@ p.bubble.plt <- function(x, main = NULL, xlab = NULL, ylab = NULL){
   
   x <- x[,1 + 3 * seq(31, from = 0)] # Select securities columns
   
-  df.scatter <- NULL # Empty variable to contain values
+  d <- NULL # Empty variable to contain values
   
-  for (n in 1:ncol(x)){ s <- x[,n] # For each security in data frame
-  
-    c <- colnames(s)
+  for (n in 1:ncol(x)){ c <- colnames(x[,n]) # Take ticker and clean data
     
-    # Clean data to reduce NA and calculate return for ownership period  
-    s.adj <- diff(log(s[apply(s, 1, function(row) all(row !=0 )),]))[-1,]
+    s.adj <- diff(log(x[,n][apply(x[,n],1,function(row) all(row !=0 )),]))[-1,]
     
-    # Join standard deviation and return
-    v.scatter <- cbind(sd(s.adj) * 1000, (exp(sum(s.adj)) - 1) * 100)
+    v <- cbind(sd(s.adj)*1000, (exp(sum(s.adj)) - 1)*100) # Join sd and return
     
     p <- sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s", c, c)
     
@@ -22,8 +18,7 @@ p.bubble.plt <- function(x, main = NULL, xlab = NULL, ylab = NULL){
     
     price.yahoo1 <- page.p %>% html_nodes('div') %>% .[[1]] -> tab11
     
-    yahoo.header1 <- tab11 %>% html_nodes('p') %>% html_nodes('span') %>%
-      html_text()
+    y <- tab11 %>% html_nodes('p') %>% html_nodes('span') %>% html_text()
     
     j <- sprintf("https://finance.yahoo.com/quote/%s/key-statistics?p=%s",c,c)
     
@@ -31,39 +26,29 @@ p.bubble.plt <- function(x, main = NULL, xlab = NULL, ylab = NULL){
     
     s.yahoo <- s.page %>% html_nodes('table') %>% .[[1]] -> tab1 # Assign Table 
     
-    s.header <- tab1 %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
+    m <- tab1 %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
     
-    s.header <- s.header[2] # Info about market capitalisation
+    m <- read.fwf(textConnection(m[2]), widths = c(nchar(m[2]) - 1, 1),
+                  colClasses="character")
     
-    s.header<-read.fwf(textConnection(s.header),widths=c(nchar(s.header)-1,1),
-                       colClasses = "character")
+    if (m[1,2] == "M"){ m <- as.numeric(m[1,1])/1000 } else if (m[1,2] == "T"){ 
+      
+      m <- as.numeric(m[1,1]) * 1000 } else m <- as.numeric(m[1,1]) # Format 
     
-    if (s.header[1,2] == "M"){ s.header <- as.numeric(s.header[1,1]) / 1000 }
+    new.info <- data.frame(m, y[2]) # Join market cap data with sector info
     
-    else if (s.header[1,2] == "T"){ s.header<-as.numeric(s.header[1,1])*1000 }
-    
-    else s.header <- as.numeric(s.header[1,1]) # Format to billion format
-    
-    new.info <- data.frame(s.header, yahoo.header1[2])
-    
-    rownames(new.info) <- colnames(s)
-    rownames(v.scatter) <- colnames(s) # Give row names to data frame
-    
-    n.scatter <- cbind.data.frame(v.scatter,new.info) # Join data about company
-    
-    df.scatter<-rbind.data.frame(df.scatter,n.scatter) } # Join all companies
+    rownames(new.info) <- c
+    rownames(v) <- c # Give row names to data frame
   
+    d <- rbind.data.frame(d, cbind(v, new.info)) } # Join stats with other info
+    
   # Plot
-  ggplot(data = df.scatter, mapping = aes(x = df.scatter[,1],
-                                          y = df.scatter[,2],
-                                          size = df.scatter[,3],
-                                          color = df.scatter[,4],
-                                          label=df.scatter[,4])) +
-    geom_point() +
-    labs(title=main,x=xlab,y=ylab,size="Market Capitalisation",
-         color="Sector") + theme_minimal() +
-    geom_text_repel(aes(label = rownames(df.scatter), fill = df.scatter[,4],
-                        size = NULL, color = NULL), nudge_y = .0125) + 
+  ggplot(data = d, mapping = aes(x = d[,1], y = d[,2], size = d[,3],
+                                 color = d[,4], label=d[,4])) + geom_point() +
+    labs(title = main, x = xlab, y = ylab, size = "Market Capitalisation",
+         color = "Sector") + theme_minimal() +
+    geom_text_repel(aes(label = rownames(d), fill = d[,4], size = NULL,
+                        color = NULL), nudge_y = .0125) + 
     guides(fill=guide_legend(title = "Sector", override.aes = aes(label = "")))
 }
 # Test
