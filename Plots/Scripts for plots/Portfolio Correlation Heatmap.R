@@ -1,27 +1,17 @@
 # Function to generate heatmap for portfolio's correlations
-p.heatmap.plt <- function(data, s.d=as.Date(Sys.Date())-365, e.d=Sys.Date()){
+p.heatmap.plt <- function(x,s=as.Date(Sys.Date())-365,e=Sys.Date(),size =.9){
   
-  p.tickers <- colnames(data[,1 + 3 * seq(31, from = 0)]) # ticker names
+  p <- NULL # Create an empty variable
   
-  a.prices <- NULL # Create an empty variable
-  
-  for (Ticker in p.tickers) # Loop for data extraction
+  for (a in colnames(x[,1 + 3 * seq(31, from = 0)])) # Loop for data extraction
     
-    # When neither start date nor end date are defined
-    a.prices <- cbind(a.prices,
-                      getSymbols(Ticker,
-                                 from = s.d,
-                                 to = e.d,
-                                 src = "yahoo",
-                                 auto.assign=FALSE)[,4])
-  # Eliminate NAs
-  a.prices<-a.prices[apply(a.prices,1,function(x) all(!is.na(x))),] 
+    p <- cbind(p, getSymbols(a, from=s, to=e, src="yahoo", auto.assign=F)[,4])
   
-  colnames(a.prices) <- p.tickers # Put the tickers in data set
+  p <- p[apply(p, 1, function(x) all(!is.na(x))),] # Eliminate NAs
   
-  asset_Returns <- diff(log(as.timeSeries(a.prices)))[-1,] # Calculate returns
-  
-  m.correlation = as.matrix(asset_Returns) # Convert data into matrix
+  colnames(p) <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Assign tickers
+   
+  m.correlation = as.matrix(diff(log(as.timeSeries(p)))[-1,]) # raturns' matrix 
   
   c.correlation = ncol(m.correlation) # Get number of columns
   
@@ -54,5 +44,4 @@ p.heatmap.plt <- function(data, s.d=as.Date(Sys.Date())-365, e.d=Sys.Date()){
          round(X_for_corr[coord_for_corr[i,1],coord_for_corr[i,2]],digits = 2),
          col = "white", cex = size) }
 }
-# Test
-p.heatmap.plt(data = df_portfolio, size =.9)
+p.heatmap.plt(x = df_portfolio, size =.9) # Test
