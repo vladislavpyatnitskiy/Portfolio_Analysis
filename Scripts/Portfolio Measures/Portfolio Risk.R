@@ -1,10 +1,14 @@
-# Function to calculate portfolio risk
-portfolio_risk <- function(x, p.weights, lg = T, sqrt = T){
+p.risk <- function(x, sqrt = T){ # Function to calculate portfolio risk
   
-  if (isTRUE(lg)) { x = diff(log(x))[-1,] } # Make logs if needed
+  p.weights <- x[,3+3*seq(31,from=0)][nrow(x),]/as.numeric(x[nrow(x),ncol(x)])
+  
+  x <- x[,1 + 3 * seq(31, from = 0)] # Subset data for securities
+  
+  x <- diff(log(x[apply(x, 1, function(row) all(row !=0 )),]))[-1,]
   
   # Calculate sum of products for variances and weights
-  v.pd<-crossprod(x=as.matrix(apply(x,2,function(col) var(col))),y=p.weights^2)
+  v.pd <- crossprod(x = as.matrix(apply(x, 2, function(col) var(col))),
+                    y = as.numeric(p.weights) ^ 2)
   
   a.names <- colnames(x) # Assign names
   
@@ -59,4 +63,4 @@ portfolio_risk <- function(x, p.weights, lg = T, sqrt = T){
   
   return(p.risk) # Print the matrix
 }
-portfolio_risk(x = stock_data, p.weights = c(.4, .3, .2, .1), sqrt = T) # Test
+p.risk(x = df_portfolio, sqrt = T) # Test
