@@ -110,8 +110,13 @@ Risk & Return (Beta)
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Scatter%20Plot%20with%20Risk%20&%20Return%20(Beta).png?raw=true)
 _______________________________________________________________
 
-### Bubble Plot for Portfolio Securities 
+### Bubble Plots for Portfolio Securities 
+
+Using Standard Deviation
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bubble%20Plot.png?raw=true)
+
+Using Beta
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bubble%20Plot%20(Beta).png?raw=true)
 _______________________________________________________________
 
 ### 3D Bubble Plot for Portfolio Securities
