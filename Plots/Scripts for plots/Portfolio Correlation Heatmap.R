@@ -1,5 +1,8 @@
-# Function to generate heatmap for portfolio's correlations
-p.heatmap.plt <- function(x,s=as.Date(Sys.Date())-365,e=Sys.Date(),size =.9){
+lapply(c("quantmod", "timeSeries"), require, character.only = T) # Libraries
+
+#Function to generate heatmap for portfolio's correlations
+p.heatmap.plt <- function(x, s = as.Date(Sys.Date()) - 365, e = Sys.Date(),
+                          size = .9, main = NULL){
   
   p <- NULL # Create an empty variable
   
@@ -12,7 +15,7 @@ p.heatmap.plt <- function(x,s=as.Date(Sys.Date())-365,e=Sys.Date(),size =.9){
   colnames(p) <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Assign tickers
    
   m.correlation = as.matrix(diff(log(as.timeSeries(p)))[-1,]) # raturns' matrix 
-  
+
   c.correlation = ncol(m.correlation) # Get number of columns
   
   new_cor <- cor(m.correlation) # Calculate correlation coefficients
@@ -29,7 +32,7 @@ p.heatmap.plt <- function(x,s=as.Date(Sys.Date())-365,e=Sys.Date(),size =.9){
   axis(2, at = c.correlation:1, labels = colnames(m.correlation), las = 2)
   axis(1, at = 1:c.correlation, labels = colnames(m.correlation), las = 2)
   
-  title(main = "Portfolio Correlations Heatmap") # Add title for heatmap
+  title(main = main) # Add title for heatmap
   
   box() # Box heatmap
   
@@ -44,4 +47,5 @@ p.heatmap.plt <- function(x,s=as.Date(Sys.Date())-365,e=Sys.Date(),size =.9){
          round(X_for_corr[coord_for_corr[i,1],coord_for_corr[i,2]],digits = 2),
          col = "white", cex = size) }
 }
-p.heatmap.plt(x = df_portfolio, size =.9) # Test
+p.heatmap.plt(x = df_portfolio, size =.9, 
+              main = "Portfolio Correlations Heatmap") # Test
