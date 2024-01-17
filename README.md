@@ -124,7 +124,12 @@ _______________________________________________________________
 _______________________________________________________________
 
 ### Treemap for Portfolio Securities
+
+Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Treemap%20Plot.jpeg?raw=true)
+
+Asset & Sector Weights
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Treemap%20with%20Sectors.png?raw=true)
 _______________________________________________________________
 
 ### Barplot for Portfolio Securities
