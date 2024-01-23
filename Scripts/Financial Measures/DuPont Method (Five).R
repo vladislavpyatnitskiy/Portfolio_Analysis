@@ -7,7 +7,7 @@ p.DuPont.five <- function(x){ # DuPont Method ratios
   dupont <- NULL # List for DuPont Method values
   
   for (q in 1:length(x)){ a <- x[q] # Each ticker in vector
-  
+    
     bs<-sprintf("https://finance.yahoo.com/quote/%s/balance-sheet?p=%s",a,a)
     is<-sprintf("https://finance.yahoo.com/quote/%s/financials?p=%s", a, a)
     
@@ -27,35 +27,18 @@ p.DuPont.five <- function(x){ # DuPont Method ratios
     r <- c("Net Income Common Stockholders", "Pretax Income", "EBIT",
            "Total Revenue")
     
-    for (m in 1:length(r)){ q <- NULL
+    for (m in 1:length(r)){ c <- rbind(c, u[grep(r[m], u) + 1][1]) }
+    for (m in 1:length(p)){ h <- rbind(h, y[grep(p[m], y) + 1][1]) }
     
-      for (n in seq(1)){ q <- cbind(q, u[grep(r[m], u) + n])
-      
-      o <- NULL
-      
-      if (length(q) > 1){  o <- c(o,q[1]) } else if (length(q) == 1) { o<-q } } 
-      
-      c <- rbind(c, o) }
-      
-    for (m in 1:length(p)){ q <- NULL
+    c <- as.numeric(gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", c)))
+    h <- as.numeric(gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", h)))
     
-      for (n in seq(1)){ q <- cbind(q, y[grep(p[m], y) + n])
-      
-      o <- NULL
-      
-      if (length(q) > 1){  o<-c(o,q[1]) } else if (length(q) == 1) { o<-q } } 
-      
-      h <- rbind(h, o) }
-      
-    c <- gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", c)) # Reduce commas
-    h <- gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", h)) 
-    
-    d.ratios <- cbind(as.numeric(c[1]) / as.numeric(h[2]), # Return on Equity
-                      as.numeric(c[1]) / as.numeric(c[2]), # Tax Burden
-                      as.numeric(c[2]) / as.numeric(c[3]), # Interest Burden
-                      as.numeric(c[3]) / as.numeric(c[4]), # Margin
-                      as.numeric(c[4]) / as.numeric(h[1]), # Turnover
-                      as.numeric(h[1]) / as.numeric(h[2])) # Equity Multiplier
+    d.ratios <- cbind(c[1] / h[2], # Return on Equity
+                      c[1] / c[2], # Tax Burden
+                      c[2] / c[3], # Interest Burden
+                      c[3] / c[4], # Margin
+                      c[4] / h[1], # Turnover
+                      h[1] / h[2]) # Equity Multiplier
     
     dupont <- rbind(dupont, d.ratios) } # DuPont Method
     
