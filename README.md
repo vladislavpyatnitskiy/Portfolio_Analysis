@@ -43,12 +43,13 @@ _______________________________________________________________
 
 • rvest
 _______________________________________________________________
-
 ## Current Data Analytics Script Capabilities:
-
 
 ### Stock Fundamentals
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Fundamental%20ratios.png?raw=true)
+
+### Altman Z Scores for Portfolio Securities
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Securities%20Altman%20Z%20Score.png?raw=true)
 _______________________________________________________________
 
 ## Current Data Visualisation Script Capabilities:
