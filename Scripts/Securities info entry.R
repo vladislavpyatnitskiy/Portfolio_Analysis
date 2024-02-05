@@ -40,17 +40,3 @@ nest.df <- list(list("UNM", c("2022-07-19"), c("2023-09-22"), c(1)),
                 list("PVH", c("2022-09-30"), c("2023-09-22"), c(1)),
                 list("VIRT", c("2022-09-30"), c("2023-09-22"), c(1)),
                 list("FLGT", c("2022-09-30"), c("2023-09-22"), c(1)))
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #  
-
-# Transform into data frame 
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-
-asset.list2 <- function(x){ df <- as.data.frame(do.call(rbind, x))
-  
-  colnames(df) <- c("Ticker", "Start Date", "End Date", "Number")
-  
-  df
-}
-asset.list2(nest.df) # Put Nested list into function
