@@ -86,8 +86,13 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
 _______________________________________________________________
 
-### Stacked Bar Plot showing Securities Portions Dynamcis
+### Stacked Bar Plot
+
+Securities Portions Dynamcis
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot.jpeg?raw=true)
+
+Sector Portions Dynamics
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Sector%20Stacked%20Bar%20Plot.png?raw=true)
 _______________________________________________________________
 
 ### Portfolio's Correlation Heatmap
