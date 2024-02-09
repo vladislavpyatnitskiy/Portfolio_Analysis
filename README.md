@@ -146,8 +146,13 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20QQ%20Plot.jpeg?raw=true)
 _______________________________________________________________
 
-### Portfolio Histogram
+### Portfolio Histograms
+
+Histogram of Returns
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Histogram.png?raw=true)
+
+Histogram of Correlation Values
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Correlations%20Histogram.png?raw=true)
 _______________________________________________________________
 
 ### Boxplot for Portfolio Securities
