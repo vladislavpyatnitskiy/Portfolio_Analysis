@@ -86,8 +86,13 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Performance%20by%20Monte.png?raw=true)
 _______________________________________________________________
 
-### Bar Plot with Portfolio Weights 
+### Bar Plot 
+
+Asset Weigths
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
+
+Dividend Weigths
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Dividends/Portfolio%20Dividends%20Allocation.png?raw=true)
 _______________________________________________________________
 
 ### Stacked Bar Plot
