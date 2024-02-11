@@ -1,7 +1,9 @@
 lapply(c("ggplot2", "tidyverse", "rvest"), require, character.only = T) # Libs
 
-p.bar.plt.stack.sector <- function(x){ f.df <- x[,3 + 3 * seq(31, from = 0)]
+p.bar.plt.stack.sector <- function(x, portion=F){ # Stacked Bar Plot by Sectors
   
+  f.df <- x[,3 + 3 * seq(31, from = 0)] # Columns with total sum
+
   # Take column names with prices to put instead total sum column names
   colnames(f.df) <- colnames(x[,1 + 3 * seq(31, from = 0)])  
   
@@ -71,7 +73,7 @@ p.bar.plt.stack.sector <- function(x){ f.df <- x[,3 + 3 * seq(31, from = 0)]
     pie.df <- aggregate(Prices ~ Sector, data=pie.df, sum) # Conditional sum
     
     if (is.null(l)){ l <- pie.df } else { l <- merge(l,pie.df,by="Sector") } }
-  
+    
   rownames(l) <- l[,1] # Assign Sector info as row names
   
   l <- l[,-1] # Reduce sector info as it is now in row names
@@ -86,8 +88,18 @@ p.bar.plt.stack.sector <- function(x){ f.df <- x[,3 + 3 * seq(31, from = 0)]
   
   i <- i %>% pivot_longer(cols=-Date,names_to="Stock",values_to="Quantity")
   
-  ggplot(i, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
-    geom_bar(position="fill",stat="identity") + 
-    labs(title="Stacked Bar Plot",x="Months",y="Stakes",fill="Sectors")
+  if (isTRUE(portion)){ # Plot showing stakes of securities for each month
+    
+    ggplot(i, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
+      geom_bar(position = "fill", stat = "identity") + 
+      labs(title = "Stacked Bar Plot of Portfolio Securities by Sectors",
+           x = "Months", y = "Stakes (%)", fill = "Securities")
+    
+  } else { # Generate plot showing amount of securities for each month
+    
+    ggplot(i, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
+      geom_bar(position = "stack", stat = "identity") + 
+      labs(title = "Stacked Bar Plot of Portfolio Securities by Sectors",
+           x = "Months", y = "Amount in $US", fill = "Securities") }
 }
-p.bar.plt.stack.sector(df_portfolio) # Test
+p.bar.plt.stack.sector(df_portfolio, portion = T) # Test
