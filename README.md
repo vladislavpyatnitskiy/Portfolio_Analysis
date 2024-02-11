@@ -66,6 +66,10 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20Plot%20with%20Sectors.png?raw=true)
 _______________________________________________________________
 
+### Weights by Market Capitalisation
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20Plot%20by%20Market%20Cap.png?raw=true)
+_______________________________________________________________
+
 ### Portfolio Performance Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Performance.jpeg?raw=true)
 _______________________________________________________________
