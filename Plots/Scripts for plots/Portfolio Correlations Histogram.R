@@ -37,7 +37,7 @@ p.hist.plt.cor <- function(x){ # Histogram with Portfolio Correlation values
   
   # Parameters
   hist(s, main = "Portfolio Correlations Histogram", freq = F, breaks=100,
-       ylab = "Frequency", xlab = "Correlation Values", las = 1,
+       ylab = "Probability", xlab = " Unique Correlation Values", las = 1,
        xlim = c(s.min, s.max), col = "navy", border = "white")
   
   for (n in seq(round(s.min, 1), round(s.max, 1), by=.05)){ # Add grey lines
