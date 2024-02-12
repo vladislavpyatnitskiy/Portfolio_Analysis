@@ -54,23 +54,26 @@ _______________________________________________________________
 
 ## Current Data Visualisation Script Capabilities:
 
-### Asset Weights
+### Pie Plot
+_______________________________________________________________
+
+#### Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
 
-#### Dividend Weigths by Assets
+#### Dividend Weigths of Assets
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Dividends/Portfolio%20Dividend%20Structure.png?raw=true)
-_______________________________________________________________
 
-### Industry Weights
+#### Industry Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20with%20industries.png?raw=true)
-_______________________________________________________________
 
-### Sector Weights
+#### Sector Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20Plot%20with%20Sectors.png?raw=true)
-_______________________________________________________________
 
-### Weights by Market Capitalisation
+#### Weights by Market Capitalisation
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20Plot%20by%20Market%20Cap.png?raw=true)
+
+#### Weights by Countries
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20Plot%20by%20Countries.png?raw=true)
 _______________________________________________________________
 
 ### Portfolio Performance Tracking
