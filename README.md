@@ -56,6 +56,9 @@ _______________________________________________________________
 
 ### Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
+
+#### Dividend Weigths by Assets
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Dividends/Portfolio%20Dividend%20Structure.png?raw=true)
 _______________________________________________________________
 
 ### Industry Weights
@@ -92,19 +95,19 @@ _______________________________________________________________
 
 ### Bar Plot 
 
-Asset Weigths
+#### Asset Weigths
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
 
-Dividend Weigths
+#### Dividend Weigths
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Dividends/Portfolio%20Dividends%20Allocation.png?raw=true)
 _______________________________________________________________
 
 ### Stacked Bar Plot
 
-Securities Portions Dynamcis
+#### Securities Portions Dynamcis
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot.jpeg?raw=true)
 
-Sector Portions Dynamics
+#### Sector Portions Dynamics
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Sector%20Stacked%20Bar%20Plot.png?raw=true)
 _______________________________________________________________
 
@@ -122,19 +125,19 @@ _______________________________________________________________
 
 ### Scatter Plot for Portfolio Securities
 
-Risk & Return (Standard Deviation)
+#### Risk & Return (Standard Deviation)
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Scatter%20Plot.jpeg?raw=true)
 
-Risk & Return (Beta)
+#### Risk & Return (Beta)
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Scatter%20Plot%20with%20Risk%20&%20Return%20(Beta).png?raw=true)
 _______________________________________________________________
 
 ### Bubble Plots for Portfolio Securities 
 
-Using Standard Deviation
+#### Using Standard Deviation
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bubble%20Plot.png?raw=true)
 
-Using Beta
+#### Using Beta
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bubble%20Plot%20(Beta).png?raw=true)
 _______________________________________________________________
 
@@ -144,10 +147,10 @@ _______________________________________________________________
 
 ### Treemap for Portfolio Securities
 
-Asset Weights
+#### Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Treemap%20Plot.jpeg?raw=true)
 
-Asset & Sector Weights
+#### Asset & Sector Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Treemap%20with%20Sectors.png?raw=true)
 _______________________________________________________________
 
@@ -161,10 +164,10 @@ _______________________________________________________________
 
 ### Portfolio Histograms
 
-Histogram of Returns
+#### Histogram of Returns
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Histogram.png?raw=true)
 
-Histogram of Correlation Values
+#### Histogram of Correlation Values
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Correlations%20Histogram.png?raw=true)
 _______________________________________________________________
 
