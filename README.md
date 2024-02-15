@@ -103,6 +103,9 @@ _______________________________________________________________
 
 #### Dividend Weigths
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Dividends/Portfolio%20Dividends%20Allocation.png?raw=true)
+
+#### Median Correlations of securities
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bar%20Plot%20of%20Portfolio%20Correlations%20by%20Assets.png?raw=true)
 _______________________________________________________________
 
 ### Stacked Bar Plot
@@ -112,6 +115,12 @@ _______________________________________________________________
 
 #### Sector Portions Dynamics
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Sector%20Stacked%20Bar%20Plot.png?raw=true)
+
+#### Market Cap Portions Dynamics
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot%20by%20Market%20Cap%20in%20Portions.png?raw=true)
+
+#### Country Portions Dynamics
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot%20by%20Country%20(%25).png?raw=true)
 _______________________________________________________________
 
 ### Portfolio's Correlation Heatmap
