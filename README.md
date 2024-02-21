@@ -53,9 +53,9 @@ _______________________________________________________________
 _______________________________________________________________
 
 ## Current Data Visualisation Script Capabilities:
+_______________________________________________________________
 
 ### Pie Plot
-_______________________________________________________________
 
 #### Asset Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Pie.jpeg?raw=true)
@@ -88,27 +88,34 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Dividends/Portfolio%20Dividend%20Pie%20By%20Country.png?raw=true)
 _______________________________________________________________
 
-### Portfolio Performance Tracking
+### Line Plot
+
+#### Portfolio Performance Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Performance.jpeg?raw=true)
-_______________________________________________________________
 
-### Portfolio Dividends Accumulation Tracking
+#### Plot Portfolio with Benchmarks / Indices to visually compare performances
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Comparison%20Plot.jpeg?raw=true)
+
+#### Portfolio Dividends Accumulation Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Dividends/Portfolio%20Dividends%20Accumulation%20Tracking.png?raw=true)
-_______________________________________________________________
 
-### Portfolio Volatility Tracking
+#### Portfolio Volatility Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Volatility.png?raw=true)
-_______________________________________________________________
 
-### Portfolio Drawdown 
+#### Portfolio Drawdown 
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Drawdown.png?raw=true)
-_______________________________________________________________
 
-### Future Portfolio Performance by Monte Carlo Simulation
+#### Future Portfolio Performance by Monte Carlo Simulation
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Performance%20by%20Monte.png?raw=true)
 _______________________________________________________________
 
 ### Bar Plot 
+
+#### Portfolio Returns
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bar%20Plot%20of%20Portfolio%20Returns.png?raw=true)
+
+#### Portfolio Securities Overall Returns
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Barplot.jpeg?raw=true)
 
 #### Asset Weigths
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Allocation%20Barplot.png?raw=true)
@@ -166,15 +173,10 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Correlations.jpeg?raw=true)
 _______________________________________________________________
 
-### Plot Portfolio with Benchmarks / Indices to visually compare performances
-![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Comparison%20Plot.jpeg?raw=true)
-_______________________________________________________________
+### Scatter Plot
 
-### Scatter Plot to compare Portfolio & Indices Performance 
+#### Comparison of Portfolio & Indices Performances
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20&%20Indices%20Performance.png?raw=true)
-_______________________________________________________________
-
-### Scatter Plot for Portfolio Securities
 
 #### Risk & Return (Standard Deviation)
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Scatter%20Plot.jpeg?raw=true)
@@ -183,16 +185,15 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Scatter%20Plot%20with%20Risk%20&%20Return%20(Beta).png?raw=true)
 _______________________________________________________________
 
-### Bubble Plots for Portfolio Securities 
+### Bubble Plot
 
 #### Using Standard Deviation
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bubble%20Plot.png?raw=true)
 
 #### Using Beta
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bubble%20Plot%20(Beta).png?raw=true)
-_______________________________________________________________
 
-### 3D Bubble Plot for Portfolio Securities
+#### 3D Version using both Standard Deviation and Beta
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%203D%20Bubble%20Plot.png?raw=true)
 _______________________________________________________________
 
@@ -203,10 +204,6 @@ _______________________________________________________________
 
 #### Asset & Sector Weights
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Treemap%20with%20Sectors.png?raw=true)
-_______________________________________________________________
-
-### Barplot for Portfolio Securities
-![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Barplot.jpeg?raw=true)
 _______________________________________________________________
 
 ### Portfolio Returns QQ Plot
