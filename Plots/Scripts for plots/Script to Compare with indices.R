@@ -1,59 +1,61 @@
+lapply(c("quantmod", "timeSeries"), require, character.only = T) # Libraries
+
 # Function to plot portfolio performance with indices
-comp.plt <- function(x,main=NULL,benchmark="^GSPC",benchnames="S&P 500",lwd=1){
+comp.plt <- function(x, benchmark = "^GSPC", benchnames = "S&P 500"){
   
   s <- rownames(x)[1] # Start Date
   e <- rownames(x)[nrow(x)] # End Date
-  x <- apply(x, 2, function(col) exp(cumsum(col)) - 1) # Portfolio returns
+  x <- apply(x,2, function(col) exp(cumsum(col)) - 1) * 100 # Portfolio returns
   
-  portfolio_r_nms <- rownames(x) # Subset dates from data set
+  p.row.names <- rownames(x) # Subset dates from data set
   
-  x <- data.frame(portfolio_r_nms, x) # Join dates with logs
+  x <- data.frame(p.row.names, x) # Join dates with logs
   
   colnames(x) <- c("Date", "Portfolio") # Rename columns once again
-  
-  rownames(x) <- index(portfolio_r_nms) # Create index numbers for data set
-  
-  tickers_for_indices <- benchmark # Vector with tickers
+  rownames(x) <- seq(nrow(x)) # Create index numbers for data set
   
   p <- NULL # Create an empty variable
   
-  for (Ticker in tickers_for_indices){ # Loop for data extraction
+  for (A in benchmark) # Loop for data extraction
     
-    p <- cbind(p,getSymbols(Ticker,from=s,to=e,src="yahoo",auto.assign=F)[,4])}
+    p <- cbind(p, getSymbols(A, from=s, to=e, src="yahoo", auto.assign=F)[,4])
   
-  p <- p[apply(p,1,function(x) all(!is.na(x))),] # NA off
+  p <- p[apply(p, 1, function(x) all(!is.na(x))),] # Clean data
   
-  colnames(p) <- benchnames # Put the tickers in data set
+  r <- diff(log(as.timeSeries(p))) # Make time series and calculate logs
   
-  r <- diff(log(as.timeSeries(p))) # Time Series Returns
+  r[1,] <- 0 # Equal first return value to 0
   
-  r[1,] <- 0 # Equal first return to 0
+  r <- apply(r, 2, function(col) exp(cumsum(col)) - 1) * 100 # total returns
   
-  r <- apply(r, 2, function(col) exp(cumsum(col))-1) # total returns
+  i.names <- rownames(r) # Subset dates from data set
   
-  indices_r_nms <- rownames(r) # Subset dates from data set
+  r <- data.frame(i.names, r) # Join dates with logs
   
-  r <- data.frame(indices_r_nms, r) # Join dates with logs
+  colnames(r)[colnames(r) == 'i.names'] <- 'Date' # Rename column Dates
   
-  colnames(r)[colnames(r) == 'indices_r_nms'] <- 'Date' # Rename column Dates
-  
-  rownames(r) <- index(indices_r_nms) # Create index numbers for data set
+  rownames(r) <- seq(nrow(r)) # Create index numbers for data set
   
   i <- as.timeSeries(merge(x, r, by = "Date")) # Merge and make time series
   
-  par(mar = c(3, 3, 3, 3), xpd = F) 
+  par(mar = c(8, 4.1, 4.1, 2.1)) # Define borders of the plot
   
-  plot(i[,1], ylim = c(min(i), max(i)), main = main, lwd = lwd, las = 1, # Plot
-       xlab = "Trading Days", ylab = "Returns (%)", type = "l", lty = 1)
+  plot(i[,1], ylim = c(min(i), max(i)), lty = 1, type = "l", lwd = 2, las = 1,
+       xlab = "Trading Days", ylab = "Returns (%)",
+       main = "Performance of Portfolio and Major Benchmarks")
   
   # Add grey dotted horizontal lines
-  for (n in seq(-1, 1, .05)){ abline(h = n, col = "grey", lty = 3) }
+  for (n in seq(-100, -5, 5)){ abline(h = n, col = "grey", lty = 3) }
+  for (n in seq(5, 100, 5)){ abline(h = n, col = "grey", lty = 3) }
   
-  for (n in 2:(ncol(i))){ lines(i[,n], col = n, lwd = lwd,)} # Plot indices
+  abline(h = 0) # Add black horizontal line at break even point
   
-  legend(x = "bottomright",colnames(i),col=1:ncol(i),lty=1,cex =.65,xpd=T)
+  for (n in 2:(ncol(i))){ lines(i[,n], col = n, lwd = 2) } # Plot indices
+  
+  legend(x = "bottom", inset = c(0, -0.3), legend = c("Portfolio", benchnames),
+         col = seq(ncol(i)), lwd = 2, cex = .85, bty = "n", xpd = T, horiz = T)
+  
+  on.exit(par(par(no.readonly = T))) # Show legend with names
 }
-# Test
-comp.plt(returns_df, main = "Portfolio vs Major Indices", lwd = 2,
-         benchmark = c("^GSPC", "^DJI", "^IXIC", "^FTSE"),
-         benchnames=c("S&P 500","Dow Jones","NASDAQ","FTSE 100"))
+comp.plt(returns_df, benchmark = c("^GSPC", "^DJI", "^IXIC", "^FTSE"),
+         benchnames=c("S&P 500","Dow Jones","NASDAQ","FTSE 100")) # Test
