@@ -132,6 +132,9 @@ _______________________________________________________________
 
 ### Stacked Bar Plot
 
+#### Portfolio Securities Dynamcis
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot%20by%20Securities%20($).png?raw=true)
+
 #### Securities Portions Dynamcis
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Stacked%20Bar%20Plot.jpeg?raw=true)
 
