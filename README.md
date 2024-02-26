@@ -102,8 +102,11 @@ _______________________________________________________________
 #### Portfolio Volatility Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Volatility.png?raw=true)
 
-#### Portfolio Drawdown 
+#### Drawdown Plot of Portfolio Cumulative Fluctuations
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Drawdown.png?raw=true)
+
+#### Drawdown Plot of Portfolio Returns Fluctuations
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Drawdown%20of%20Fluctuations.png?raw=true)
 
 #### Future Portfolio Performance by Monte Carlo Simulation
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Performance%20by%20Monte.png?raw=true)
