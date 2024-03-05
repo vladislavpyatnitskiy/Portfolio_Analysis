@@ -1,15 +1,15 @@
 # Library
-lapply(c("quantmod","timeSeries","ggplot2","ggrepel", "rvest"),
-       require,character.only=T)
+lapply(c("quantmod", "timeSeries", "ggplot2", "ggrepel", "rvest"), require,
+       character.only=T)
 
-p.bubble.plt.beta <- function(x, main = NULL, xlab = NULL, ylab = NULL){
+p.bubble.plt.beta <- function(x){ # Bubble of Portfolio Securities (Beta)
   
   x <- x[,1 + 3 * seq(31, from = 0)] # Select securities columns
   
   d <- NULL # Empty variable to contain values
   
   for (n in 1:ncol(x)){ c <- colnames(x[,n]) # Take ticker and clean data
-  
+    
     s.adj <- diff(log(x[,n][apply(x[,n],1,function(row) all(row !=0 )),]))[-1,]
     
     p <- sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s", c, c)
@@ -63,16 +63,18 @@ p.bubble.plt.beta <- function(x, main = NULL, xlab = NULL, ylab = NULL){
     rownames(v) <- c # Give row names to data frame
     
     d <- rbind.data.frame(d, cbind(v, new.info)) } # Join
-  
+    
   # Plot
   ggplot(data = d, mapping = aes(x = d[,1], y = d[,2], size = d[,3],
                                  color = d[,4], label=d[,4])) + geom_point() +
-    labs(title = main, x = xlab, y = ylab, size = "Market Capitalisation",
-         color = "Sector") + theme_minimal() +
+    labs(title = "Bubble Plot of Portfolio Securities by Risk and Return",
+         x = "Risk (Beta)", y = "Return (%)",
+         size = "Market Capitalisation (US$ Billions)", color = "Sector") +
+    theme_minimal() +
     geom_text_repel(aes(label = rownames(d), fill = d[,4], size = NULL,
-                        color = NULL), nudge_y = .0125) + 
+                        color = NULL), nudge_y = .0125) +
+    scale_size_continuous(breaks = c(1,2,5,10,20,50,100,200,500,1000, 2000)) +
+    theme(plot.title = element_text(hjust = .5)) +
     guides(fill=guide_legend(title = "Sector", override.aes = aes(label = "")))
 }
-# Test
-p.bubble.plt.beta(df_portfolio, main = "Portfolio Securities",
-                  xlab = "Risk (Beta)", ylab = "Return (%)")
+p.bubble.plt.beta(df_portfolio) # Test
