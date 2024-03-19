@@ -38,11 +38,13 @@ comp.plt <- function(x, benchmark = "^GSPC", benchnames = "S&P 500"){
   
   i <- as.timeSeries(merge(x, r, by = "Date")) # Merge and make time series
   
-  par(mar = c(8, 4.1, 4.1, 2.1)) # Define borders of the plot
+  par(mar = c(8, 4, 4.1, 2.5)) # Define borders of the plot
   
   plot(i[,1], ylim = c(min(i), max(i)), lty = 1, type = "l", lwd = 2, las = 1,
        xlab = "Trading Days", ylab = "Returns (%)",
        main = "Performance of Portfolio and Major Benchmarks")
+  
+  axis(side = 4, las = 1, at = seq(-100, 100, 5))
   
   # Add grey dotted horizontal lines
   for (n in seq(-100, -5, 5)){ abline(h = n, col = "grey", lty = 3) }
