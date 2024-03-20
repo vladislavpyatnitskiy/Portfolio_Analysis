@@ -1,5 +1,5 @@
 # Function to plot portfolio weights via barplot
-p.weights.plt <- function(x, main = "Portfolio", sort = F, decreasing = T){
+p.bar.plt.weights <- function(x, sort = F, decreasing = T){
   
   pct <- as.data.frame(x[,3+3*seq(31,from=0)])/x[,ncol(x)] # Calculate weights
   
@@ -21,38 +21,39 @@ p.weights.plt <- function(x, main = "Portfolio", sort = F, decreasing = T){
   
   # Create barplot
   bar.plt.script <- barplot(pct,
-                    names.arg = names(pct),
-                    horiz = F,
-                    col = colors37,
-                    main = main,
-                    ylab = "Percentage (%)",
-                    ylim = c(0, ceiling(max(pct))),
-                    las = 2)
-  # Y axis
-  p.seq <- seq(0,ceiling(max(pct)),.5)
-  axis(side = 2, at = p.seq, las=1, labels = p.seq)
-  axis(side = 4, at = p.seq, las=1, labels = p.seq)
+                            names.arg = names(pct),
+                            horiz = F,
+                            col = colors37,
+                            main = "Allocation of Securities in Portfolio",
+                            ylab = "Percentage (%)",
+                            ylim = c(0, ceiling(max(pct))),
+                            las = 2)
+
+  p.seq <- seq(0, ceiling(max(pct)), .5) # Y axis
   
+  for (n in 1:2){ axis(side = n*2, at=p.seq, las=1, labels=p.seq) } # y-axes
+
   # Add grey lines for fast visual percentage calculation
   for (n in seq(0, ceiling(max(pct)), .5)){ abline(h = n, col ="grey",lty = 3)}
-  abline(v = bar.plt.script, col ="grey",lty = 3)
+  abline(v = bar.plt.script, col = "grey", lty = 3)
   
   abline(h = mean(pct), col = "red", lwd = 3) # Mean percentage line
   abline(h = median(pct), col = "green", lwd = 3) # Median percentage line
   
-  # Add box with legend with mean and median on top right
-  if (isTRUE(decreasing)){ legend("topright",
-                                  legend=c((sprintf("Mean:    %s %%",
-                                                    mean(pct))),
-                                           sprintf("Median: %s %%",
-                                                   round(median(pct),3))),
-                                  fill = c("red", "green"), cex =.75)} else {
-    # On top left  
-    legend("topleft",legend=c((sprintf("Mean:    %s %%",mean(pct))),
-                              sprintf("Median: %s %%", round(median(pct),3))),
-           fill = c("red", "green"), cex = .75) }
+  par(mar = c(5, 4, 4, 4)) # Define borders of the plot to fit right y-axis
+  
+  if (isTRUE(decreasing)){ # Box with legend with mean and median on top right
+    
+    legend("topright", legend=c((sprintf("Mean:    %s %%", mean(pct))),
+                                sprintf("Median: %s %%",round(median(pct),3))),
+           fill = c("red", "green"), cex =.75, bty = "n")
+    
+    } else { # Box with legend with mean and median on top left
+      
+      legend("topleft", legend=c((sprintf("Mean:    %s %%",mean(pct))),
+                                 sprintf("Median: %s %%",
+                                         round(median(pct),3))),
+             fill = c("red", "green"), cex = .75, bty = "n") }
   box()                       
 }
-# Test
-p.weights.plt(df_portfolio, main = "Portfolio Weights Allocation", sort = T,
-              decreasing = T)
+p.bar.plt.weights(df_portfolio, sort = T, decreasing = T) # Test
