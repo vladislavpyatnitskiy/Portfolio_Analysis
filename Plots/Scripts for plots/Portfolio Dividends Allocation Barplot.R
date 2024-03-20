@@ -1,4 +1,4 @@
-p.weights.plt.dividend <- function(x, sort = T, decreasing = T){ 
+p.bar.plt.weights.dividend <- function(x, sort = T, decreasing = T){ 
   
   s.names <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Subset tickers
   
@@ -6,7 +6,7 @@ p.weights.plt.dividend <- function(x, sort = T, decreasing = T){
   
   colnames(x) <- s.names # Assign tickers
   
-  x <- cbind(x, as.timeSeries(rowSums(x, na.rm = T))) # Join with Total Sum
+  x <- cbind(x, rowSums(x, na.rm = T)) # Join with Total Sum
   
   colnames(x)[ncol(x)] <- "Total" # Give column name to total sum
   
@@ -40,36 +40,36 @@ p.weights.plt.dividend <- function(x, sort = T, decreasing = T){
                             names.arg = names(v),
                             horiz = F,
                             col = colors37,
-                            main = "Portfolio Dividends Allocation",
+                            main="Dividend Allocation of Portfolio Securities",
                             ylab = "Percentage (%)",
                             ylim = c(0, ceiling(max(v))),
                             las = 2)
-  # Y axis
-  p.seq <- seq(0,ceiling(max(v)), 5)
-  axis(side = 2, at = p.seq, las=1, labels = p.seq)
-  axis(side = 4, at = p.seq, las=1, labels = p.seq)
+  
+  p.seq <- seq(0,ceiling(max(v)), 5) # Y axis
+  
+  for (n in 1:2){ axis(side = n*2, at=p.seq, las=1, labels=p.seq) } # y-axes
+  
+  par(mar = c(5, 4, 4, 4)) # Define borders of the plot to fit right y-axis
   
   # Add grey lines for fast visual percentage calculation
   for (n in seq(0, ceiling(max(v)), 5)){ abline(h = n, col ="grey",lty = 3)}
-  abline(v = bar.plt.script, col ="grey",lty = 3)
+  abline(v = bar.plt.script, col = "grey", lty = 3)
   
   abline(h = mean(v), col = "red", lwd = 3) # Mean percentage line
   abline(h = median(v), col = "green", lwd = 3) # Median percentage line
   
-  # Add box with legend with mean and median on Top Right
-  if (isTRUE(decreasing)){ 
+  if (isTRUE(decreasing)){ # Box with legend with mean and median on Top Right
     
-    legend("topright",
-           legend=c((sprintf("Mean:    %s %%", round(mean(v),3))),
-                    sprintf("Median: %s %%", round(median(v),3))),
-           fill = c("red", "green"), cex =.75) } else {
+    legend("topright", legend=c((sprintf("Mean:    %s %%", round(mean(v), 3))),
+                                sprintf("Median: %s %%", round(median(v), 3))),
+           fill = c("red", "green"), cex = .75, bty = "n")
     
-    # Top Left         
-                      
-    legend("topleft", legend=c((sprintf("Mean:    %s %%", mean(v))),
-                               sprintf("Median: %s %%", round(median(v), 3))),
-           fill = c("red", "green"), cex = .75) }
+    } else { # Box with legend with mean and median on Top Left
+      
+      legend("topleft", legend=c((sprintf("Mean:    %s %%", mean(v))),
+                                 sprintf("Median: %s %%", round(median(v),3))),
+             fill = c("red", "green"), cex = .75, bty = "n") }
   
   box() # Box
 }
-p.weights.plt.dividend(df_portfolio_dividend) # Test
+p.bar.plt.weights.dividend(df_portfolio_dividend) # Test
