@@ -102,6 +102,9 @@ _______________________________________________________________
 #### Portfolio Volatility Tracking
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Volatility.png?raw=true)
 
+#### Portfolio Volatility in Absolute Values
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Volatility%20in%20absolute%20values.png?raw=true)
+
 #### Drawdown Plot of Portfolio Cumulative Fluctuations
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Drawdown.png?raw=true)
 
