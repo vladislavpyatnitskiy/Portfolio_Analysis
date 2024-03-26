@@ -36,10 +36,10 @@ p.bar.plt.cor <- function(x){ # Bar Plot with Median Correlation Values
   
   for (n in 1:length(cor.names)){ k <- cor.names[n] # Select ticker
   
-    v <- f[f$`Security 1` == k | f$`Security 2` == k, ] # ticker's correlations
-    
-    l <- rbind.data.frame(l, cbind(median(v[,3]), mean(v[,3]))) } # Join
-    
+  v <- f[f$`Security 1` == k | f$`Security 2` == k, ] # ticker's correlations
+  
+  l <- rbind.data.frame(l, cbind(median(v[,3]), mean(v[,3]))) } # Join
+  
   rownames(l) <- cor.names
   colnames(l) <- c("Median", "Average") # Column names
   
@@ -59,8 +59,8 @@ p.bar.plt.cor <- function(x){ # Bar Plot with Median Correlation Values
                             names.arg = rownames(l),
                             horiz = F,
                             col = colors37,
-                            main = "Portfolio Correlations by Assets",
-                            ylab = "Correlation Level",
+                            main = "Median Correlations of Portfolio Stocks",
+                            ylab = "Median Correlation Level",
                             ylim = c(0, ceiling(max(l[,1]))),
                             las = 2)
   # Y axis
@@ -75,6 +75,8 @@ p.bar.plt.cor <- function(x){ # Bar Plot with Median Correlation Values
   v <- c(0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2)
   
   for (n in 1:length(v)){ abline(h = v[n], col = c[n], lwd = 2) } # Lines
+  
+  par(mar = c(5, 5, 5, 5)) # Define borders of the plot
   
   box() # Add box
   
@@ -94,7 +96,7 @@ p.bar.plt.cor <- function(x){ # Bar Plot with Median Correlation Values
                     toString(names(which(h > .45 & h < .5))))) }
   
   if (isFALSE(identical(names(which(h > .4 & h < .45)), character(0)))){
-  
+    
     m <- c(m, paste("Consider to sell one of these Assets:",
                     toString(names(which(h > .4 & h < .45))))) }
   
