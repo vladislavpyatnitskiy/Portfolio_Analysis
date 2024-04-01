@@ -2,11 +2,11 @@ library("rvest") # Library
 
 p.names <- function(x){ # Data Frame with tickers and names
   
-  l.securities <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Get tickers
-
+  A <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
+  
   l <- NULL
   
-  for (n in 1:length(l.securities)){ a <- l.securities[n]
+  for (n in 1:length(A)){ a <- A[n]
   
     s <- sprintf("https://finance.yahoo.com/quote/%s?p=%s&.tsrc=fin-srch",a,a)
     
@@ -20,8 +20,8 @@ p.names <- function(x){ # Data Frame with tickers and names
                   colClasses = "character") # Reduce excessive elements
     
     l <- rbind(l, y[,-ncol(y)]) } # Join names
-  
-  p.list <- data.frame(l.securities, l) # Join tickers with names
+    
+  p.list <- data.frame(A, l) # Join tickers with names
   
   rownames(p.list) <- seq(nrow(p.list)) # row names
   colnames(p.list) <- c("Ticker", "Name") # Column names
