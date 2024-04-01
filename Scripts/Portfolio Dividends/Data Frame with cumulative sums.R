@@ -1,8 +1,8 @@
 p.dividends.cum <- function(x){ # Data Frame with cumulative dividends
   
-  s.names <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Tickers
+  s.names <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
   
-  x <- cumsum(x[,3 + 3 * seq(31, from = 0)]) # Cumulative total sum
+  x <- cumsum(x[,3 * seq(ncol(x) %/% 3, from = 1)]) # Cumulative total sum
   
   colnames(x) <- s.names # Assign tickers for columns
   
