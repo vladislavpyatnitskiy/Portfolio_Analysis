@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.country <- function(x){ l <- NULL # Create list
 
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)])
+  x <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
 
   for (n in 1:length(x)){ s <- x[n] # For each security find sector
   
