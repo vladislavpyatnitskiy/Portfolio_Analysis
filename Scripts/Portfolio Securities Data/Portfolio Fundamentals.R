@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.fundamentals <- function(x, transpose = F, l = 1){ # portfolio fundamentals
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # portfolio tickers
+  x <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
   
   df.s <- NULL # Set up list for infos
   
