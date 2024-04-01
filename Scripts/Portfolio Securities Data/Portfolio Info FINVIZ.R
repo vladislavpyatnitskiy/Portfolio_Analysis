@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.finviz.ratios <- function(x){ # Get info about tickers from FINVIZ
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # portfolio tickers
+  x <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
   
   df_ <- NULL
   
