@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.holders <- function(x){ # info about holders of large positions
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Select securities columns
+  x <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
   
   d <- NULL # Where to put data
   
@@ -33,8 +33,8 @@ p.holders <- function(x){ # info about holders of large positions
     rownames(v) <- seq(nrow(v)) # Row names
     
     if (is.null(d)){ d <- v } else { # Join securities' data
-    
-    d <- merge(x = d, y = v, by = "Top Institutional Holders", all = T) } }
+      
+      d <- merge(x = d, y = v, by = "Top Institutional Holders", all = T) } }
   
   d # Display
 }
