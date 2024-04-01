@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.marketcap <- function(x, info = F){ # Market Cap Info
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # tickers
+  x <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
   
   df <- NULL # Data Frame for Market Cap Levels and Values
   
