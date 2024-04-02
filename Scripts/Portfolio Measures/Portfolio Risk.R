@@ -1,8 +1,9 @@
 p.risk <- function(x, sqrt = T){ # Function to calculate portfolio risk
   
-  p.weights <- x[,3+3*seq(31,from=0)][nrow(x),]/as.numeric(x[nrow(x),ncol(x)])
+  p.weights <- x[,3*seq(ncol(x)%/%3,from=1)][nrow(x),]/
+    as.numeric(x[nrow(x),ncol(x)])
   
-  x <- x[,1 + 3 * seq(31, from = 0)] # Subset data for securities
+  x <- x[,1 + 3*seq(ncol(x) %/% 3, from = 0)][,1:(ncol(x)%/%3)] # Subset data
   
   x <- diff(log(x[apply(x, 1, function(row) all(row !=0 )),]))[-1,]
   
