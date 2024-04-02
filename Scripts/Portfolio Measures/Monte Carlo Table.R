@@ -3,7 +3,7 @@ lapply(c("quantmod", "ggplot2", "data.table", "timeSeries"),
 
 p.monte.table <- function(x, ndays, n){ # Table for Monte values
   
-  tickers <- colnames(x[,1 + 3 * seq(31, from = 0)]) # tickers
+  tickers <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
   
   p <- NULL # Assign empty variable
   
@@ -16,7 +16,7 @@ p.monte.table <- function(x, ndays, n){ # Table for Monte values
   l <- NULL # Empty variable & calculate returns
   
   for (m in 1:ncol(p)){ r <- as.numeric(diff(log(as.timeSeries(p[,m]))) + 1)
-  
+    
     r[1] <- 1 # Assign first observation as 1
     set.seed(0) # Calculate various scenarios of Stock Performance
     
