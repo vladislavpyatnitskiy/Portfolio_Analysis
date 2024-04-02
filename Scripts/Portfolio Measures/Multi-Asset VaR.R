@@ -1,8 +1,9 @@
 p.MVaR <- function(x, VaR = 0.01, ndays = 1){ # MVaR for portfolio
   
-  p.weights <- x[,3+3*seq(31,from=0)][nrow(x),]/as.numeric(x[nrow(x),ncol(x)])
+  p.weights <- x[,3*seq(ncol(x)%/%3,from=1)][nrow(x),]/
+    as.numeric(x[nrow(x),ncol(x)])
   
-  x <- x[,1 + 3 * seq(31, from = 0)] # Subset data for securities
+  x <- x[,1 + 3*seq(ncol(x) %/% 3, from = 0)][,1:(ncol(x)%/%3)] # Subset data
   
   x <- diff(log(x[apply(x, 1, function(row) all(row !=0 )),]))[-1,]
   
@@ -21,7 +22,7 @@ p.MVaR <- function(x, VaR = 0.01, ndays = 1){ # MVaR for portfolio
   
   # Fill the matrix with weight products
   for (i in 1:length(a.names)) { for (j in 1:length(a.names)) {
-      weight_product_matrix[i, j] <- p.weights[i] * p.weights[j] } }
+    weight_product_matrix[i, j] <- p.weights[i] * p.weights[j] } }
   
   rownames(weight_product_matrix) <- a.names # Set row and column names
   colnames(weight_product_matrix) <- a.names
