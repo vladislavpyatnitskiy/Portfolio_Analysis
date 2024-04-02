@@ -2,7 +2,7 @@ library("rvest") # library
 
 p.DuPont.five <- function(x){ # DuPont Method ratios
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Subset data for securities
+  x <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)][,1:(ncol(x)%/%3)])
   
   dupont <- NULL # List for DuPont Method values
   
