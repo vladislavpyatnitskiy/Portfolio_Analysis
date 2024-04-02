@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.altmanz.score <- function(x){ # Function to get Altman Z Score
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)])
+  x <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)][,1:(ncol(x)%/%3)])
   
   l <- NULL 
   
@@ -38,44 +38,44 @@ p.altmanz.score <- function(x){ # Function to get Altman Z Score
       
     } else { b <- w[grep("Payout Ratio ", w) + 1] # Payout Ratio
     
-      b <- as.numeric(read.fwf(textConnection(b), widths = c(nchar(b) - 1, 1),
-                               colClasses = "character")[, 1]) / 100
-      c <- NULL
-      h <- NULL
+    b <- as.numeric(read.fwf(textConnection(b), widths = c(nchar(b) - 1, 1),
+                             colClasses = "character")[, 1]) / 100
+    c <- NULL
+    h <- NULL
+    
+    k <- c("Total Assets", "Total Liabilities Net Minority Interest",
+           "Total Equity Gross Minority Interest", "Working Capital")
+    
+    r <- c("EBIT", "Total Revenue", "Net Income Common Stockholders")
+    
+    for (m in 1:length(r)){ c <- rbind(c, u[grep(r[m], u) + 1][1]) }
+    for (m in 1:length(k)){ h <- rbind(h, y[grep(k[m], y) + 1][1]) }
+    
+    c <- as.numeric(gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", c)))
+    h <- as.numeric(gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", h)))
+    
+    A <- h[4] / h[1]  # Working Capital/Total Assets
+    B <- (1 - b) * c[3] / h[1] # Retention/Total Assets  
+    C <- c[1] / h[1] # EBIT / Total Assets
+    D <- h[3] / h[2] # Equity / Total Liabilities
+    E <- c[2] / h[1] # Total Revenue / Total Assets
+    
+    if (isTRUE(p[grep("Sector", p) + 1] == "Technology")){ 
       
-      k <- c("Total Assets", "Total Liabilities Net Minority Interest",
-             "Total Equity Gross Minority Interest", "Working Capital")
+      a.r = round(6.56 * A + 3.26 * B + 6.72 * C + 1.05 * D, 2)
       
-      r <- c("EBIT", "Total Revenue", "Net Income Common Stockholders")
+    } else { a.r = round(1.2 * A + 1.4 * B + 3.3 * C + .6 * D + E, 2) }
+    
+    if (a.r > 2.6){ S <- "Safe" } else if (a.r < 2.6 && a.r > 1.1){
       
-      for (m in 1:length(r)){ c <- rbind(c, u[grep(r[m], u) + 1][1]) }
-      for (m in 1:length(k)){ h <- rbind(h, y[grep(k[m], y) + 1][1]) }
-      
-      c <- as.numeric(gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", c)))
-      h <- as.numeric(gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", h)))
-      
-      A <- h[4] / h[1]  # Working Capital/Total Assets
-      B <- (1 - b) * c[3] / h[1] # Retention/Total Assets  
-      C <- c[1] / h[1] # EBIT / Total Assets
-      D <- h[3] / h[2] # Equity / Total Liabilities
-      E <- c[2] / h[1] # Total Revenue / Total Assets
-      
-      if (isTRUE(p[grep("Sector", p) + 1] == "Technology")){ 
-        
-        a.r = round(6.56 * A + 3.26 * B + 6.72 * C + 1.05 * D, 2)
-        
-      } else { a.r = round(1.2 * A + 1.4 * B + 3.3 * C + .6 * D + E, 2) }
-      
-      if (a.r > 2.6){ S <- "Safe" } else if (a.r < 2.6 && a.r > 1.1){
-        
-        S <- "Grey" } else { S <- "Distress" } # Financial Health Status
-      
-      w <- cbind(p[grep("Sector", p) + 1], a.r, S)
-      
-      colnames(w) <- c("Sector" ,"Value", "Status") 
-      
-      l <- rbind.data.frame(l, w) } } # Add to data frame
-      
+      S <- "Grey" } else { S <- "Distress" } # Financial Health Status
+    
+    w <- cbind(p[grep("Sector", p) + 1], a.r, S)
+    
+    colnames(w) <- c("Sector" ,"Value", "Status") 
+    
+    l <- rbind.data.frame(l, w) } } # Add to data frame
+    
   rownames(l) <- x # Assign row names
   
   l # Display
