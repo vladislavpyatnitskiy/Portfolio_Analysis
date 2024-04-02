@@ -4,13 +4,13 @@ p.cor.advices <- function(x){ # Bar Plot with Median Correlation Values
   
   p <- NULL # Create an empty variable
   
-  for (a in colnames(x[,1 + 3 * seq(31, from = 0)])) # Loop for data extraction
+  for (a in colnames(x[,1+3*seq(ncol(x)%/%3,from=0)][,1:(ncol(x)%/%3)])) 
     
     p <- cbind(p, getSymbols(a, src = "yahoo", auto.assign = F)[,4])
   
   p <- p[apply(p, 1, function(x) all(!is.na(x))),] # Eliminate NAs
   
-  colnames(p) <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Assign tickers
+  colnames(p) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)][,1:(ncol(x)%/%3)])
   
   # Calculate correlation matrix
   cor_matrix <- cor(as.matrix(diff(log(as.timeSeries(p)))[-1,]))
