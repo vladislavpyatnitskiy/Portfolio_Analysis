@@ -1,15 +1,14 @@
 p.weights <- function(x){ # Get Portfolio Weight Values
   
-  a.names <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Assign tickers
+  tickers <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)][,1:(ncol(x)%/%3)])
   
-  # Take values of last observations
-  p.weights <- x[,3+3*seq(31,from=0)][nrow(x),]/as.numeric(x[nrow(x),ncol(x)])
+  # Take values of last observations and divide by the total sum
+  w <- round(t(as.data.frame(x[,3*seq(ncol(x)%/%3,from=1)][nrow(x),]/
+                               as.numeric(x[nrow(x),ncol(x)]))) * 100, 2)
   
-  p.weights <- round(t(as.data.frame(p.weights)) * 100, 2) # Values
+  rownames(w) <- tickers # Assign tickers to this data frame
+  colnames(w) <- "Weights (%)" 
   
-  rownames(p.weights) <- a.names # Assign tickers to this data frame
-  colnames(p.weights) <- "Weights (%)" 
-  
-  p.weights # Display
+  w # Display
 }
 p.weights(df_portfolio) # Test
