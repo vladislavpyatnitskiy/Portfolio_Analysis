@@ -1,13 +1,13 @@
-library("rvest") # Library
+library("rvest") # Library
 
 p.Debt.EBITDA.advices <- function(x){
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Assign variable to tickers
+  x <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)][,1:(ncol(x)%/%3)])
   
   db <- NULL # List for Debt to EBITDA values
   
   for (q in 1:length(x)){ a <- x[q] # Each ticker in vector
-    
+  
     bs <- sprintf("https://finance.yahoo.com/quote/%s/balance-sheet?p=%s",a,a)
     is <- sprintf("https://finance.yahoo.com/quote/%s/financials?p=%s", a, a)
     
@@ -26,12 +26,12 @@ p.Debt.EBITDA.advices <- function(x){
     
     db <- rbind(db, as.numeric(h) / as.numeric(c)) } # Add values
     
-  rownames(db) <- x # Assign tickers as row names to debt/ebitda values
-  
-  l <- NULL # Find securities without debt/ebitda values
-  
-  for (n in 1:nrow(db)){ if (is.na(db[n,])){ l <- c(l, rownames(db)[n])} }
-  
+    rownames(db) <- x # Assign tickers as row names to debt/ebitda values
+    
+    l <- NULL # Find securities without debt/ebitda values
+    
+    for (n in 1:nrow(db)){ if (is.na(db[n,])){ l <- c(l, rownames(db)[n])} }
+    
   v <- as.numeric(db) # Make available values to numeric format
   
   names(v) <- x # Assign names to them
