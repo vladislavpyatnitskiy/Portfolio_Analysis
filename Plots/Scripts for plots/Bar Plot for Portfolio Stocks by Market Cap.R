@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.bar.plt.marketcap <- function(x){ # Bar Plot with Market Capitalisations
   
-  tickers <- colnames(x[,1 + 3 * seq(31, from = 0)]) # tickers
+  tickers <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
   
   df <- NULL # Collect market cap data
   
