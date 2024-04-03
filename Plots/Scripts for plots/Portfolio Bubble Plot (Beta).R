@@ -4,7 +4,7 @@ lapply(c("quantmod", "timeSeries", "ggplot2", "ggrepel", "rvest"), require,
 
 p.bubble.plt.beta <- function(x){ # Bubble of Portfolio Securities (Beta)
   
-  x <- x[,1 + 3 * seq(31, from = 0)] # Select securities columns
+  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x)%/%3+1)] # Data
   
   d <- NULL # Empty variable to contain values
   
