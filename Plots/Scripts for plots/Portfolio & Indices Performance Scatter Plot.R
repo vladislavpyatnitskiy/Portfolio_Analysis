@@ -5,7 +5,7 @@ lapply(c("quantmod","timeSeries","ggplot2","ggrepel"),require,character.only=T)
 p.scatter.plt.indices <- function(x, benchmark = "^GSPC", benchnames="S&P 500",
                                   main = NULL, xlab = NULL, ylab = NULL){
   
-  x <- x[,3 + 3 * seq(31, from = 0)] #x
+  x <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Take columns with Total Sum
   
   x1 <- t(x) # Transpose x1 and x
   
