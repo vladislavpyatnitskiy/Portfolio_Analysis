@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.hist.plt.marketcap <- function(x){ # Histogram of Market Caps
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # tickers
+  x <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
   
   df <- NULL # Data Frame for Market Cap values
   
@@ -31,9 +31,9 @@ p.hist.plt.marketcap <- function(x){ # Histogram of Market Caps
   s.max <- max(df) # Maximum Market Cap value
   
   # Parameters
-  hist(df, main = "Portfolio Market Cap Histogram", freq = F, breaks=100,
-       ylab = "Probability", xlab = "Market Cap Values", las = 1,
-       xlim = c(s.min, s.max), col = "navy", border = "white")
+  hist(df, main = "Portfolio Market Cap Histogram", freq = F, breaks = 100,
+       ylab = "Probability", xlab = "Market Cap Values", las = 1, col = "navy",
+       xlim = c(s.min, s.max), border = "white")
   
   abline(h = 0) # Add vertical line at x = 0
   
