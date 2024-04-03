@@ -2,7 +2,7 @@ lapply(c("ggplot2","ggrepel","rvest"),require,character.only=T) # Libraries
 
 p.bubble.plt <- function(x){ # Bubble Plot of Portfolio Securities
   
-  x <- x[,1 + 3 * seq(31, from = 0)] # Select securities columns
+  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x)%/%3+1)] # Data
   
   d <- NULL # Empty variable to contain values
   
@@ -47,12 +47,10 @@ p.bubble.plt <- function(x){ # Bubble Plot of Portfolio Securities
                                  color = d[,4], label=d[,4])) + geom_point() +
     labs(title = "Bubble Plot of Portfolio Securities by Risk and Return",
          x = "Risk (Standard Deviation)", y = "Return (%)",
-         size = "Market Capitalisation (US$ Billions)",
-         color = "Sector") + theme_minimal() +
+         size = "Market Capitalisation (US$ Billions)", color = "Sector") + 
     geom_text_repel(aes(label = rownames(d), fill = d[,4], size = NULL,
-                        color = NULL), nudge_y = .0125) +
-    scale_size_continuous(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000,
-                                     2000)) +
+                        color = NULL), nudge_y = .0125) + theme_minimal() +
+    scale_size_continuous(breaks = c(1,2,5,10,20,50,100,200,500,1000,2000)) +
     theme(plot.title = element_text(hjust = .5)) +
     guides(fill=guide_legend(title = "Sector", override.aes = aes(label = "")))
 }
