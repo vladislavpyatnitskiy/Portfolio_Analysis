@@ -2,19 +2,18 @@ lapply(c("rvest","plotly","tidyverse"), require, character.only=T) # Libraries
 
 p.bubble.plt.3d <- function(x, title = "Stocks"){ # 3D Bubble Plot
   
-  x <- x[,1 + 3 * seq(31, from = 0)] # Select securities columns
+  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x)%/%3+1)] 
   
   d <- NULL # Empty variable to contain values
   
   for (n in 1:ncol(x)){ c <- colnames(x)[n] # names of securities
-    
-    r <- diff(log(x[,n][apply(x[,n],1,function(row) all(row !=0 )),]))[-1,]
   
-    p <- sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s", c, c)
+    r <- diff(log(x[,n][apply(x[,n],1,function(row) all(row !=0 )),]))[-1,]
     
-    page.p <- read_html(p) # Read HTML & extract necessary info
+    p <- read_html(sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s",
+                           c, c)) # Read HTML & extract necessary info
     
-    price.yahoo1 <- page.p %>% html_nodes('div') %>% .[[1]] -> tab11
+    price.yahoo1 <- p %>% html_nodes('div') %>% .[[1]] -> tab11
     
     m <- tab11 %>% html_nodes('p') %>% html_nodes('span') %>% html_text()
     
@@ -37,7 +36,7 @@ p.bubble.plt.3d <- function(x, title = "Stocks"){ # 3D Bubble Plot
     
     d <- rbind.data.frame(d, cbind(sd(r) * 1000, (exp(sum(r)) - 1) * 100, s,
                                    m[2], b)) } # Join
-  
+    
   rownames(d) <- colnames(x) # Row names
   
   # Plot 3D Bubble Plot
