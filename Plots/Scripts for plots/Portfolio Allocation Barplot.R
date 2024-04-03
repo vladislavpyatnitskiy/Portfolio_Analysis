@@ -1,12 +1,11 @@
-# Function to plot portfolio weights via barplot
-p.bar.plt.weights <- function(x, sort = F, decreasing = T){
+p.bar.plt.weights <- function(x, sort=F, decreasing=T){ # Weights via Bar Plot
   
-  pct <- as.data.frame(x[,3+3*seq(31,from=0)])/x[,ncol(x)] # Calculate weights
+  pct <- as.data.frame(x[,3 * seq(ncol(x) %/% 3, from = 1)][nrow(x),]/
+                         as.numeric(x[nrow(x),ncol(x)]))
   
-  # Select last period and transform portions into percentages
-  pct <- as.numeric(((pct[nrow(pct),] * 100)))
+  pct <- as.numeric(((pct[nrow(pct),] * 100))) # Percentage of last observation
   
-  names(pct) <- colnames((x[,1 + 3 * seq(31, from = 0)])) # Tickers
+  names(pct) <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
   
   if (isTRUE(sort)) { pct <- sort(pct, decreasing = decreasing) }
   
@@ -28,11 +27,11 @@ p.bar.plt.weights <- function(x, sort = F, decreasing = T){
                             ylab = "Percentage (%)",
                             ylim = c(0, ceiling(max(pct))),
                             las = 2)
-
+  
   p.seq <- seq(0, ceiling(max(pct)), .5) # Y axis
   
   for (n in 1:2){ axis(side = n*2, at=p.seq, las=1, labels=p.seq) } # y-axes
-
+  
   # Add grey lines for fast visual percentage calculation
   for (n in seq(0, ceiling(max(pct)), .5)){ abline(h = n, col ="grey",lty = 3)}
   abline(v = bar.plt.script, col = "grey", lty = 3)
@@ -48,12 +47,12 @@ p.bar.plt.weights <- function(x, sort = F, decreasing = T){
                                 sprintf("Median: %s %%",round(median(pct),3))),
            fill = c("red", "green"), cex =.75, bty = "n")
     
-    } else { # Box with legend with mean and median on top left
-      
-      legend("topleft", legend=c((sprintf("Mean:    %s %%",mean(pct))),
-                                 sprintf("Median: %s %%",
-                                         round(median(pct),3))),
-             fill = c("red", "green"), cex = .75, bty = "n") }
+  } else { # Box with legend with mean and median on top left
+    
+    legend("topleft", legend=c((sprintf("Mean:    %s %%",mean(pct))),
+                               sprintf("Median: %s %%",
+                                       round(median(pct),3))),
+           fill = c("red", "green"), cex = .75, bty = "n") }
   box()                       
 }
 p.bar.plt.weights(df_portfolio, sort = T, decreasing = T) # Test
