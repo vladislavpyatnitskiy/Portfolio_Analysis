@@ -1,6 +1,6 @@
 p.bar.plt <- function(x, main = NULL, v = NULL){ # Bar Plot of Stocks Returns
   
-  x <- x[,1 + 3 * seq(31, from = 0)] # Subset values with securities' values
+  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x)%/%3+1)] # Data
   
   for (n in 1:ncol(x)){ s <- x[,n] # Clean data, calculate logs and returns
   
