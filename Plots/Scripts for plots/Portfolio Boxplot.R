@@ -1,17 +1,17 @@
-# Function to create Boxplot for Portfolio
-p.box.plt <- function(x){ x <- x[,1 + 3 * seq(31, from = 0)] # Extract data
+p.box.plt <- function(x){ # Box Plot for Portfolio
+  
+  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x)%/%3+1)] # Data
 
   v <- NULL # Variable for values
   
-  for (n in 1:ncol(x)){ s <- x[,n] # For each column in data set
+  for (n in 1:ncol(x)){ s <- x[,n] # Clean data and calculate logs
   
-    # Clean data from NA & zeros and calculate logs & Put it in data frame
     v <- cbind(v, diff(log(s[apply(s,1,function(row) all(row !=0 )),]))[-1,]) } 
   
   colnames(v) <- colnames(x) # Give column names & generate plot
   
-  boxplot.matrix(v, main = "Fluctuations of Portfolio Securities",
-                 col = "steelblue", title = F, las = 2, ylab = "Returns (%)") 
+  boxplot.matrix(v, main = "Fluctuations of Portfolio Securities", title = F,
+                 col = "steelblue", las = 2, ylab = "Returns (%)") 
   
   for (n in 1:2){ axis(side = n * 2, at = seq(-1, 1, .1), las = 1) } # y-axis
   
