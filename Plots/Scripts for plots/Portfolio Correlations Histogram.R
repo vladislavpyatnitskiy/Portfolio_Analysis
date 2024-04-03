@@ -2,15 +2,15 @@ lapply(c("quantmod","timeSeries"),require,character.only=T) # Libraries
 
 p.hist.plt.cor <- function(x){ # Histogram with Portfolio Correlation values
   
-  p <- NULL # Create an empty variable
+  p <- NULL # Create an empty variable & Loop for data extraction
   
-  for (a in colnames(x[,1 + 3 * seq(31, from = 0)])) # Loop for data extraction
+  for (a in colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]) 
     
     p <- cbind(p, getSymbols(a, src = "yahoo", auto.assign = F)[,4])
   
   p <- p[apply(p, 1, function(x) all(!is.na(x))),] # Eliminate NAs
   
-  colnames(p) <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Assign tickers
+  colnames(p) <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
   
   # Calculate correlation matrix
   cor_matrix <- cor(as.matrix(diff(log(as.timeSeries(p)))[-1,]))
