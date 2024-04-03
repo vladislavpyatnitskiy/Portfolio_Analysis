@@ -1,10 +1,10 @@
 p.bar.plt.weights.dividend <- function(x, sort = T, decreasing = T){ 
   
-  s.names <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Subset tickers
+  tickers <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
   
-  x <- cumsum(x[,3 + 3 * seq(31, from = 0)]) # Calculate Cumulative Divs
+  x <- cumsum(x[,3 * seq(ncol(x) %/% 3, from = 1)]) # Calculate Cumulative Divs
   
-  colnames(x) <- s.names # Assign tickers
+  colnames(x) <- tickers # Assign tickers
   
   x <- cbind(x, rowSums(x, na.rm = T)) # Join with Total Sum
   
@@ -12,13 +12,13 @@ p.bar.plt.weights.dividend <- function(x, sort = T, decreasing = T){
   
   x <- x[,colSums(x) !=0] # Reduce column without dividends
   
-  s.names <- colnames(x) # Assign tickers of securities without dividends
+  tickers <- colnames(x) # Assign tickers of securities without dividends
   
   x <- as.numeric(x[nrow(x),]) / as.numeric(x[nrow(x),ncol(x)]) # Find %
   
   x <- x[-length(x)] # Reduce column with total sum (100%)
   
-  tickers <- s.names[-length(s.names)] # Reduce name with total sum (100%)
+  tickers <- tickers[-length(tickers)] # Reduce name with total sum (100%)
   
   v <- c(round(x * 100, 2)) # Data Frame with tickers & %
   
@@ -45,16 +45,16 @@ p.bar.plt.weights.dividend <- function(x, sort = T, decreasing = T){
                             ylim = c(0, ceiling(max(v))),
                             las = 2)
   
-  p.seq <- seq(0,ceiling(max(v)), 5) # Y axis
+  p.seq <- seq(0, ceiling(max(v)), 5) # Y axis
   
   for (n in 1:2){ axis(side = n*2, at=p.seq, las=1, labels=p.seq) } # y-axes
   
   par(mar = c(5, 4, 4, 4)) # Define borders of the plot to fit right y-axis
   
   # Add grey lines for fast visual percentage calculation
-  for (n in seq(0, ceiling(max(v)), 5)){ abline(h = n, col ="grey",lty = 3)}
-  abline(v = bar.plt.script, col = "grey", lty = 3)
+  for (n in seq(0, ceiling(max(v)), 5)){ abline(h = n, col ="grey",lty = 3) }
   
+  abline(v = bar.plt.script, col = "grey", lty = 3)
   abline(h = mean(v), col = "red", lwd = 3) # Mean percentage line
   abline(h = median(v), col = "green", lwd = 3) # Median percentage line
   
@@ -64,11 +64,11 @@ p.bar.plt.weights.dividend <- function(x, sort = T, decreasing = T){
                                 sprintf("Median: %s %%", round(median(v), 3))),
            fill = c("red", "green"), cex = .75, bty = "n")
     
-    } else { # Box with legend with mean and median on Top Left
-      
-      legend("topleft", legend=c((sprintf("Mean:    %s %%", mean(v))),
-                                 sprintf("Median: %s %%", round(median(v),3))),
-             fill = c("red", "green"), cex = .75, bty = "n") }
+  } else { # Box with legend with mean and median on Top Left
+    
+    legend("topleft", legend=c((sprintf("Mean:    %s %%", mean(v))),
+                               sprintf("Median: %s %%", round(median(v),3))),
+           fill = c("red", "green"), cex = .75, bty = "n") }
   
   box() # Box
 }
