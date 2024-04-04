@@ -3,10 +3,10 @@ lapply(c("ggplot2", "tidyverse", "rvest"), require, character.only = T) # Libs
 # Stacked Bar Plot of Portfolio Securities Dividends
 p.bar.plt.stack.dividend.sector <- function(x, portion = F){ 
   
-  f.df <- x[,3 + 3 * seq(31, from = 0)]
+  f.df <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Columns with total sum
   
   # Take column names with prices to put instead total sum column names
-  colnames(f.df) <- colnames(x[,1 + 3 * seq(31, from = 0)])  
+  colnames(f.df) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)])[-(ncol(x)%/%3+1)]
   
   f.df <- f.df[rowSums(f.df) > 0,][,colSums(f.df) > 0] # Only > 0
   
@@ -20,10 +20,9 @@ p.bar.plt.stack.dividend.sector <- function(x, portion = F){
   
   p.df <- NULL # Define variable to contain values
   
-  for (n in 2:ncol(f.df)){ s <- f.df[,n] # Loop to make monthly data
+  for (n in 2:ncol(f.df)){ # Convert daily data to monthly
     
-    # Convert daily data to monthly
-    v <- tapply(s, format(as.Date(f.df[,1]), "%Y-%m"), sum)
+    v <- tapply(f.df[,n], format(as.Date(f.df[,1]), "%Y-%m"), sum)
     
     rwmns_ds <- rownames(v) # Take dates from index column
     
@@ -49,7 +48,7 @@ p.bar.plt.stack.dividend.sector <- function(x, portion = F){
   y <- NULL # Create list
   
   for (n in 1:length(rownames(p.df))){ s <- rownames(p.df)[n] 
-  
+    
     p <- sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s", s, s)
     
     page.p <- read_html(p) # Read HTML & extract necessary info
@@ -68,7 +67,7 @@ p.bar.plt.stack.dividend.sector <- function(x, portion = F){
   l <- NULL # Create time series with sector data
   
   for (n in 1:length(colnames(p.df))){ s <- as.data.frame(p.df[,n])
-  
+    
     pie.df <- data.frame(y, s) # Join data
     
     colnames(pie.df)[2] <- "Prices" # Assign column names
@@ -90,13 +89,12 @@ p.bar.plt.stack.dividend.sector <- function(x, portion = F){
   colnames(i)[colnames(i) == colnames(i[1])] <- 'Date' # Rename again
   
   # Colour set for plot
-  colors37 = c("#466791","#60bf37","#953ada","#4fbe6c","#ce49d3","#a7b43d",
-               "#5a51dc","#d49f36","#552095","#507f2d","#db37aa","#84b67c",
-               "#a06fda","#df462a","#5b83db","#c76c2d","#4f49a3","#82702d",
-               "#dd6bbb","#334c22","#d83979","#55baad","#dc4555","#62aad3",
-               "#8c3025","#417d61","#862977","#bba672","#403367","#da8a6d",
-               "#a79cd4","#71482c","#c689d0","#6b2940","#d593a7","#895c8b",
-               "#bd5975")
+  C = c("#466791","#60bf37","#953ada","#4fbe6c","#ce49d3","#a7b43d","#5a51dc",
+        "#d49f36","#552095","#507f2d","#db37aa","#84b67c","#a06fda","#df462a",
+        "#5b83db","#c76c2d","#4f49a3","#82702d","#dd6bbb","#334c22","#d83979",
+        "#55baad","#dc4555","#62aad3","#8c3025","#417d61","#862977","#bba672",
+        "#403367","#da8a6d","#a79cd4","#71482c","#c689d0","#6b2940","#d593a7",
+        "#895c8b","#bd5975")
   
   # Convert for better read by ggplot
   i <- i %>% pivot_longer(cols=-Date, names_to="Stock", values_to="Quantity")
@@ -107,7 +105,7 @@ p.bar.plt.stack.dividend.sector <- function(x, portion = F){
       geom_bar(position = "fill", stat = "identity") + 
       labs(title="Stacked Bar Plot of Portfolio Dividends by Sector",
            x = "Months", y = "Stakes (%)", fill = "Sectors") +
-      scale_fill_manual(values = colors37)   
+      scale_fill_manual(values = C)   
     
   } else { # Generate plot showing amount of dividends for each month
     
@@ -115,6 +113,6 @@ p.bar.plt.stack.dividend.sector <- function(x, portion = F){
       geom_bar(position = "stack", stat = "identity") + 
       labs(title="Stacked Bar Plot of Portfolio Dividends by Sector",
            x = "Months", y = "Amount in $US", fill = "Sectors") +
-      scale_fill_manual(values = colors37) }
+      scale_fill_manual(values = C) }
 }
 p.bar.plt.stack.dividend.sector(df_portfolio_dividend, portion = F) # Test
