@@ -2,7 +2,7 @@ library("rvest") # Library
 
 p.bar.plt.Debt.EBITDA <- function(x){ #Debt/EBITDA Barplot for Portfolio stocks
   
-  x <- colnames(x[,1 + 3 * seq(31, from = 0)]) # Assign variable to tickers
+  x <- colnames(x[,1 + 3 * seq(ncol(x) %/% 3,from = 0)])[-(ncol(x) %/% 3 + 1)]
   
   db <- NULL # List for Debt to EBITDA values
   
