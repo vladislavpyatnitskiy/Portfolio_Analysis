@@ -2,10 +2,10 @@ lapply(c("ggplot2", "tidyverse", "rvest"), require, character.only = T) # Libs
 
 p.bar.plt.stack.country <- function(x, portion=F){ # Market Cap Stacked Bar
   
-  f.df <- x[,3 + 3 * seq(31, from = 0)] # Columns with total sum
+  f.df <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Columns with total sum
   
   # Take column names with prices to put instead total sum column names
-  colnames(f.df) <- colnames(x[,1 + 3 * seq(31, from = 0)])  
+  colnames(f.df) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)])[-(ncol(x)%/%3+1)]
   
   rwnms <- rownames(f.df) # Take dates from index column
   
@@ -17,10 +17,9 @@ p.bar.plt.stack.country <- function(x, portion=F){ # Market Cap Stacked Bar
   
   p.df <- NULL # Define variable to contain values
   
-  for (n in 2:ncol(f.df)){ s <- f.df[,n] # Loop to make monthly data
-  
-    # Convert daily data to monthly
-    v <- tapply(s, format(as.Date(f.df[,1]), "%Y-%m"), median)
+  for (n in 2:ncol(f.df)){ # Convert daily data to monthly
+    
+    v <- tapply(f.df[,n], format(as.Date(f.df[,1]), "%Y-%m"), median)
     
     rwmns_ds <- rownames(v) # Take dates from index column
     
@@ -44,7 +43,7 @@ p.bar.plt.stack.country <- function(x, portion=F){ # Market Cap Stacked Bar
   p.df <- t(p.df[,-1]) #
   
   y <- NULL # Create list
-    
+  
   for (n in 1:length(rownames(p.df))){ v <- rownames(p.df)[n]  # Subset ticker
   
     p <- sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s", v, v)
@@ -58,7 +57,7 @@ p.bar.plt.stack.country <- function(x, portion=F){ # Market Cap Stacked Bar
     l <- strsplit(toString(c), "<br>")[[1]][length(strsplit(toString(c),
                                                             "<br>")[[1]])-4]
     y <- rbind.data.frame(y, l) } # Data Frame  
-  
+    
   colnames(y) <- "Country" # 
   rownames(y) <- rownames(p.df) # Assign tickers
   
@@ -67,7 +66,7 @@ p.bar.plt.stack.country <- function(x, portion=F){ # Market Cap Stacked Bar
   l <- NULL # Create time series with sector data
   
   for (n in 1:length(colnames(p.df))){ s <- as.data.frame(p.df[,n])
-  
+    
     pie.df <- data.frame(y, s) # Join data
     
     colnames(pie.df)[2] <- "Prices" # Assign column names
