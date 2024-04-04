@@ -3,10 +3,10 @@ lapply(c("ggplot2", "tidyverse", "rvest"), require, character.only = T) # Libs
 # Stacked Bar Plot of Portfolio Securities Dividends by Country
 p.bar.plt.stack.dividend.country <- function(x, portion = F){ 
   
-  f.df <- x[,3 + 3 * seq(31, from = 0)] # Total sum of dividends for each stock
+  f.df <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Columns with total sum
   
   # Take column names with prices to put instead total sum column names
-  colnames(f.df) <- colnames(x[,1 + 3 * seq(31, from = 0)])  
+  colnames(f.df) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)])[-(ncol(x)%/%3+1)]
   
   f.df <- f.df[rowSums(f.df) > 0,][,colSums(f.df) > 0] # Only > 0
   
@@ -20,9 +20,9 @@ p.bar.plt.stack.dividend.country <- function(x, portion = F){
   
   p.df <- NULL # Define variable to contain values
   
-  for (n in 2:ncol(f.df)){ s <- f.df[,n] # Loop to make monthly data
-  
-    v <- tapply(s, format(as.Date(f.df[,1]), "%Y-%m"), sum) # Daily to monthly
+  for (n in 2:ncol(f.df)){ # Convert daily data to monthly
+    
+    v <- tapply(f.df[,n], format(as.Date(f.df[,1]), "%Y-%m"), sum)
     
     rwmns_ds <- rownames(v) # Take dates from index column
     
@@ -34,7 +34,7 @@ p.bar.plt.stack.dividend.country <- function(x, portion = F){
     
     # If defined empty variable is still empty # Put new dataset there
     if (is.null(p.df)){ p.df<-v } else { p.df <- merge(x=p.df,y=v,by="Date")} }
-  
+    
   p.df <- as.data.frame(p.df) # Convert to data frame format
   
   colnames(p.df) <- colnames(f.df) # Give column names
@@ -69,7 +69,7 @@ p.bar.plt.stack.dividend.country <- function(x, portion = F){
   l <- NULL # Create time series with sector data
   
   for (n in 1:length(colnames(p.df))){ s <- as.data.frame(p.df[,n])
-  
+    
     pie.df <- data.frame(y, s) # Join data
     
     colnames(pie.df)[2] <- "Prices" # Assign column names
