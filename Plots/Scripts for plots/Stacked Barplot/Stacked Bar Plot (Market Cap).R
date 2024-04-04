@@ -2,10 +2,10 @@ lapply(c("ggplot2", "tidyverse", "rvest"), require, character.only = T) # Libs
 
 p.bar.plt.stack.marketcap <- function(x, portion=F){ # Market Cap Stacked Bar
   
-  f.df <- x[,3 + 3 * seq(31, from = 0)] # Columns with total sum
+  f.df <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Columns with total sum
   
   # Take column names with prices to put instead total sum column names
-  colnames(f.df) <- colnames(x[,1 + 3 * seq(31, from = 0)])  
+  colnames(f.df) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)])[-(ncol(x)%/%3+1)]
   
   rwnms <- rownames(f.df) # Take dates from index column
   
@@ -17,10 +17,9 @@ p.bar.plt.stack.marketcap <- function(x, portion=F){ # Market Cap Stacked Bar
   
   p.df <- NULL # Define variable to contain values
   
-  for (n in 2:ncol(f.df)){ s <- f.df[,n] # Loop to make monthly data
-  
-    # Convert daily data to monthly
-    v <- tapply(s, format(as.Date(f.df[,1]), "%Y-%m"), median)
+  for (n in 2:ncol(f.df)){ # Convert daily data to monthly
+    
+    v <- tapply(f.df[,n], format(as.Date(f.df[,1]), "%Y-%m"), median)
     
     rwmns_ds <- rownames(v) # Take dates from index column
     
@@ -75,7 +74,7 @@ p.bar.plt.stack.marketcap <- function(x, portion=F){ # Market Cap Stacked Bar
     else { l <- "Mega-Cap" } # if > $200 billion => Mega-Cap
     
     y <- rbind.data.frame(y, l) } # Data Frame 
-  
+    
   colnames(y) <- "Marketcap" # 
   rownames(y) <- rownames(p.df) # Assign tickers
   
