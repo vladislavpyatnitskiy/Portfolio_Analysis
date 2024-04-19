@@ -1,6 +1,6 @@
 # Portfolio Analysis
 
-FYI: Yahoo! Finance started to block web pearsing from its website. However, parsing is still possible via UK version, so in some cases it is possible to parse by typing "uk." before yahoo in link, for example, https://uk.finance.yahoo.com/quote/AAPL/key-statistics
+FYI: Yahoo! Finance started to block web parsing from its website. However, parsing is still possible via UK version, so in some cases it is possible to parse by typing "uk." before yahoo in link, for example, https://uk.finance.yahoo.com/quote/AAPL/key-statistics
 _______________________________________________________________
 
 ## Repository Mission
