@@ -3,14 +3,12 @@ library("rvest") # Library
 p.country <- function(x){ l <- NULL # Create list
 
   x <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
-
-  for (n in 1:length(x)){ s <- x[n] # For each security find sector
   
-    p <- sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s", s, s)
+  for (n in 1:length(x)){ s <- x[n] # Read HTML & extract necessary info
+  
+    p <- read_html(sprintf("https://uk.finance.yahoo.com/quote/%s/profile", s))
     
-    page.p <- read_html(p) # Read HTML & extract necessary info
-    
-    price.yahoo1 <- page.p %>% html_nodes('div') %>% .[[1]] -> tab
+    tab <- p %>% html_nodes('div') %>% .[[1]]
     
     y <- tab %>% html_nodes('p') # Find country character in elements
     
