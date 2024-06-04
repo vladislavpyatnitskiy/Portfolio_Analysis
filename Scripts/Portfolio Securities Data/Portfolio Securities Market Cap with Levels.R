@@ -6,17 +6,16 @@ p.marketcap <- function(x, info = F){ # Market Cap Info
   
   df <- NULL # Data Frame for Market Cap Levels and Values
   
-  for (n in 1:length(x)){ v <- x[n] # Subset ticker
+  for (n in 1:length(x)){ # Read HTML & extract necessary info
   
-    p <- sprintf("https://finance.yahoo.com/quote/%s/key-statistics?p=%s",v,v)
+    p <- read_html(sprintf("https://uk.finance.yahoo.com/quote/%s/%s", x[n],
+                           "key-statistics")) 
     
-    page.p <- read_html(p) # Read HTML & extract necessary info
-    
-    price.yahoo1 <- page.p %>% html_nodes('div') %>% .[[1]] -> tab
+    tab <- p %>% html_nodes('div') %>% .[[1]]
     
     i <- tab %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
     
-    s <- i[grep("Market Cap", i) + 1] # Market Cap Info
+    s <- i[grep("Market cap", i) + 1] # Market Cap Info
     
     s <- read.fwf(textConnection(s), widths = c(nchar(s) - 1, 1),
                   colClasses = "character")
@@ -26,7 +25,7 @@ p.marketcap <- function(x, info = F){ # Market Cap Info
       s <- as.numeric(s[1,1]) * 1000 } else { s <- as.numeric(s[1,1]) }
     
     if (isFALSE(info)){ # Market Cap Levels
-    
+      
       if (s < .3){ l <- "Micro-Cap" } # if < $300 million => Micro-Cap
       
       else if (s > .3 && s < 2) { l <- "Small-Cap" } # Small-Cap
@@ -40,13 +39,13 @@ p.marketcap <- function(x, info = F){ # Market Cap Info
       df <- rbind.data.frame(df, cbind(l, s)) } # Market Cap Level with values
     
     else { df <- rbind(df, s) } } # Market Cap values only
+  
+  if (isFALSE(info)){ # Create Data Frame
     
-    if (isFALSE(info)){ # Create Data Frame
+    rownames(df) <- x # Tickers
+    colnames(df) <- c("Level", "Marker Cap ($billions)") # colnames
     
-      rownames(df) <- x # Tickers
-      colnames(df) <- c("Level", "Marker Cap ($billions)") # colnames
-      
-      df } else { c <- as.numeric(df) # Make available values to numeric format
+    df } else { c <- as.numeric(df) # Make available values to numeric format
     
     names(c) <- x # Assign names to them
     
