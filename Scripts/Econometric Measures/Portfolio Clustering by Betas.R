@@ -22,7 +22,7 @@ p.beta.sums <- function(x){ # Cluster portfolio sum according to stocks' betas
     
     b <- as.numeric(i[grep("Beta ", i) + 1]) # Select Beta value
     
-    if (is.na(b)){ l <- c(v, "^GSPC") # When Beta is not available
+    if (is.na(b)){ l <- c(x[n], "^GSPC") # When Beta is not available
     
       b <- NULL # Download data from Yahoo! Finance directly
       
