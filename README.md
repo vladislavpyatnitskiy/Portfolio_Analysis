@@ -88,6 +88,9 @@ _______________________________________________________________
 
 #### Countries Weigths of Dividends
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Dividends/Portfolio%20Dividend%20Pie%20By%20Country.png?raw=true)
+
+#### Weights of Securitites by Beta
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Pie%20Plot%20by%20Beta.png?raw=true)
 _______________________________________________________________
 
 ### Line Plot
