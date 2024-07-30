@@ -1,19 +1,23 @@
 library("rvest") # Library
 
-p.marketcap <- function(x, info = F){ # Market Cap Info
+p.marketcap <- function(x, info = F){ # Market Cap info via string or table
   
   x <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
+  
+  j <- list(list(10, 200, "Large-Cap Companies:", "Large-Cap"), # > 10 & < 200
+            list(2, 10, "Medium-Cap Companies:", "Medium-Cap"), # > 2 & < 10
+            list(0.3, 2, "Small-Cap Companies:", "Small-Cap"), # > 0.3 & < 2
+            list(0, 0.3, "Micro-Cap Companies:", "Micro-Cap")) # > 0 & < 0.3
   
   df <- NULL # Data Frame for Market Cap Levels and Values
   
   for (n in 1:length(x)){ # Read HTML & extract necessary info
-  
+    
     p <- read_html(sprintf("https://uk.finance.yahoo.com/quote/%s/%s", x[n],
                            "key-statistics")) 
     
-    tab <- p %>% html_nodes('div') %>% .[[1]]
-    
-    i <- tab %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
+    i <- p %>% html_nodes('div') %>% .[[1]] %>% html_nodes('tr') %>%
+      html_nodes('td') %>% html_text()
     
     s <- i[grep("Market cap", i) + 1] # Market Cap Info
     
@@ -24,34 +28,23 @@ p.marketcap <- function(x, info = F){ # Market Cap Info
       
       s <- as.numeric(s[1,1]) * 1000 } else { s <- as.numeric(s[1,1]) }
     
-    if (isFALSE(info)){ # Market Cap Levels
+    if (isFALSE(info)){ for (n in 1:length(j)){ # Market Cap Levels
+        
+        if (s > j[[n]][[1]] && s < j[[n]][[2]]){ l <- j[[n]][[4]] 
+        
+        } else if (s > 200){ l <- "Mega-Cap" } else { next } } 
       
-      if (s < .3){ l <- "Micro-Cap" } # if < $300 million => Micro-Cap
-      
-      else if (s > .3 && s < 2) { l <- "Small-Cap" } # Small-Cap
-      
-      else if (s > 2 && s < 10) { l <- "Mid-Cap" } # Mid-Cap
-      
-      else if (s > 10 && s < 200) { l <- "Large-Cap" } # Large-Cap
-      
-      else { l <- "Mega-Cap" } # if > $200 billion => Mega-Cap
-      
-      df <- rbind.data.frame(df, cbind(l, s)) } # Market Cap Level with values
-    
-    else { df <- rbind(df, s) } } # Market Cap values only
+      # Market Cap Level with values OR Market Cap values only
+      df <- rbind.data.frame(df, cbind(l, s)) } else { df <- rbind(df, s) } }
   
   if (isFALSE(info)){ # Create Data Frame
     
     rownames(df) <- x # Tickers
-    colnames(df) <- c("Level", "Marker Cap ($billions)") # colnames
+    colnames(df) <- c("Level", "Marker Cap ($billions)") # column names
     
     df } else { c <- as.numeric(df) # Make available values to numeric format
     
     names(c) <- x # Assign names to them
-    
-    l <- NULL # Find securities without debt/ebitda values
-    
-    for (n in 1:length(c)){ if (is.na(c[n])){ l <- c(l, names(c)[n])} }
     
     c <- sort(c, decreasing = T) # Sort in a descending way
     
@@ -59,28 +52,15 @@ p.marketcap <- function(x, info = F){ # Market Cap Info
     
     if (isFALSE(identical(names(which(c > 200)), character(0)))){
       
-      m <- c(m, paste("Mega-Cap Companies:",
-                      toString(names(which(c > 200))))) }
+      m <- c(m, paste("Mega-Cap Companies:", toString(names(which(c > 200)))))}
     
-    if (isFALSE(identical(names(which(c > 10 & c < 200)), character(0)))){
+    for (n in 1:length(j)){ #
       
-      m <- c(m, paste("Large-Cap Companies:",
-                      toString(names(which(c > 10 & c < 200))))) }
-    
-    if (isFALSE(identical(names(which(c > 2 & c < 10)), character(0)))){
-      
-      m <- c(m, paste("Medium-Cap Companies:",
-                      toString(names(which(c > 2 & c < 10))))) }
-    
-    if (isFALSE(identical(names(which(c > .3 & c < 2)), character(0)))){
-      
-      m <- c(m, paste("Small-Cap Companies:",
-                      toString(names(which(c > .3 & c < 2))))) }
-    
-    if (isFALSE(identical(names(which(c < .3)), character(0)))){
-      
-      m <- c(m, paste("Micro-Cap Companies:", toString(names(which(c < .3)))))}
-    
+      if (isFALSE(identical(names(which(c > j[[n]][[1]] & c < j[[n]][[2]])),
+                            character(0)))){
+        m <- c(m,
+               paste(j[[n]][[3]],
+                     toString(names(which(c>j[[n]][[1]] & c<j[[n]][[2]])))))} }
     m } # Display
 }
 p.marketcap(df_portfolio, info = T) # Test
