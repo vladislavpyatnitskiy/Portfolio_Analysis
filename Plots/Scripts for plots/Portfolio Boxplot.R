@@ -1,6 +1,6 @@
 p.box.plt <- function(x){ # Box Plot for Portfolio
   
-  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x)%/%3+1)] # Data
+  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x) %/% 3 + 1)] # Data
   
   v <- NULL # Variable for values
   
@@ -22,15 +22,15 @@ p.box.plt <- function(x){ # Box Plot for Portfolio
   
   m <- round(min(l) * -1 + max(l),0)/10^(nchar(round(min(l) * -1 + max(l),0)))
   
-  if (m > 0 && m < 1){ mn <- 1 * 10 ^ (nchar(m) - 4) }
+  i <- c(0, 1, 2, 5) # Calculate intervals for lines and axes
   
-  else if (m > 1 && m < 2){ mn <- 2 * 10 ^ (nchar(m) - 4) }
-  
-  else if (m > 2 && m < 5){ mn <- 5 * 10 ^ (nchar(m) - 4) }
+  for (n in 1:length(i) - 1){ if (m > i[n] && m < i[n + 1]){
+    
+      mn <- i[n + 1] * 10 ^ (nchar(m) - 4) } else { next } }
   
   abline(h = seq(-1,1,by=mn)[-match(0, seq(-1,1,by=mn))], col="grey", lty=3) 
   
-  axis(side=2, at=seq(round(min(l), 1)-mn, round(max(l), 1)+mn, mn*2), las = 1)
-  axis(side=4, at=seq(round(min(l), 1)-2*mn, round(max(l), 1)+2*mn, mn), las=1)
+  for (n in 1:2){ axis(side=2*n, at=seq(round(min(l),1)-mn*n,
+                                        round(max(l),1)+mn*n, mn*2/n), las=1) }
 }
 p.box.plt(df_portfolio) # Test
