@@ -47,6 +47,28 @@ _______________________________________________________________
 _______________________________________________________________
 ## Current Data Analytics Script Capabilities:
 
+### Fama & French 3 Factor Model
+
+`lm(formula = M$RPRF ~ M$MRKT + M$SMB + M$HML)`
+
+
+| Min | 1Q | Median | 3Q | Max |
+|---|---|---|---|---|
+-0.020934 | -0.004838 | -0.000629 | 0.003277 | 0.051802 |
+
+| `Coefficients` | `Estimate` | `Std. Error` | `t value` | `Prob` |   
+|---|---|---|---|---|
+|`Intercept`| -0.0154586 | 0.0004465 | -34.625 | < 2e-16 *** |
+|`M$MRKT`| 0.0108014 | 0.0004298 | 25.132 | < 2e-16 *** |
+|`M$SMB`| 0.0048543 | 0.0007821  | 6.207 | 1.84e-09 *** |
+|`M$HML`| 0.0040361 | 0.0005629  | 7.170 | 6.12e-12 *** |
+
+| Other | Stats |
+|---|---| 
+| Residual standard error | 0.007676 on 293 degrees of freedom |
+| Multiple R-squared  0.7509 |	Adjusted R-squared  0.7483 |
+| F-statistic 294.4 on 3 and 293 DF | p-value < 2.2e-16 |
+
 ### Portfolio Calendar
 
 | | 2022 | 2023 | Median | Mean |
