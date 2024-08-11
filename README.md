@@ -52,7 +52,7 @@ _______________________________________________________________
 `lm(formula = M$RPRF ~ M$MRKT + M$SMB + M$HML)`
 
 
-| Min | 1Q | Median | 3Q | Max |
+| `Min` | `1Q` | `Median` | `3Q` | `Max` |
 |---|---|---|---|---|
 -0.020934 | -0.004838 | -0.000629 | 0.003277 | 0.051802 |
 
@@ -63,11 +63,34 @@ _______________________________________________________________
 |`M$SMB`| 0.0048543 | 0.0007821  | 6.207 | 1.84e-09 *** |
 |`M$HML`| 0.0040361 | 0.0005629  | 7.170 | 6.12e-12 *** |
 
-| Other | Stats |
+| `Other` | `Stats` |
 |---|---| 
 | Residual standard error | 0.007676 on 293 degrees of freedom |
 | Multiple R-squared  0.7509 |	Adjusted R-squared  0.7483 |
 | F-statistic 294.4 on 3 and 293 DF | p-value < 2.2e-16 |
+
+### Fama & French 5 Factor Model
+
+`lm(formula = M$RPRF ~ M$MRKT + M$SMB + M$HML + M$RMW + M$CMA)`
+
+| `Min` | `1Q` | `Median` | `3Q` | `Max` 
+|---|---|---|---|---|
+| -0.020861 | -0.004908 | -0.000812 | 0.003460 | 0.051695 |
+
+| `Coefficients` | `Estimate` | `Std. Error` | `t value` | `Prob` |
+|---|---|---|---|---|
+| `Intercept` | -0.0155191 | 0.0004443 | -34.933 | < 2e-16 *** |
+| `M$MRKT` | 0.0102639 | 0.0004893 | 20.976 | < 2e-16 *** |
+| `M$SMB` | 0.0052029 | 0.0009148 | 5.687 | 3.14e-08 *** |
+| `M$HML` | 0.0037777 | 0.0008425 | 4.484 | 1.05e-05 *** |
+| `M$RMW` | 0.0013644 | 0.0009931 | 1.374 | 0.1705 |
+| `M$CMA` | -0.0029100 | 0.0013212 | -2.203 | 0.0284 * |
+
+| `Other` | `Stats` |
+|---|---| 
+| Residual standard error | 0.007621 on 291 degrees of freedom |
+| Multiple R-squared 0.7561 |	Adjusted R-squared 0.7519 |
+| F-statistic 180.4 on 5 and 291 DF | p-value: < 2.2e-16 |
 
 ### Portfolio Calendar
 
