@@ -39,7 +39,7 @@ p.cor.advices <- function(x){ # Bar Plot with Median Correlation Values
     v <- f[f$`Security 1` == k | f$`Security 2` == k, ] # ticker's correlations
     
     l <- rbind.data.frame(l, cbind(median(v[,3]), mean(v[,3]))) } # Join
-    
+  
   rownames(l) <- cor.names
   colnames(l) <- c("Median", "Average") # Column names
   
@@ -51,44 +51,20 @@ p.cor.advices <- function(x){ # Bar Plot with Median Correlation Values
   
   m <- NULL # Write advices about securities according to correlations
   
-  if (isFALSE(identical(names(which(h > 0.5)), character(0)))){
-    
-    m <- c(m, paste("Sell these Assets:", toString(names(which(h > .5))))) }
+  j <- list(list(.5, 1, "Sell these Assets:"),
+            list(.45, .5, "Sell one of these Assets:"), 
+            list(.4, .45, "Consider to sell one of these Assets:"),
+            list(.35, .4, "Check these Assets:"),
+            list(.3, .35, "OK to keep Assets:"), list(.25, .3, "Good Assets:"),
+            list(.2, .25, "Great Assets:"), list(-1, .2, "Best Assets:")) 
   
-  if (isFALSE(identical(names(which(h > .45 & h < .5)), character(0)))){
+  for (n in 1:length(j)){ # Messages indicating correlation levels for stocks
     
-    m <- c(m, paste("Sell one of these Assets:",
-                    toString(names(which(h > .45 & h < .5))))) }
-  
-  if (isFALSE(identical(names(which(h > .4 & h < .45)), character(0)))){
-    
-    m <- c(m, paste("Consider to sell one of these Assets:",
-                    toString(names(which(h > .4 & h < .45))))) }
-  
-  if (isFALSE(identical(names(which(h > .35 & h < .4)), character(0)))){
-    
-    m <- c(m, paste("Check these Assets:",
-                    toString(names(which(h > .35 & h < .4))))) }
-  
-  if (isFALSE(identical(names(which(h > .3 & h < .35)), character(0)))){
-    
-    m <- c(m, paste("OK to keep Assets:",
-                    toString(names(which(h > .3 & h < .35))))) }
-  
-  if (isFALSE(identical(names(which(h > .25 & h < .3)), character(0)))){
-    
-    m <- c(m, paste("Good Assets:",
-                    toString(names(which(h > .25 & h < .3))))) }
-  
-  if (isFALSE(identical(names(which(h > .2 & h < .25)), character(0)))){
-    
-    m <- c(m, paste("Great Assets:",
-                    toString(names(which(h > .2 & h < .25))))) }
-  
-  if (isFALSE(identical(names(which(h < .2)), character(0)))){
-    
-    m <- c(m, paste("Best Assets:", toString(names(which(h < .2))))) }
-  
+    if (isFALSE(identical(names(which(h > j[[n]][[1]] & h < j[[n]][[2]])),
+                          character(0)))){
+      m <- c(m,
+             paste(j[[n]][[3]],
+                   toString(names(which(h>j[[n]][[1]] & h<j[[n]][[2]]))))) } }
   m # Display
 }
 p.cor.advices(df_portfolio) # Test
