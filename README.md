@@ -202,6 +202,16 @@ _______________________________________________________________
 #### Median Correlations of securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bar%20Plot%20of%20Portfolio%20Correlations%20by%20Assets.png?raw=true)
 
+```
+[1] "Consider to sell one of these Assets: JEF"            
+[2] "Check these Assets: BFH, STLA, TPH, C, PVH, COF, ALLY"
+[3] "OK to keep Assets: HPE, MU, VOYA, F, HPQ"             
+[4] "Good Assets: WBA, AMZN, GOOGL, VSTO, WERN, AIG"       
+[5] "Great Assets: SWBI, ZIM, T, TSN, UNM, PARA, NRG, FL"  
+[6] "Best Assets: VIR, FLGT, VIRT, ARCH, VALE"     
+```
+Note: Plot and Script Output have been generated in different time periods
+
 #### Portfolio Securities by Debt to EBITDA
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Bar%20Plot%20for%20Portfolio%20Stocks%20by%20Debt:EBITDA.png?raw=true)
 _______________________________________________________________
