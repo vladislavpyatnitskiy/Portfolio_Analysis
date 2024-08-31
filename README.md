@@ -71,28 +71,29 @@ F-statistic: 294.4 on 3 and 293 DF,  p-value: < 2.2e-16
 
 ```
 ### Fama & French 5 Factor Model
+```
+Call:
+lm(formula = M$RPRF ~ M$MRKT + M$SMB + M$HML + M$RMW + M$CMA)
 
-`lm(formula = M$RPRF ~ M$MRKT + M$SMB + M$HML + M$RMW + M$CMA)`
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.020972 -0.004851 -0.000796  0.003456  0.051699 
 
-| `Min` | `1Q` | `Median` | `3Q` | `Max` 
-|---|---|---|---|---|
-| -0.020861 | -0.004908 | -0.000812 | 0.003460 | 0.051695 |
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -0.0155165  0.0004439 -34.956  < 2e-16 ***
+M$MRKT       0.0102556  0.0004884  20.996  < 2e-16 ***
+M$SMB        0.0051883  0.0009149   5.671 3.42e-08 ***
+M$HML        0.0038052  0.0008431   4.513 9.27e-06 ***
+M$RMW        0.0013533  0.0009940   1.361   0.1744    
+M$CMA       -0.0029369  0.0013197  -2.225   0.0268 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-| `Coefficients` | `Estimate` | `Std. Error` | `t value` | `Prob` |
-|---|---|---|---|---|
-| `Intercept` | -0.0155191 | 0.0004443 | -34.933 | < 2e-16 *** |
-| `M$MRKT` | 0.0102639 | 0.0004893 | 20.976 | < 2e-16 *** |
-| `M$SMB` | 0.0052029 | 0.0009148 | 5.687 | 3.14e-08 *** |
-| `M$HML` | 0.0037777 | 0.0008425 | 4.484 | 1.05e-05 *** |
-| `M$RMW` | 0.0013644 | 0.0009931 | 1.374 | 0.1705 |
-| `M$CMA` | -0.0029100 | 0.0013212 | -2.203 | 0.0284 * |
-
-| `Other` | `Stats` |
-|---|---| 
-| Residual standard error | 0.007621 on 291 degrees of freedom |
-| Multiple R-squared 0.7561 |	Adjusted R-squared 0.7519 |
-| F-statistic 180.4 on 5 and 291 DF | p-value: < 2.2e-16 |
-
+Residual standard error: 0.007616 on 291 degrees of freedom
+Multiple R-squared:  0.7565,	Adjusted R-squared:  0.7523 
+F-statistic: 180.8 on 5 and 291 DF,  p-value: < 2.2e-16
+```
 ### Portfolio Calendar
 
 | | 2022 | 2023 | Median | Mean |
