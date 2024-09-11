@@ -31,6 +31,9 @@ Today my R script enables to get the following info about portfolio:
 My first goal is to write powerful scripts that enable to check most necessary info for investor.  
 
 Currently under development: stock fundamentals, more advanced plots, making script suitable for using via Git
+
+In case you are interested in tracking of portfolio consisting of Russian stocks, you may be interested in the [rus-stock-data-analysis
+](https://github.com/vladislavpyatnitskiy/rus-stock-data-analysis) repositoty.
 _______________________________________________________________
 
 ## Requirements:
