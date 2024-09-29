@@ -39,6 +39,14 @@ In case you are interested in tracking of portfolio consisting of Russian stocks
 ](https://github.com/vladislavpyatnitskiy/rus-stock-data-analysis) repositoty.
 _______________________________________________________________
 
+## Installation
+
+You may clone my repository via command line:
+
+```bash
+git clone https://github.com/vladislavpyatnitskiy/Portfolio_Analysis.git
+
+```
 ## Requirements:
 
 • quantmod
