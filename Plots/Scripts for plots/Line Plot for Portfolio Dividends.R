@@ -9,11 +9,11 @@ p.plt.dividends <- function(x, c = "$US", sub = NULL){ # Dividend Accumulation
   
   m <- round(max(x), 0) / 10 ^ (nchar(round(max(x), 0)) - 1) # Axes Interval
   
-  if (m > 0 && m < 1){ mn <- 1 * 10 ^ (nchar(m) - 3) }
+  i <- c(0, 1, 2, 5) # Calculate intervals for lines and axes
   
-  else if (m > 1 && m < 2){ mn <- 2 * 10 ^ (nchar(m) - 3) }
-  
-  else if (m > 2 && m < 5){ mn <- 5 * 10 ^ (nchar(m) - 3) }
+  for (n in 1:length(i) - 1){ if (m > i[n] && m < i[n + 1]){
+    
+      mn <- i[n + 1] * 10 ^ (nchar(m) - 3) } else { next } }
   
   abline(h = 0) # Add black horizontal line showing 0 and grey line for others
   abline(h = seq(round(max(x), 0), from = mn/2, by = mn/2), col="grey", lty=3)
