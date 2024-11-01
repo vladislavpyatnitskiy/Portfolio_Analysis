@@ -67,15 +67,13 @@ comp.plt <- function(x, benchmark = "^GSPC", benchnames = "S&P 500"){
        xlab = "Trading Days", ylab = "Returns (%)",
        main = "Performance of Portfolio and Major Benchmarks")
   
-  m <- round(min(i) * -1 + max(i), 0) # Set up interval for axes and lines
+  m <- round(min(i)*-1+max(i), 0)/10^(nchar(round(min(i)*-1+max(i), 0)) - 1)
   
-  m <- m / 10 ^ (nchar(m) - 1)
+  j <- c(0, 1, 2, 5) # Calculate intervals for lines and axes
   
-  if (m > 0 && m < 1){ mn <- 1 * 10 ^ (nchar(m) - 3) }
-  
-  else if (m > 1 && m < 2){ mn <- 2 * 10 ^ (nchar(m) - 3) }
-  
-  else if (m > 2 && m < 5){ mn <- 5 * 10 ^ (nchar(m) - 3) }
+  for (n in 1:length(j) - 1){ if (m > j[n] && m < j[n + 1]){
+    
+      mn <- j[n + 1] * 10 ^ (nchar(m) - 3) } else { next } }
   
   axis(side = 4, las = 1, at = seq(-100, 100, mn)) # Axes
   
