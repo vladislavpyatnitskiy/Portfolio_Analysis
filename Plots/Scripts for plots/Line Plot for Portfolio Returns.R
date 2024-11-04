@@ -17,12 +17,12 @@ p.plt <- function(x, SD = F){ if (isFALSE(SD)){ # Return Plot
   
   m <- m / 10 ^ (nchar(m) - 1)
   
-  if (m > 0 && m < 1){ mn <- 1 * 10 ^ (nchar(m) - 3) }
-  
-  else if (m > 1 && m < 2){ mn <- 2 * 10 ^ (nchar(m) - 3) }
-  
-  else if (m > 2 && m < 5){ mn <- 5 * 10 ^ (nchar(m) - 3) }
-  
+  j <- c(0, 1, 2, 5) # Calculate intervals for lines and axes
+    
+  for (n in 1:length(j) - 1){ if (m > j[n] && m < j[n + 1]){
+      
+      mn <- j[n + 1] * 10 ^ (nchar(m) - 3) } else { next } }
+    
   axis(side = 4, las = 1, at = seq(-100, 100, mn)) # Axes
   
   abline(h = x[nrow(x),], col = "navy", lwd = 2) # Current Return
