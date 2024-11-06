@@ -1,31 +1,25 @@
 library("rvest") # Library
 
-p.names <- function(x){ # Data Frame with tickers and names
+p.names <- function(x){ # Company names from Stock Analysis Website
   
   A <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)] # Tickers
   
-  l <- NULL
+  L <- NULL # Variable for tickers
   
-  for (n in 1:length(A)){ a <- A[n]
+  for (n in 1:length(A)){ a <- A[n] # Tickers
   
-    s <- sprintf("https://finance.yahoo.com/quote/%s?p=%s&.tsrc=fin-srch",a,a)
+    s <- read_html(sprintf("https://stockanalysis.com/stocks/%s/", a)) %>%
+      html_nodes('main') %>% .[[1]] %>% html_nodes('div') %>%
+      html_nodes('h1') %>% html_text() # Get values
     
-    s <- read_html(s) # Read html info
+    s <- read.fwf(textConnection(s), widths = c(nchar(s) - nchar(a) - 3, 1),
+                  colClasses = "character")[1] # Reduce excessive elements
     
-    s.yahoo <- s %>% html_nodes('body') %>% .[[1]] -> tab # Assign Body
+    L <- rbind.data.frame(L, s) } # Join names
     
-    y <- tab %>% html_nodes('div') %>% html_nodes('h1') %>% html_text()
-    
-    y <- read.fwf(textConnection(y), widths = c(nchar(y) - nchar(a) - 3, 1),
-                  colClasses = "character") # Reduce excessive elements
-    
-    l <- rbind(l, y[,-ncol(y)]) } # Join names
-    
-  p.list <- data.frame(A, l) # Join tickers with names
+  colnames(L) <- "Company Name" # Assign column name
+  rownames(L) <- A
   
-  rownames(p.list) <- seq(nrow(p.list)) # row names
-  colnames(p.list) <- c("Ticker", "Name") # Column names
-  
-  p.list # Display
+  L # Display
 }
 p.names(df_portfolio) # Test
