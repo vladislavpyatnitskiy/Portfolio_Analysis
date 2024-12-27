@@ -7,18 +7,10 @@ p.plt.dividends <- function(x, c = "$US", sub = NULL){ # Dividend Accumulation
   
   par(mar = c(5, 3.5, 5, 3.5)) # Define borders of the plot
   
-  m <- round(max(x), 0) / 10 ^ (nchar(round(max(x), 0)) - 1) # Axes Interval
-  
-  i <- c(0, 1, 2, 5) # Calculate intervals for lines and axes
-  
-  for (n in 1:length(i) - 1){ if (m > i[n] && m < i[n + 1]){
-    
-      mn <- i[n + 1] * 10 ^ (nchar(m) - 3) } else { next } }
-  
   abline(h = 0) # Add black horizontal line showing 0 and grey line for others
-  abline(h = seq(round(max(x), 0), from = mn/2, by = mn/2), col="grey", lty=3)
   
-  axis(side = 2, at = seq(round(max(x), 0),  from = mn / 2, by = mn), las = 2) 
-  axis(side = 4, las = 1, at = seq(0, round(max(x), 0), mn / 2)) # Both Axes
+  grid(nx = 1, ny = NULL, col = "grey", lty = "dotted", lwd=1) # grid lines
+  
+  axis(side = 4, las = 2) # Right y-axis
 }
 p.plt.dividends(df_portfolio_dividend, sub = "Data Source: Yahoo! Finance")
