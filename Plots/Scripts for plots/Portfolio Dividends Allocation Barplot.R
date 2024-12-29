@@ -37,24 +37,19 @@ p.bar.plt.weights.dividend <- function(x, sort = T, decreasing = T){
                main="Dividend Allocation of Portfolio Securities", las = 2,
                ylim = c(0, ceiling(max(v))), col = C) # Create Bar Plot
   
-  p.seq <- seq(0, ceiling(max(v)), 5) # Y axis
-  
-  for (n in 1:2){ axis(side = n*2, at=p.seq, las=1, labels=p.seq) } # y-axes
+  axis(side = 4, las = 2) # y-axes
   
   par(mar = c(5, 4, 4, 4)) # Define borders of the plot to fit right y-axis
   
-  # Add grey lines for fast visual percentage calculation
-  for (n in seq(0, ceiling(max(v)), 5)){ abline(h = n, col ="grey", lty = 3) }
+  abline(v = B, col = "grey", lty = 3) # grid lines
+  grid(nx = 1, ny = NULL, col = "grey", lty = "dotted", lwd = 1) 
   
-  abline(v = B, col = "grey", lty = 3)
-  abline(h = mean(v), col = "red", lwd = 3) # Mean percentage line
-  abline(h = median(v), col = "green", lwd = 3) # Median percentage line
+  vs <- list(c(mean(v), median(v)), c("red", "green"))
+  for (n in 1:2){ abline(h = vs[[1]][n], col = vs[[2]][n], lwd = 3) }
   
-  legend(x = "bottom", inset = c(0, -.22), cex = .85, bty = "n", horiz = T,
-         legend = c((sprintf("Mean: %s %%", round(mean(v), 3))),
-                    sprintf("Median: %s %%", round(median(v), 3))),
-         col = c("red", "green"), xpd = T, pch = 15)
-  
+  legend(x="bottom",inset=c(0,-.22),cex=.85,bty="n",horiz=T,xpd=T,pch=15,
+         legend=c((sprintf("Mean: %s %%", round(mean(v), 3))),
+                  sprintf("Median: %s %%", round(median(v), 3))), col=vs[[2]])
   box() # Box
 }
 p.bar.plt.weights.dividend(df_portfolio_dividend) # Test
