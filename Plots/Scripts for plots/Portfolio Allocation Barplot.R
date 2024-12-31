@@ -1,4 +1,4 @@
-p.bar.plt.weights <- function(x, sort=F, decreasing=T){ # Weights via Bar Plot
+p.bar.plt.weights <- function(x, sort = F, decreasing = T){ # Weights Bar Plot
   
   pct <- as.data.frame(x[,3 * seq(ncol(x) %/% 3, from = 1)][nrow(x),]/
                          as.numeric(x[nrow(x),ncol(x)]))
@@ -16,28 +16,25 @@ p.bar.plt.weights <- function(x, sort=F, decreasing=T){ # Weights via Bar Plot
         "#403367","#da8a6d","#a79cd4","#71482c","#c689d0","#6b2940","#d593a7",
         "#895c8b","#bd5975") # Add colour range
   
-  # Create bar plot
   B <- barplot(pct, names.arg = names(pct), horiz = F, col = С, las = 2,
-               main = "Allocation of Portfolio Securities",
-               ylab = "Percentage (%)", ylim = c(0, ceiling(max(pct))))
+               main = "Allocation of Portfolio Securities in %",
+               ylim = c(0, ceiling(max(pct)))) # Bar plot
   
-  p.seq <- seq(0, ceiling(max(pct)), .5) # Y axis
+  grid(nx = 1, ny = NULL, col = "grey", lty = 3, lwd = 1) # Horizontal lines
   
-  for (n in 1:2){ axis(side = n*2, at=p.seq, las=1, labels=p.seq) } # y-axes
+  abline(v = B, col = "grey", lty = 3) # Vertical lines of grid
   
-  # Add grey lines for fast visual percentage calculation
-  for (n in seq(0, ceiling(max(pct)), .5)){ abline(h = n, col ="grey",lty = 3)}
-  abline(v = B, col = "grey", lty = 3)
-  
-  abline(h = mean(pct), col = "red", lwd = 3) # Mean percentage line
-  abline(h = median(pct), col = "green", lwd = 3) # Median percentage line
+  vals <- list(c(mean(pct), median(pct)), c("red", "green"))
+  for (n in 1:2){ abline(h = vals[[1]][n], col = vals[[2]][n], lwd = 3) }
   
   par(mar = c(5, 4, 4, 4)) # Define borders of the plot to fit right y-axis
   
-  legend(x = "bottom", inset = c(0, -.22), cex = .85, bty = "n", horiz = T,
+  legend(x="bottom",inset=c(0,-.2),cex=.85,bty="n",horiz=T,col=vals[[2]],xpd=T,
          legend = c((sprintf("Mean: %s %%", round(mean(pct), 3))),
-                    sprintf("Median: %s %%", round(median(pct), 3))),
-         col = c("red", "green"), xpd = T, pch = 15)
+                    sprintf("Median: %s %%", round(median(pct), 3))),pch=15)
+  
+  axis(side = 4, las = 2) # Right y-axis
+  
   box()                       
 }
 p.bar.plt.weights(df_portfolio, sort = T, decreasing = T) # Test
