@@ -1,46 +1,45 @@
 library("timeSeries") # Library
 
-p.plt <- function(x, SD = F){ if (isFALSE(SD)){ # Return Plot
+p.plt <- function(x, SD = F){ # Line Plot of Portfolio Returns
   
-  x <- apply(x, 2, function(col) (exp(cumsum(col)) - 1) * 100) # Return
+  x <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Take columns with Total Sum
   
-  if (x[nrow(x),] > 0){ plot(x, main = "Returns of Portfolio Securities",
-                             las = 1, xlab = "Trading Days", col = "green4",
-                             ylab = "Return (%)", lwd = 3, type="l")
+  x1 <- t(x) # Transpose x1 and x
+  
+  colnames(x1) <- rownames(x) # Make dates as column names x1 and x
+  
+  r <- as.data.frame(0) # Define dataframe with value zero
+  
+  # Loop for portfolio log returns calculation
+  for (n in 2:ncol(x1)){ df2p <- x1[,(n-1):n] # x1 # Select two periods
+  
+    s <- df2p[apply(df2p, 1, function(row) all(row !=0 )),] # Remove zeros & NA
     
-  } else { plot(x, main = "Returns of Portfolio Securities", ylab="Return (%)",
-                xlab = "Trading Days", type="l", las=1, col = "red3", lwd=3) }
+    # Add newly generated variable to data frame
+    r <- rbind(r, log(as.numeric(colSums(s)[2]) / as.numeric(colSums(s)[1]))) }
+    
+  colnames(r) <- "Returns" # Give name to column
+  rownames(r) <- rownames(x) # Return dates to index
+  
+  x <- as.timeSeries(r) # Make it time series
+  
+  if (isFALSE(SD)){ x <- apply(x, 2, function(col) (exp(cumsum(col)) - 1)*100) 
+    
+    plot(x, main = "Returns of Portfolio Securities", las = 1, type = "l",
+         col = ifelse(x[nrow(x),] > 0, "green4", "red3"), ylab = "Return (%)",
+         lwd = 2, xlab = "Trading Days")
+  
+    abline(h = x[nrow(x),], col = "navy", lwd = 2) # Current Return
+    
+    } else { plot(x * 100, main = "Volatility of Portfolio Returns", type = "l",
+                  col="red",las=1,ylab="Fluctuations (%)", xlab="Trading Days")  
+
+      abline(h = 0) } # Break Even
+  
+  grid(nx = 1, ny = NULL, col = "grey", lty = 3, lwd = 1) # Horizontal lines
   
   par(mar = c(5, 5, 5, 5)) # Define borders of the plot
   
-  m <- round(min(x) * -1 + max(x), 0)
-  
-  m <- m / 10 ^ (nchar(m) - 1)
-  
-  j <- c(0, 1, 2, 5) # Calculate intervals for lines and axes
-    
-  for (n in 1:length(j) - 1){ if (m > j[n] && m < j[n + 1]){
-      
-      mn <- j[n + 1] * 10 ^ (nchar(m) - 3) } else { next } }
-    
-  axis(side = 4, las = 1, at = seq(-100, 100, mn)) # Axes
-  
-  abline(h = x[nrow(x),], col = "navy", lwd = 2) # Current Return
-  
-  } else { y <- x * 100
-  
-    plot(y, main = "Volatility of Portfolio Returns", ylab = "Fluctuations (%)",
-         ylim = c(signif(min(y)), signif(max(y))), col = "red", type = "l",
-         xlab = "Trading Days", las = 1)  
-    
-    axis(side = 4, at = seq(-100, 100, 1), las = 1)
-    
-    for (n in c(-99)){ axis(side = 2, at = seq(n, max(y), 1), las = 1)
-      
-      mn = 1 } }
-    
-  abline(h = 0) # Break Even
-  for (n in seq(-100, -mn, mn)){ abline(h = n, col = "grey", lty = 3) }
-  for (n in seq(mn, 100, mn)){ abline(h = n, col = "grey", lty = 3) }
+  axis(side = 4, las = 2) # Axes
 }
-p.plt(returns_df, SD = F) # Test
+p.plt(df_portfolio, SD = F) # Test
