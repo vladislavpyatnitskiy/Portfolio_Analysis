@@ -26,7 +26,7 @@ p.bar.plt.stack.dividend <- function(x, portion = F, c = "$US"){
     
     # If defined empty variable is still empty # Put new dataset there
     if (is.null(D)){ D <- v } else { D <- merge(x = D, y = v, by = "Date") } }
-  
+    
   D <- as.data.frame(D) # Convert to data frame format
   
   colnames(D) <- colnames(d) # Give column names
@@ -43,20 +43,13 @@ p.bar.plt.stack.dividend <- function(x, portion = F, c = "$US"){
   # Convert for better read by ggplot
   D <- D %>% pivot_longer(cols=-Date, names_to="Stock", values_to="Quantity")
   
-  if (isTRUE(portion)){ # Plot showing stakes of dividends for each month
+  if (isTRUE(portion)){ l <- c("fill", "Stakes (%)") } # Portion
+  
+  else { l <- c("stack", sprintf("Amount in %s", c)) } # Amount
     
-    ggplot(D, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
-      geom_bar(position = "fill", stat = "identity") + 
-      labs(title = "Stacked Bar Plot of Portfolio Securities Dividends",
-           x = "Months", y = "Stakes (%)", fill = "Securities") +
-      scale_fill_manual(values = C)   
-    
-  } else { # Generate plot showing amount of dividends for each month
-    
-    ggplot(D, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
-      geom_bar(position = "stack", stat = "identity") + 
-      labs(title = "Stacked Bar Plot of Portfolio Securities Dividends",
-           x = "Months", y = sprintf("Amount in %s", c), fill = "Securities") +
-      scale_fill_manual(values = C) }
+  ggplot(D, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
+    geom_bar(position=l[1], stat="identity") + scale_fill_manual(values = C) +   
+    labs(title = "Stacked Bar Plot of Portfolio Securities Dividends",
+         x = "Months", y = l[2], fill = "Securities")
 }
 p.bar.plt.stack.dividend(df_portfolio_dividend, portion = F) # Test
