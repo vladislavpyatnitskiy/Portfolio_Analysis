@@ -108,6 +108,31 @@ Residual standard error: 0.007616 on 291 degrees of freedom
 Multiple R-squared:  0.7565,	Adjusted R-squared:  0.7523 
 F-statistic: 180.8 on 5 and 291 DF,  p-value: < 2.2e-16
 ```
+### Commodity Factors
+```
+Call:
+lm(formula = r, data = d)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.044480 -0.007785  0.000177  0.007535  0.049854 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 0.000451   0.000759   0.594  0.55282    
+Brent       0.083091   0.039509   2.103  0.03632 *  
+Copper      0.165133   0.061681   2.677  0.00785 ** 
+Cotton      0.118486   0.037906   3.126  0.00195 ** 
+Gas         0.064113   0.015289   4.193 3.65e-05 ***
+Gold        0.151256   0.095168   1.589  0.11306    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.01303 on 291 degrees of freedom
+Multiple R-squared:  0.2043,	Adjusted R-squared:  0.1907 
+F-statistic: 14.95 on 5 and 291 DF,  p-value: 4.622e-13
+
+```
 ### Portfolio Calendar
 
 | | 2022 | 2023 | Median | Mean |
