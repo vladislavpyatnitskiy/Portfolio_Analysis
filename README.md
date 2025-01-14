@@ -224,6 +224,16 @@ _______________________________________________________________
 
 #### Future Portfolio Performance by Monte Carlo Simulation
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Performance%20by%20Monte.png?raw=true)
+```
+[[1]]
+
+[[2]]
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-69.419  -7.008  21.825  36.331  57.804 236.288 
+
+[[3]]
+[1] 0.634
+```
 _______________________________________________________________
 
 ### Bar Plot 
