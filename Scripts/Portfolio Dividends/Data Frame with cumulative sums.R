@@ -1,17 +1,15 @@
+library(timeSeries) # Library
+
 p.dividends.cum <- function(x){ # Data Frame with cumulative dividends
   
-  s.names <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
+  S <- cumsum(x[,3 * seq(ncol(x) %/% 3, from = 1)]) # Cumulative total sum
   
-  x <- cumsum(x[,3 * seq(ncol(x) %/% 3, from = 1)]) # Cumulative total sum
+  colnames(S) <- colnames(x[,1+3*seq(ncol(x) %/% 3,from=0)])[-(ncol(x)%/%3+1)]
   
-  colnames(x) <- s.names # Assign tickers for columns
+  S <- cbind(S, as.timeSeries(rowSums(S, na.rm = T))) # Sum dividends
   
-  x <- cbind(x, as.timeSeries(rowSums(x, na.rm = T))) # Sum dividends
+  colnames(S)[ncol(S)] <- "Total" # Column name for cumulative sum
   
-  colnames(x)[ncol(x)] <- "Total" # Column name for cumulative sum
-  
-  x <- x[,colSums(x) !=0] # Subtract column of securities without dividends
-  
-  x # Display
+  S[,colSums(S) !=0] # Subtract column of securities without dividends
 }
 p.dividends.cum(df_portfolio_dividend) # Test
