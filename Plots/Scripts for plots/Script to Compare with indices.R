@@ -67,25 +67,15 @@ comp.plt <- function(x, benchmark = "^GSPC", benchnames = "S&P 500"){
        xlab = "Trading Days", ylab = "Returns (%)",
        main = "Performance of Portfolio and Major Benchmarks")
   
-  m <- round(min(i)*-1+max(i), 0)/10^(nchar(round(min(i)*-1+max(i), 0)) - 1)
+  axis(side = 4, las = 2) # Right Y-Axis Values
   
-  j <- c(0, 1, 2, 5) # Calculate intervals for lines and axes
-  
-  for (n in 1:length(j) - 1){ if (m > j[n] && m < j[n + 1]){
-    
-      mn <- j[n + 1] * 10 ^ (nchar(m) - 3) } else { next } }
-  
-  axis(side = 4, las = 1, at = seq(-100, 100, mn)) # Axes
-  
-  # Add grey dotted horizontal lines
-  for (n in seq(-100, -mn, mn)){ abline(h = n, col = "grey", lty = 3) }
-  for (n in seq(mn, 100, mn)){ abline(h = n, col = "grey", lty = 3) }
+  grid(nx = 1, ny = NULL, lty = 3, col = "grey") # Horizontal lines
   
   abline(h = 0) # Add black horizontal line at break even point
   
   for (n in 2:(ncol(i))){ lines(i[,n], col = n, lwd = 2) } # Plot indices
   
-  legend(x = "bottom", inset = c(0, -0.22), legend = c("Portfolio", benchnames),
+  legend(x = "bottom", inset = c(0, -0.27), legend = c("Portfolio", benchnames),
          col = seq(ncol(i)), lwd = 2, cex = .85, bty = "n", xpd = T, horiz = T)
   
   on.exit(par(par(no.readonly = T))) # Show legend with names
