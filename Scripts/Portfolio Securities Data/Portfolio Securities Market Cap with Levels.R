@@ -11,29 +11,27 @@ p.marketcap <- function(x, info = F){ # Market Cap info via string or table
   
   df <- NULL # Data Frame for Market Cap Levels and Values
   
-  for (n in 1:length(x)){ # Read HTML & extract necessary info
+  for (n in 1:length(x)){ y <- x[n] # Read HTML & extract necessary info
     
-    p <- read_html(sprintf("https://uk.finance.yahoo.com/quote/%s/%s", x[n],
-                           "key-statistics")) 
+    p <- read_html(sprintf("https://stockanalysis.com/stocks/%s/statistics/",
+                           tolower(y))) %>% html_nodes('div') %>% .[[1]] %>%
+      html_nodes('tr') %>% html_nodes('td') %>% html_text()
     
-    i <- p %>% html_nodes('div') %>% .[[1]] %>% html_nodes('tr') %>%
-      html_nodes('td') %>% html_text()
-    
-    s <- i[grep("Market cap", i) + 1] # Market Cap Info
+    s <- p[grep("Market Cap", p) + 1] # Market Cap Info
     
     s <- read.fwf(textConnection(s), widths = c(nchar(s) - 1, 1),
                   colClasses = "character")
     
-    if (s[1,2] == "M"){ s <- as.numeric(s[1,1])/1000 } else if (s[1,2] == "T"){
-      
-      s <- as.numeric(s[1,1]) * 1000 } else { s <- as.numeric(s[1,1]) }
+    v <- as.numeric(s[1,1])
+    
+    s <- switch(s[1,2], "M" = v / 1000, "B" =  v, "T" = v * 1000)
     
     if (isFALSE(info)){ for (n in 1:length(j)){ # Market Cap Levels
-        
+      
         if (s > j[[n]][[1]] && s < j[[n]][[2]]){ l <- j[[n]][[4]] 
         
         } else if (s > 200){ l <- "Mega-Cap" } else { next } } 
-      
+        
       # Market Cap Level with values OR Market Cap values only
       df <- rbind.data.frame(df, cbind(l, s)) } else { df <- rbind(df, s) } }
   
