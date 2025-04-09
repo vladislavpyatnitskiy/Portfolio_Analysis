@@ -157,7 +157,41 @@ Mean | 0.39 | 0.5 |  |  |
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Fundamental%20ratios.png?raw=true)
 
 ### Altman Z Scores for Portfolio Securities
-![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Portfolio%20Securities%20Altman%20Z%20Score.png?raw=true)
+```
+                      Sector Altman Z-Score     Zone
+UNM               Financials           <NA>     <NA>
+SWBI             Industrials           4.59     Safe
+T     Communication Services           0.79 Distress
+VSTO  Consumer Discretionary           2.81     Safe
+WBA               Healthcare           2.32     Grey
+AMZN  Consumer Discretionary           5.21     Safe
+JEF               Financials           <NA>     <NA>
+HPQ               Technology           1.89     Grey
+TPH   Consumer Discretionary           4.68     Safe
+F     Consumer Discretionary           1.06 Distress
+C                 Financials           <NA>     <NA>
+TSN         Consumer Staples           3.18     Safe
+WERN             Industrials           2.93     Safe
+GOOGL Communication Services          12.31     Safe
+MU                Technology           4.76     Safe
+AIG               Financials           <NA>     <NA>
+NRG                Utilities           <NA>     <NA>
+ARCH                  Energy           3.15     Safe
+ALLY              Financials           <NA>     <NA>
+FL    Consumer Discretionary           2.33     Grey
+VALE               Materials            1.7     Grey
+STLA  Consumer Discretionary           1.57     Grey
+HPE               Technology              1 Distress
+BFH               Financials           <NA>     <NA>
+PARA  Communication Services           1.28     Grey
+COF               Financials           <NA>     <NA>
+VOYA              Financials           <NA>     <NA>
+VIR               Healthcare           1.83     Grey
+ZIM              Industrials           2.09     Grey
+PVH   Consumer Discretionary           2.48     Grey
+VIRT              Financials           <NA>     <NA>
+FLGT              Healthcare           5.33     Safe
+```
 _______________________________________________________________
 
 ## Current Data Visualisation Script Capabilities:
