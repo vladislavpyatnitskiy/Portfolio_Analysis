@@ -22,28 +22,19 @@ p.volatility.plt <- function(x, abs = F){ # Plot Security volatility
   
   x <- as.timeSeries(r) * 100 # Make it time series & multiply by 100
   
-  if (isFALSE(abs)){ # Choose between real and absolute values of returns
+  main = ifelse(abs == T, "Volatility", "Fluctuations")
+  if (isTRUE(abs)){ x <- abs(x) }
+  
+  for (n in 1:ncol(x)){ 
     
-    for (n in 1:ncol(x)){ # Plot volatility with positive and negative returns
-      
-      plot(x[,n], col = "red", ylab = "Returns (%)", xlab = "Trading Days",
-           main = sprintf("Volatility of Portfolio %s", colnames(x[,n])),
-           ylim = c(min(x[,n]), max(x[,n])), las = 2)
-      
-      } } else { x <- abs(x)
-            
-      for (n in 1:ncol(x)){ # Plot returns fluctuations
-              
-        plot(x[,n], col = "red", ylab = "Fluctuations (%)", las = 2,
-             xlab = "Trading Days", ylim = c(min(x[,n]), max(x[,n])),
-             main = sprintf("Portfolio %s Fluctuations", colnames(x[,n]))) } }
-  
-  abline(h = 0)
-  
-  axis(side = 4, las = 2)
-  
-  grid(nx = 1, ny = NULL, col = "grey", lty = "dotted", lwd = 1)
-  
-  par(mar = c(5, 4, 4, 4)) # Define borders of the plot to fit right y-axis
+    plot(x[,n], col = "red", ylab = "Returns (%)", xlab = "Trading Days",
+         main = sprintf("%s of Portfolio %s", main , colnames(x[,n])), las = 2,
+         ylim = c(min(x[,n]), max(x[,n]))) 
+    
+    axis(side = 4, las = 2) # Right y axis and lines
+    
+    grid(nx = 1, ny = NULL, col = "grey", lty = "dotted", lwd = 1)
+    abline(h = 0) 
+    par(mar = c(5, 4, 4, 4)) } # Define borders of the plot to fit right y-axis
 }
-p.volatility.plt(df_portfolio, abs = F)
+p.volatility.plt(df_portfolio, abs = T)
