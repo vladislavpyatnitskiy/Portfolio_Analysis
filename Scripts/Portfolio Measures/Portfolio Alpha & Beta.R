@@ -1,5 +1,28 @@
+lapply(c("quantmod", "timeSeries"), require, character.only = T) # Libraries
+
 # Function to get alpha and beta of portfolio
 p.coefficients <- function(x, benchmark = "^GSPC", string = F){
+  
+  P <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Take columns with Total Sum
+  
+  P1 <- t(P) # Transpose 
+  
+  colnames(P1) <- rownames(P) # Make dates as column names 
+  
+  R <- as.data.frame(0) # Define data frame with value zero
+  
+  # Loop for portfolio log returns calculation
+  for (n in 2:ncol(P1)){ df2p <- P1[,(n-1):n] # x1 # Select two periods
+  
+    s <- df2p[apply(df2p, 1, function(row) all(row !=0 )),] # Remove zeros & NA
+  
+    # Add newly generated variable to data frame
+    R <- rbind(R, log(as.numeric(colSums(s)[2]) / as.numeric(colSums(s)[1]))) }
+  
+  colnames(R) <- "Returns" # Give name to column
+  rownames(R) <- rownames(P) # Return dates to index
+  
+  x <- as.timeSeries(R) # Make it time series
   
   s <- rownames(x)[1] # First date
   
@@ -15,9 +38,8 @@ p.coefficients <- function(x, benchmark = "^GSPC", string = F){
   
   p <- NULL # Create an empty variable
   
-  for (a in benchmark) # Loop for data extraction
-    
-    p <- cbind(p,getSymbols(a,from=s,to=e,src="yahoo",auto.assign=F)[,4])
+  for (a in benchmark){ p <- cbind(p,getSymbols(a,from=s,to=e,src="yahoo",
+                                                auto.assign=F)[,4]) }
   
   p <- p[apply(p,1,function(x) all(!is.na(x))),] # Get rid of NA
   
@@ -38,11 +60,10 @@ p.coefficients <- function(x, benchmark = "^GSPC", string = F){
   i <- as.timeSeries(merge(x,r,by = "Date")) # Join & make time series
   
   # Beta & Alpha
-  B<-round(apply(i[,1],2,function(col) ((lm((col)~i[,2]))$coefficients[2])),2)
-  A <- round(apply(i[,1],2,
-                   function(col) ((lm((col)~i[,2]))$coefficients[1]))*100,2)
+  B = round(apply(i[,1],2,function(col) ((lm((col)~i[,2]))$coefficients[2])),2)
+  A = round(apply(i[,1],2,function(col) ((lm((col)~i[,2]))$coefficients[1])),2)
   
-  if (isTRUE(string)) { sprintf("Portfolio Alpha is %s %%, Beta is %s", A, B)
-    } else { return(rbind(A,B)) } # Choose either string or table
+  ifelse(isTRUE(string), sprintf("Portfolio Alpha is %s, Beta is %s", A, B),
+         return(rbind(A,B)))
 }
-p.coefficients(returns_df, string = T) # Test
+p.coefficients(df_portfolio, string = T) # Test
