@@ -1,7 +1,7 @@
 lapply(c("quantmod", "timeSeries"), require, character.only = T) # Libraries
 
 # Function to get alpha and beta of portfolio
-p.coefficients <- function(x, benchmark = "^GSPC", string = F){
+p.coefficients <- function(x, benchmark = "^GSPC"){
   
   P <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Take columns with Total Sum
   
@@ -25,7 +25,6 @@ p.coefficients <- function(x, benchmark = "^GSPC", string = F){
   x <- as.timeSeries(R) # Make it time series
   
   s <- rownames(x)[1] # First date
-  
   e <- rownames(x)[nrow(x)] # Last date
   
   p.names <- rownames(x) # Subset dates from data set
@@ -61,9 +60,8 @@ p.coefficients <- function(x, benchmark = "^GSPC", string = F){
   
   # Beta & Alpha
   B = round(apply(i[,1],2,function(col) ((lm((col)~i[,2]))$coefficients[2])),2)
-  A = round(apply(i[,1],2,function(col) ((lm((col)~i[,2]))$coefficients[1])),2)
+  A = round(apply(i[,1],2,function(col) ((lm((col)~i[,2]))$coefficients[1])),4)
   
-  ifelse(isTRUE(string), sprintf("Portfolio Alpha is %s, Beta is %s", A, B),
-         return(rbind(A,B)))
+  sprintf("Alpha is %s, Beta is %s", format(as.numeric(A), scientific = F), B)
 }
-p.coefficients(df_portfolio, string = T) # Test
+p.coefficients(df_portfolio) # Test
