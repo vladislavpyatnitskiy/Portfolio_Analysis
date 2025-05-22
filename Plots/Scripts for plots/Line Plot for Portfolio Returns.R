@@ -43,7 +43,9 @@ p.plt <- function(x, SD = F){ # Line Plot of Portfolio Returns
   
   grid(nx = 1, ny = NULL, col = "grey", lty = 3, lwd = 1) # Horizontal lines
   
-  if (SD){ abline(h = 0) } else { abline(h = x[nrow(x),], col="navy", lwd=2) }
+  if (!SD){ abline(h = x[nrow(x),], col = "blue", lwd = 2, lty = 9) }
+  
+  abline(h = 0) # Break Even Line
   
   par(mar = rep(5, 4)) # Define borders of the plot
   
