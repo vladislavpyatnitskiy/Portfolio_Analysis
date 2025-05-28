@@ -1,51 +1,93 @@
-lapply(c("rvest","plotly","tidyverse"), require, character.only=T) # Libraries
+lapply(c("rvest","plotly","tidyverse", "quantmod", "timeSeries", "httr",
+         "xml2"), require, character.only = T) # Libs
 
 p.bubble.plt.3d <- function(x, title = "Stocks"){ # 3D Bubble Plot
   
-  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x)%/%3+1)] 
+  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x) %/% 3 + 1)] 
+  
+  x <- x[,-which(names(x) == "VSTO")]
+  x <- x[,-which(names(x) == "ARCH")]
   
   d <- NULL # Empty variable to contain values
   
-  for (n in 1:ncol(x)){ c <- colnames(x)[n] # names of securities
+  for (n in 1:ncol(x)){ c <- sprintf("https://uk.finance.yahoo.com/quote/%s",
+                                     colnames(x)[n])
   
-    r <- diff(log(x[,n][apply(x[,n],1,function(row) all(row !=0 )),]))[-1,]
+    r <- diff(log(x[,n][apply(x[,n], 1, function(row) all(row !=0 )),]))[-1,]
     
-    p <- read_html(sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s",
-                           c, c)) # Read HTML & extract necessary info
+    B <- paste("Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+               "AppleWebKit/537.36", "Chrome/122.0.0.0", "Safari/537.36",
+               sep = " ")
     
-    price.yahoo1 <- p %>% html_nodes('div') %>% .[[1]] -> tab11
+    l <- paste(c, "/%s/", sep = "") # Paste %s to add profile or statistics
     
-    m <- tab11 %>% html_nodes('p') %>% html_nodes('span') %>% html_text()
+    R1 <- GET(sprintf(l, "profile"), add_headers(`User-Agent` = B))
+    R2 <- GET(sprintf(l, "key-statistics"), add_headers(`User-Agent` = B))
     
-    j <- sprintf("https://finance.yahoo.com/quote/%s/key-statistics?p=%s",c,c)
+    f <- read_html(content(R1, as = "text", encoding = "UTF-8")) %>%
+      html_nodes('div') %>% html_nodes('dl') %>% html_nodes('dd') %>%
+      html_nodes('strong') %>% html_text() %>% .[1]
     
-    page.p <- read_html(j) # Read HTML & extract necessary info
+    j <- read_html(content(R2, as = "text", encoding = "UTF-8")) %>%
+      html_nodes('table')
     
-    price.yahoo1 <- page.p %>% html_nodes('div') %>% .[[1]] -> tab
+    y <- j %>% .[[8]] %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
+    s <- j %>% .[[1]] %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
     
-    i <- tab %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
+    b <- as.numeric(y[grep("Beta ", y) + 1]) # Select Beta value
     
-    b <- data.frame(i[grep("Beta ", i) + 1]) # Scrape Beta value
+    if (is.na(b)){ l <- c(v, "^GSPC") # When Beta is not available
     
-    s <- read.fwf(textConnection(i[2]), widths = c(nchar(i[2]) - 1, 1),
-                  colClasses = "character") 
-    
-    if (s[1,2] == "M"){ s <- as.numeric(s[1,1])/1000 } else if (s[1,2] == "T"){
+      b <- NULL # Get Stock Price Data and calculate Beta yourself
       
-      s <- as.numeric(s[1, 1]) * 1000 } else s <- as.numeric(s[1, 1]) 
+      for (m in l){ b <- cbind(b, getSymbols(m, from=as.Date(Sys.Date())-1825,
+                                             to=Sys.Date(), src="yahoo",
+                                             auto.assign=F)[,4]) }
+      
+      b <- b[apply(b, 1, function(x) all(!is.na(x))),] # Get rid of NA
+      
+      b = diff(log(as.timeSeries(b)))[-1,] # Calculate Returns and Beta
+      
+      b <- as.numeric(apply(b[,1], 2,
+                            function(col) ((lm((col) ~
+                                                 b[,2]))$coefficients[2]))) }
     
-    d <- rbind.data.frame(d, cbind(sd(r) * 1000, (exp(sum(r)) - 1) * 100, s,
-                                   m[2], b)) } # Join
+    s <- s[grep("Market cap", s) + 1] # Market Cap Info
+    
+    s <- read.fwf(textConnection(s), widths = c(nchar(s) - 2, 1),
+                  colClasses = "character")
+    
+    v <- as.numeric(s[1,1]) # Make data numeric
+    
+    s <- switch(s[1,2], "M" = v / 1000, "B" =  v, "T" = v * 1000)
+    
+    d <- rbind.data.frame(d, cbind(sd(r)*1000, (exp(sum(r))-1)*100, s, f, b)) } 
     
   rownames(d) <- colnames(x) # Row names
+  colnames(d) <- c("SD", "Return", "Market Cap", "Sector", "Beta")
+  
+  d[,3] <- as.numeric(d[,3])
   
   # Plot 3D Bubble Plot
-  fig <- plot_ly(d, x = ~d[,1], y = ~d[,5], z = ~d[,2], size=~d[,3], 
-                 color=~d[,4],marker=list(symbol='circle',sizemode='diameter'),
-                 sizes = c(5, 150), text=~paste('Ticker:',rownames(d)))
-  # Rename axes
-  fig %>% layout(title=title,scene=list(xaxis=list(title='Standard Deviation'),
-                                        yaxis=list(title='Beta'),
-                                        zaxis=list(title = 'Return (%)')))
+  plot_ly(
+    d,
+    x = ~d[,"SD"],
+    y = ~d[,"Beta"],
+    z = ~d[,"Return"],
+    size = ~d[,"Market Cap"],
+    color = ~d[,"Sector"],
+    marker = list(
+      symbol='circle',
+      sizemode='diameter'),
+    sizes = c(5, 150),
+    text = ~paste('Ticker:', rownames(d))) %>%
+    layout(
+      title = title,
+      scene = list(
+        xaxis = list(title = 'Standard Deviation'),
+        yaxis = list(title='Beta'),
+        zaxis = list(title = 'Return (%)')
+        )
+      )
 }
 p.bubble.plt.3d(df_portfolio) # Test
