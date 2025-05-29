@@ -1,80 +1,106 @@
-# Library
-lapply(c("quantmod", "timeSeries", "ggplot2", "ggrepel", "rvest"), require,
-       character.only=T)
+lapply(c("rvest","plotly","tidyverse", "quantmod", "timeSeries", "httr",
+         "xml2", "ggplot2", "ggrepel"), require, character.only = T) # Libs
 
 p.bubble.plt.beta <- function(x){ # Bubble of Portfolio Securities (Beta)
   
-  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x)%/%3+1)] # Data
+  x <- x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)][,-(ncol(x) %/% 3 + 1)] 
+  
+  x <- x[,-which(names(x) == "VSTO")]
+  x <- x[,-which(names(x) == "ARCH")]
   
   d <- NULL # Empty variable to contain values
   
-  for (n in 1:ncol(x)){ c <- colnames(x[,n]) # Take ticker and clean data
+  for (n in 1:ncol(x)){ c <- sprintf("https://uk.finance.yahoo.com/quote/%s",
+                                     colnames(x)[n])
+  
+    r <- diff(log(x[,n][apply(x[,n], 1, function(row) all(row !=0 )),]))[-1,]
     
-    s.adj <- diff(log(x[,n][apply(x[,n],1,function(row) all(row !=0 )),]))[-1,]
+    B <- paste("Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+               "AppleWebKit/537.36", "Chrome/122.0.0.0", "Safari/537.36",
+               sep = " ")
     
-    p <- sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s", c, c)
+    l <- paste(c, "/%s/", sep = "") # Paste %s to add profile or statistics
     
-    page.p <- read_html(p) # Read HTML & extract necessary info
+    R1 <- GET(sprintf(l, "profile"), add_headers(`User-Agent` = B))
+    R2 <- GET(sprintf(l, "key-statistics"), add_headers(`User-Agent` = B))
     
-    price.yahoo1 <- page.p %>% html_nodes('div') %>% .[[1]] -> tab11
+    f <- read_html(content(R1, as = "text", encoding = "UTF-8")) %>%
+      html_nodes('div') %>% html_nodes('dl') %>% html_nodes('dd') %>%
+      html_nodes('strong') %>% html_text() %>% .[1]
     
-    y <- tab11 %>% html_nodes('p') %>% html_nodes('span') %>% html_text()
+    j <- read_html(content(R2, as = "text", encoding = "UTF-8")) %>%
+      html_nodes('table')
     
-    j <- sprintf("https://finance.yahoo.com/quote/%s/key-statistics?p=%s",c,c)
+    y <- j %>% .[[8]] %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
+    s <- j %>% .[[1]] %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
     
-    s.page <- read_html(j) # Read HTML of page
+    b <- as.numeric(y[grep("Beta ", y) + 1]) # Select Beta value
     
-    s.yahoo <- s.page %>% html_nodes('table') %>% .[[1]] -> tab1 # Assign Table 
-    s1 <- s.page %>% html_nodes('table') %>% .[[2]] -> tab2 # Assign Table
+    if (is.na(b)){ l <- c(v, "^GSPC") # When Beta is not available
     
-    i <- tab1 %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
-    h <- tab2 %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
-    
-    m <- read.fwf(textConnection(i[2]), widths = c(nchar(i[2]) - 1, 1),
-                  colClasses = "character")
-    
-    if (m[1,2] == "M"){ m <- as.numeric(m[1,1])/1000 } else if (m[1,2] == "T"){ 
+      b <- NULL # Get Stock Price Data and calculate Beta yourself
       
-      m <- as.numeric(m[1,1]) * 1000 } else m <- as.numeric(m[1,1]) # Format 
-    
-    new.info <- data.frame(m, y[2]) # Join market cap data with sector info
-    
-    b <- as.numeric(h[grep("Beta ", h) + 1]) # Join betas
-    
-    if (is.na(b)){ l <- c(c, "^GSPC") # When Beta is not available
-    
-      b <- NULL #
-      
-      for (m in l){ b <- cbind(b, getSymbols(m, from=as.Date(Sys.Date())-365*5,
-                                             to = Sys.Date(), src = "yahoo",
-                                             auto.assign = F)[,4])}
+      for (m in l){ b <- cbind(b, getSymbols(m, from=as.Date(Sys.Date())-1825,
+                                             to=Sys.Date(), src="yahoo",
+                                             auto.assign=F)[,4]) }
       
       b <- b[apply(b, 1, function(x) all(!is.na(x))),] # Get rid of NA
       
-      b = diff(log(as.timeSeries(b)))[-1,] # Calculate Returns
+      b = diff(log(as.timeSeries(b)))[-1,] # Calculate Returns and Beta
       
       b <- as.numeric(apply(b[,1], 2,
                             function(col) ((lm((col) ~
                                                  b[,2]))$coefficients[2]))) }
       
-    v <- cbind(b, (exp(sum(s.adj)) - 1) * 100) # Join sd and return
+    s <- s[grep("Market cap", s) + 1] # Market Cap Info
     
-    rownames(new.info) <- c
-    rownames(v) <- c # Give row names to data frame
+    s <- read.fwf(textConnection(s), widths = c(nchar(s) - 2, 1),
+                  colClasses = "character")
     
-    d <- rbind.data.frame(d, cbind(v, new.info)) } # Join
+    v <- as.numeric(s[1,1]) # Make data numeric
     
+    s <- switch(s[1,2], "M" = v / 1000, "B" =  v, "T" = v * 1000)
+    
+    d <- rbind.data.frame(d, cbind((exp(sum(r)) - 1) * 100, s, b, f)) } 
+    
+  rownames(d) <- colnames(x) # Row names
+  colnames(d) <- c("Return", "Market Cap", "Beta", "Sector")
+  
+  for (n in 1:(ncol(d) - 1)){ d[,n] <- as.numeric(d[,n]) }
+  
   # Plot
-  ggplot(data = d, mapping = aes(x = d[,1], y = d[,2], size = d[,3],
-                                 color = d[,4], label=d[,4])) + geom_point() +
-    labs(title = "Bubble Plot of Portfolio Securities by Risk and Return",
-         x = "Risk (Beta)", y = "Return (%)",
-         size = "Market Capitalisation (US$ Billions)", color = "Sector") +
+  ggplot(
+    data = d,
+    mapping = aes(
+      x = d[,"Beta"],
+      y = d[,"Return"],
+      size = d[,"Market Cap"],
+      color = d[,"Sector"],
+      label = d[,"Sector"])
+    ) +
+    geom_point() +
+    labs(
+      title = "Bubble Plot of Portfolio Securities by Risk and Return",
+      x = "Risk (Beta)",
+      y = "Return (%)",
+      size = "Market Capitalisation (US$ Billions)",
+      color = "Sector"
+      ) +
     theme_minimal() +
-    geom_text_repel(aes(label = rownames(d), fill = d[,4], size = NULL,
-                        color = NULL), nudge_y = .0125) +
-    scale_size_continuous(breaks = c(1,2,5,10,20,50,100,200,500,1000, 2000)) +
-    theme(plot.title = element_text(hjust = .5)) +
-    guides(fill=guide_legend(title = "Sector", override.aes = aes(label = "")))
+    geom_text_repel(
+      aes(label = rownames(d), fill = d[,4], size = NULL, color = NULL),
+      nudge_y = .0125
+      ) +
+    scale_size_continuous(
+      breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000)
+      ) +
+    theme(
+      plot.title = element_text(hjust = .5)
+      ) +
+    guides(
+      fill = guide_legend(
+        title = "Sector", override.aes = aes(label = "")
+        )
+      )
 }
 p.bubble.plt.beta(df_portfolio) # Test
