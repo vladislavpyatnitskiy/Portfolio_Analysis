@@ -1,25 +1,24 @@
-lapply(c("ggplot2", "tidyverse", "rvest"), require, character.only = T) # Libs
+lapply(c("ggplot2", "tidyverse", "rvest", "xml2", "httr"),
+       require, character.only = T) # Libs
 
 p.bar.plt.stack.sector <- function(x, portion=F){ # Stacked Bar Plot by Sectors
   
-  f.df <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Columns with total sum
+  D <- x[,3 * seq(ncol(x) %/% 3, from = 1)] # Columns with total sum
   
   # Take column names with prices to put instead total sum column names
-  colnames(f.df) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)])[-(ncol(x)%/%3+1)]
+  colnames(D) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)])[-(ncol(x)%/%3+1)]
   
-  rwnms <- rownames(f.df) # Take dates from index column
+  rwnms <- rownames(D) # Take dates from index column
   
   rwnms <- as.Date(rwnms) # Make it in date format
   
-  f.df <- data.frame(rwnms, f.df) # Join it with main data set
+  D <- data.frame(rwnms, D) # Join it with main data set
   
-  rownames(f.df) <- seq(nrow(f.df)) # Create sequence for index column
+  rownames(D) <- seq(nrow(D)) # Create sequence for index column
   
-  p.df <- NULL # Define variable to contain values
+  DF <- NULL # Define variable to contain values
   
-  for (n in 2:ncol(f.df)){ # Convert daily data to monthly
-    
-    v <- tapply(f.df[,n], format(as.Date(f.df[,1]), "%Y-%m"), median)
+  for (n in 2:ncol(D)){ v = tapply(D[,n],format(as.Date(D[,1]),"%Y-%m"),median)
     
     rwmns_ds <- rownames(v) # Take dates from index column
     
@@ -30,48 +29,49 @@ p.bar.plt.stack.sector <- function(x, portion=F){ # Stacked Bar Plot by Sectors
     colnames(v)[colnames(v) == 'rwmns_ds'] <- 'Date' # Name column as Date
     
     # If defined empty variable is still empty # Put new dataset there
-    if (is.null(p.df)){ p.df<-v } else { p.df <- merge(x=p.df,y=v,by="Date")} }
-    
-  p.df <- as.data.frame(p.df) # Convert to data frame format
+    if (is.null(DF)){ DF = v } else { DF = merge(x=DF, y=v, by="Date") } }
   
-  colnames(p.df) <- colnames(f.df) # Give column names
+  DF <- as.data.frame(DF) # Convert to data frame format
   
-  colnames(p.df)[colnames(p.df) == colnames(p.df[1])] <- 'Date' # Rename again
+  colnames(DF) <- colnames(D) # Give column names
   
-  rownames(p.df) <- p.df[,1] #
+  colnames(DF)[1] <- 'Date' # Rename again
   
-  p.df <- t(p.df[,-1]) #
+  rownames(DF) <- DF[,1] #
+  
+  DF <- t(DF[,-1]) #
   
   y <- NULL # Create list
   
-  for (n in 1:length(rownames(p.df))){ s <- rownames(p.df)[n] 
+  for (n in 1:length(rownames(DF))){ s <- rownames(DF)[n] 
     
-    p <- sprintf("https://finance.yahoo.com/quote/%s/profile?p=%s", s, s)
+    B <- paste("Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+               "AppleWebKit/537.36", "Chrome/122.0.0.0", "Safari/537.36",
+               sep = " ")
     
-    page.p <- read_html(p) # Read HTML & extract necessary info
+    R <- GET(sprintf("https://uk.finance.yahoo.com/quote/%s/profile", s),
+             add_headers(`User-Agent` = B))
     
-    price.yahoo1 <- page.p %>% html_nodes('div') %>% .[[1]] -> tab
+    f <- read_html(content(R, as = "text", encoding = "UTF-8")) %>%
+      html_nodes('div') %>% html_nodes('dl') %>% html_nodes('dd') %>%
+      html_nodes('strong') %>% html_text() %>% .[1] 
     
-    h <- tab %>% html_nodes('p') %>% html_nodes('span') %>% html_text()
-    
-    y <- rbind(y, h[grep("Sector", h) + 1]) } # Add to list
+    y <- rbind.data.frame(y, f) } 
     
   colnames(y) <- "Sector" # 
-  rownames(y) <- rownames(p.df) # Assign tickers
+  rownames(y) <- rownames(DF) # Assign tickers
   
-  p.dates <- colnames(p.df) # Assign dates as column dates
+  p.dates <- colnames(DF) # Assign dates as column dates
   
   l <- NULL # Create time series with sector data
   
-  for (n in 1:length(colnames(p.df))){ s <- as.data.frame(p.df[,n])
+  for (n in 1:length(p.dates)){ SUM <- data.frame(y, as.data.frame(DF[,n])) 
     
-    pie.df <- data.frame(y, s) # Join data
+    colnames(SUM)[2] <- "Prices" # Assign column names
     
-    colnames(pie.df)[2] <- "Prices" # Assign column names
+    SUM <- aggregate(Prices ~ Sector, data = SUM, sum) # Conditional sum
     
-    pie.df <- aggregate(Prices ~ Sector, data=pie.df, sum) # Conditional sum
-    
-    if (is.null(l)){ l <- pie.df } else { l <- merge(l,pie.df,by="Sector") } }
+    if (is.null(l)){ l <- SUM } else { l <- merge(l, SUM, by = "Sector") } }
     
   rownames(l) <- l[,1] # Assign Sector info as row names
   
@@ -83,22 +83,32 @@ p.bar.plt.stack.sector <- function(x, portion=F){ # Stacked Bar Plot by Sectors
   
   i <- data.frame(rownames(l), l) # Join Dates with time series
   
-  colnames(i)[colnames(i) == colnames(i[1])] <- 'Date' # Rename again
+  colnames(i)[1] <- 'Date' # Rename again
   
-  i <- i %>% pivot_longer(cols=-Date,names_to="Stock",values_to="Quantity")
+  i <- i %>% pivot_longer(cols=-Date, names_to="Stock", values_to="Quantity")
   
-  if (isTRUE(portion)){ # Plot showing stakes of securities for each month
-    
-    ggplot(i, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
-      geom_bar(position = "fill", stat = "identity") + 
-      labs(title = "Stacked Bar Plot of Portfolio Securities by Sectors",
-           x = "Months", y = "Stakes (%)", fill = "Securities")
-    
-  } else { # Generate plot showing amount of securities for each month
-    
-    ggplot(i, aes(x = Date, y = Quantity, fill = Stock)) + theme_minimal() +
-      geom_bar(position = "stack", stat = "identity") + 
-      labs(title = "Stacked Bar Plot of Portfolio Securities by Sectors",
-           x = "Months", y = "Amount in $US", fill = "Securities") }
+  C = c("#466791","#60bf37","#953ada","#4fbe6c","#ce49d3","#a7b43d","#5a51dc",
+        "#d49f36","#552095","#507f2d","#db37aa","#84b67c","#a06fda","#df462a")
+  
+  if (portion){ l <- c("fill", "Stakes") } # Portions
+  
+  else { l <- c("stack", "Amount in $US") } # By Value
+  
+  ggplot(
+    i,
+    aes(
+      x = Date,
+      y = Quantity,
+      fill = Stock)
+    ) +
+    theme_minimal() +
+    geom_bar(position = l[1], stat = "identity") +
+    scale_fill_manual(values = C) +
+    labs(
+      title = "Stacked Bar Plot of Portfolio Securities by Sectors",
+      x = "Months",
+      y = l[2],
+      fill = "Securities"
+      ) 
 }
 p.bar.plt.stack.sector(df_portfolio, portion = T) # Test
