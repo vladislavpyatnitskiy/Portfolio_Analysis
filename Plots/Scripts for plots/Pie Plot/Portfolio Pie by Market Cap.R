@@ -1,64 +1,79 @@
-library("rvest") # Library
+lapply(c("rvest", "xml2", "httr"), require, character.only = T) # Libs
 
 p.pie.plt.marketcap <- function(x){ # Portfolio Pie Plot by Market Cap
   
-  tickers <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)])[-(ncol(x)%/%3+1)]
+  A <- colnames(x[,1 + 3 * seq(ncol(x) %/% 3, from = 0)])[-(ncol(x) %/% 3 + 1)]
+  
+  A <- A[-grep("VSTO", A)] # Reduce obsolete tickers
+  A <- A[-grep("ARCH", A)] 
+  
+  j <- list(
+    list(10, 200,"Large-Cap"), # > 10 & < 200
+    list(2, 10, "Medium-Cap"), # > 2 & < 10
+    list(0.3, 2, "Small-Cap"), # > 0.3 & < 2
+    list(0, 0.3, "Micro-Cap") # > 0 & < 0.3
+    ) 
   
   df <- NULL
   
-  for (n in 1:length(tickers)){ v <- tickers[n] # Subset ticker
+  for (n in 1:length(A)){ 
   
-    p <- sprintf("https://finance.yahoo.com/quote/%s/key-statistics?p=%s",v,v)
+    B <- paste("Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+               "AppleWebKit/537.36", "Chrome/122.0.0.0", "Safari/537.36",
+               sep = " ")
     
-    page.p <- read_html(p) # Read HTML & extract necessary info
+    response <- GET(sprintf("https://uk.finance.yahoo.com/quote/%s/%s/",
+                            A[n], "key-statistics"),
+                    add_headers(`User-Agent` = B))
     
-    price.yahoo1 <- page.p %>% html_nodes('div') %>% .[[1]] -> tab
+    i <- read_html(content(response, as = "text", encoding = "UTF-8")) %>%
+      html_nodes('table') %>% .[[1]] %>% html_nodes('tr') %>%
+      html_nodes('td') %>% html_text()
     
-    i <- tab %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
+    s <- i[grep("Market cap", i) + 1] # Market Cap Info
     
-    s <- i[grep("Market Cap", i) + 1] # Market Cap Info
-    
-    s <- read.fwf(textConnection(s), widths = c(nchar(s) - 1, 1),
+    s <- read.fwf(textConnection(s), widths = c(nchar(s) - 2, 1),
                   colClasses = "character")
     
-    if (s[1,2] == "M"){ s <- as.numeric(s[1,1])/1000 } else if (s[1,2] == "T"){
+    v <- as.numeric(s[1,1]) # Make data numeric
+    
+    s <- as.numeric(switch(s[1,2], "M" = v / 1000, "B" =  v, "T" = v * 1000))
+  
+    if (s > 200){ l <- "Mega-Cap" }
+    
+    for (m in 1:length(j)){
       
-      s <- as.numeric(s[1,1]) * 1000 } else { s <- as.numeric(s[1,1]) }
-    
-    if (s < .3){ l <- "Micro-Cap" } # if < $300 million => Micro-Cap
-    
-    else if (s > .3 && s < 2) { l <- "Small-Cap" } # Small-Cap
-    
-    else if (s > 2 && s < 10) { l <- "Mid-Cap" } # Mid-Cap
-    
-    else if (s > 10 && s < 200) { l <- "Large-Cap" } # Large-Cap
-    
-    else { l <- "Mega-Cap" } # if > $200 billion => Mega-Cap
+      if (s > j[[m]][[1]] & s < j[[m]][[2]]){ l <- j[[m]][[3]] } }
     
     df <- rbind.data.frame(df, l) } # Data Frame 
-    
-  # Calculate Weights for each security
-  y <- round(as.data.frame(t(as.data.frame(x[,3*seq(ncol(x)%/%3,
-                                                    from=1)][nrow(x),]/
-                                             as.numeric(x[nrow(x),
-                                                          ncol(x)])))),2)*100
-  rownames(y) <- tickers
-  rownames(df) <- tickers # Tickers
+  
+  # Calculate portions
+  y <- as.data.frame(x[,3 * seq(ncol(x) %/% 3, from = 1)]) / x[,ncol(x)]
+  
+  colnames(y) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)])[-(ncol(x)%/%3+1)]
+  
+  y <- y[,-which(names(y) == "VSTO")]
+  y <- y[,-which(names(y) == "ARCH")]
+  
+  # Select last period and transform portions into percentages
+  y <- t(round(y[nrow(y),] * 100))
+  
+  rownames(df) <- A # Tickers
   
   df <- cbind.data.frame(df, y) # Join
   
   colnames(df) <- c("Level", "Portion") # column names
   
-  df <- aggregate(Portion ~ Level, data=df, sum) # Conditional sum
+  df <- aggregate(Portion ~ Level, data = df, sum) # Conditional sum
   
-  C = c("#466791","#60bf37","#953ada","#4fbe6c","#ce49d3","#a7b43d","#5a51dc",
-        "#d49f36","#552095","#507f2d","#db37aa","#84b67c","#a06fda","#df462a",
-        "#5b83db","#c76c2d","#4f49a3","#82702d","#dd6bbb","#334c22","#d83979",
-        "#55baad","#dc4555","#62aad3","#8c3025","#417d61","#862977","#bba672",
-        "#403367","#da8a6d","#a79cd4","#71482c","#c689d0","#6b2940","#d593a7",
-        "#895c8b","#bd5975")
+  C = c("#d49f36", "#df462a", "#c76c2d", "#dc4555", "#82702d", "#8c3025")
   
-  pie(df[,2], labels=c(sprintf("%s %s%%", df[,1], df[,2])), col=C, radius=1.6,
-      main = "Portfolio Securities by Market Capitalisation") # Plot
+  pie(
+    df[,"Portion"],
+    labels = c(sprintf("%s %s%%", df[,"Level"], df[,"Portion"])),
+    col = C,
+    radius = 1.6,
+    main = "Portfolio Securities by Market Capitalisation"
+    ) # Plot
 }
 p.pie.plt.marketcap(df_portfolio) # Test
