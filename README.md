@@ -396,9 +396,14 @@ _______________________________________________________________
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Correlations%20Histogram.png?raw=true)
 _______________________________________________________________
 
-### Boxplot for Portfolio Securities
+### Other Plots
+
+#### Boxplot for Portfolio Securities
 ![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Boxplot.png?raw=true)
 
+#### Portfolio Calendar
+
+![](https://github.com/vladislavpyatnitskiy/Portfolio_Analysis/blob/main/Plots/Portfolio%20Calendar%20Plot.png?raw=true)
 _______________________________________________________________
 
 ## Data
