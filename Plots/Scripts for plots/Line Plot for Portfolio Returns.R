@@ -30,7 +30,9 @@ p.plt <- function(x, SD = F){ # Line Plot of Portfolio Returns
   ylab = ifelse(SD == T, "Fluctuations (%)", "Return (%)")
   
   col = ifelse(SD == T, "red", ifelse(x[nrow(x),] > 0, "green4", "red3"))
-  
+
+  par(mar = rep(5, 4)) # Define borders of the plot
+                    
   plot(
     x,
     main = main,
@@ -46,8 +48,6 @@ p.plt <- function(x, SD = F){ # Line Plot of Portfolio Returns
   if (!SD){ abline(h = x[nrow(x),], col = "blue", lwd = 2, lty = 9) }
   
   abline(h = 0) # Break Even Line
-  
-  par(mar = rep(5, 4)) # Define borders of the plot
   
   axis(side = 4, las = 2) # Axes
 }
