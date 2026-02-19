@@ -9,11 +9,11 @@ p.box.plt <- function(x){ # Box Plot for Portfolio
     v <- cbind(v, diff(log(s[apply(s,1,function(row) all(row !=0 )),]))[-1,]) } 
   
   colnames(v) <- colnames(x) # Give column names & generate plot
-  
+
+  par(mar = c(5, 4, 4, 4)) # Define borders of the plot to fit right y-axis
+                                   
   boxplot.matrix(v, main = "Fluctuations of Portfolio Securities", title = F,
                  col = "steelblue", las = 2, ylab = "Returns (%)") 
-  
-  par(mar = c(5, 4, 4, 4)) # Define borders of the plot to fit right y-axis
   
   abline(v = seq(ncol(v)), col = "grey", lty = 3) # Add vertical lines
   
