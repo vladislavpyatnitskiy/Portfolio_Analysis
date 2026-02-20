@@ -23,7 +23,7 @@ p.drawdown.plt <- function(x, SD = T){ # Function to plot asset drawdown
   
   x <- as.timeSeries(r) # Make it time series
   
-  if (isFALSE(SD)){ r <- rownames(x) # Save dates for Cumulative Returns
+  if (!SD){ r <- rownames(x) # Save dates for Cumulative Returns
   
     x <- apply(x, 2, function(col) exp(cumsum(col)) - 1) # Cumulative Returns
     
@@ -32,7 +32,9 @@ p.drawdown.plt <- function(x, SD = T){ # Function to plot asset drawdown
   x <- x * 100 # Multiply returns by 100
   
   x[x > 0] <- 0 # Replace positive values as 0
-  
+
+  par(mar = c(5, rep(4, 3))) # Margins
+               
   for (n in 1:ncol(x)){ s <- x[,n] # Plot each column in data frame
   
     plot(
@@ -50,8 +52,6 @@ p.drawdown.plt <- function(x, SD = T){ # Function to plot asset drawdown
     grid(nx = 1, ny = NULL, col = "grey", lty = 3, lwd = 1) # Horizontal lines
     
     abline(h = 0) # Break Even
-    
-    par(mar = c(5, rep(4, 3))) # Define borders of the plot to fit right y-axis
     
     axis(side = 4, las = 2) } # Right y-axis}
 }
