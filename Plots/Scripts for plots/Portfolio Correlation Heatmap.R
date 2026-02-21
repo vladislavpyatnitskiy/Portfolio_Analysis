@@ -1,8 +1,11 @@
 lapply(c("quantmod", "timeSeries"), require, character.only = T) # Libraries
 
 # Function to generate heatmap for portfolio's correlations
-p.heatmap.plt <- function(x, s = as.Date(Sys.Date()) - 365, e = Sys.Date(),
-                          size = .9, main = NULL){
+p.heatmap.plt <- function(x, s = NULL, e = NULL, size = NULL, main = NULL){
+  
+  if (is.null(s)) s = as.Date(Sys.Date()) - 365 # Default Start Date
+  if (is.null(e)) e = as.Date(Sys.Date()) # Default End Date
+  if (is.null(size)) size = .9 # Default coefficients size
   
   p <- NULL # Create an empty variable and get stock price data
   
@@ -32,7 +35,7 @@ p.heatmap.plt <- function(x, s = as.Date(Sys.Date()) - 365, e = Sys.Date(),
   axis(2, at = c.correlation:1, labels = colnames(m.correlation), las = 2)
   axis(1, at = 1:c.correlation, labels = colnames(m.correlation), las = 2)
   
-  title(main = main) # Add title for heatmap
+  if (is.null(main)) title(main = "Portfolio Correlations Heatmap")
   
   box() # Box heatmap
   
@@ -47,5 +50,4 @@ p.heatmap.plt <- function(x, s = as.Date(Sys.Date()) - 365, e = Sys.Date(),
          round(X_for_corr[coord_for_corr[i,1],coord_for_corr[i,2]],digits = 2),
          col = "white", cex = size) }
 }
-p.heatmap.plt(x = df_portfolio, size =.9, 
-              main = "Portfolio Correlations Heatmap") # Test
+p.heatmap.plt(x = df_portfolio) # Test
