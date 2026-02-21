@@ -34,6 +34,8 @@ p.bar.plt.weights.dividend <- function(x, sort = T, decreasing = T){
     "#403367","#da8a6d","#a79cd4","#71482c","#c689d0","#6b2940","#d593a7",
     "#895c8b","#bd5975"
     ) # Add colour range
+
+  par(mar = c(5, rep(4,3))) # Define borders of the plot to fit right y-axis
   
   B <- barplot(
     v, 
@@ -47,8 +49,6 @@ p.bar.plt.weights.dividend <- function(x, sort = T, decreasing = T){
     ) # Create Bar Plot
   
   axis(side = 4, las = 2) # y-axes
-  
-  par(mar = c(5, rep(4,3))) # Define borders of the plot to fit right y-axis
   
   abline(v = B, col = "grey", lty = 3) # grid lines
   grid(nx = 1, ny = NULL, col = "grey", lty = "dotted", lwd = 1) 
