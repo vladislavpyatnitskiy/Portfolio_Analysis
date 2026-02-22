@@ -20,6 +20,8 @@ p.bar.plt.weights <- function(x, sort = F, decreasing = T){ # Weights Bar Plot
     "#403367","#da8a6d","#a79cd4","#71482c","#c689d0","#6b2940","#d593a7",
     "#895c8b","#bd5975"
     ) # Add colour range
+
+  par(mar = c(5, rep(4, 3))) # Define borders of the plot to fit right y-axis
   
   B <- barplot(
     pct, 
@@ -37,8 +39,6 @@ p.bar.plt.weights <- function(x, sort = F, decreasing = T){ # Weights Bar Plot
   
   vals <- list(c(mean(pct), median(pct)), c("red", "green"))
   for (n in 1:2){ abline(h = vals[[1]][n], col = vals[[2]][n], lwd = 3) }
-  
-  par(mar = c(5, rep(4, 3))) # Define borders of the plot to fit right y-axis
   
   legend(
     x = "bottom",
