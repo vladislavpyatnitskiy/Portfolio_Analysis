@@ -11,7 +11,9 @@ p.bar.plt <- function(x){ v = NULL # Bar Plot of Stocks Returns
   names(v) <- colnames(x) # Give column names and sort returns
   
   v <- sort(v, decreasing = T) # Make data numeric and sort values
-  
+
+  par(mar = rep(4, 4)) # Margins
+                                 
   B <- barplot(
     v,
     xlim = c(min(v) - 1, max(v) + 1),
@@ -26,8 +28,6 @@ p.bar.plt <- function(x){ v = NULL # Bar Plot of Stocks Returns
   abline(v = 0) # Break Even line
   
   axis(side = 4, at = B, labels = names(v), las = 1,tick = F, line = -0.5)
-  
-  par(mar = rep(4, 4)) # Margins
   
   box() # Make borders for plot
 }
