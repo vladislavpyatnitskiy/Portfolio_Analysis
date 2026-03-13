@@ -51,7 +51,9 @@ p.bar.plt.cor <- function(x){ # Bar Plot with Median Correlation Values
                "#8c3025","#417d61","#862977","#bba672","#403367","#da8a6d",
                "#a79cd4","#71482c","#c689d0","#6b2940","#d593a7","#895c8b",
                "#bd5975") # Add colour range & Create barplot
-  
+
+  par(mar = rep(5, 4)) # Define borders of the plot
+               
   bar.plt.script <- barplot(l[,1], names.arg = rownames(l), horiz = F,
                             col = colors37, ylim = c(0, ceiling(max(l[,1]))),
                             main = "Median Correlations of Portfolio Stocks",
@@ -67,8 +69,6 @@ p.bar.plt.cor <- function(x){ # Bar Plot with Median Correlation Values
   v <- c(0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2)
   
   for (n in 1:length(v)){ abline(h = v[n], col = c[n], lwd = 2) } # Lines
-  
-  par(mar = c(5, 5, 5, 5)) # Define borders of the plot
   
   box() # Add box
   
