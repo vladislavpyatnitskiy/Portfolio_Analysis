@@ -1,6 +1,7 @@
 lapply(c("quantmod", "timeSeries"), require, character.only = T) # Libraries
 
-p.cor.advices <- function(x){ # Bar Plot with Median Correlation Values
+# Bar Plot with Median Correlation Values
+p.cor.advices <- function(x, method="pearson"){ 
   
   p <- NULL # Create an empty variable
   
@@ -13,7 +14,7 @@ p.cor.advices <- function(x){ # Bar Plot with Median Correlation Values
   colnames(p) <- colnames(x[,1+3*seq(ncol(x)%/%3,from=0)][,1:(ncol(x)%/%3)])
   
   # Calculate correlation matrix
-  cor_matrix <- cor(as.matrix(diff(log(as.timeSeries(p)))[-1,]))
+  cor_matrix <- cor(as.matrix(diff(log(as.timeSeries(p)))[-1,]), method=method)
   
   # Extract unique pairs and their correlations
   cor_pairs <- which(upper.tri(cor_matrix, diag = TRUE), arr.ind = TRUE)
