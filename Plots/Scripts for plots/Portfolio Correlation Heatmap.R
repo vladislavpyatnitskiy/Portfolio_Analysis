@@ -1,7 +1,8 @@
 lapply(c("quantmod", "timeSeries"), require, character.only = T) # Libraries
 
 # Function to generate heatmap for portfolio's correlations
-p.heatmap.plt <- function(x, s = NULL, e = NULL, size = NULL, main = NULL){
+p.heatmap.plt <- function(x, s = NULL, e = NULL, size = NULL, main = NULL,
+                          method="pearson"){
   
   if (is.null(s)) s = as.Date(Sys.Date()) - 365 # Default Start Date
   if (is.null(e)) e = as.Date(Sys.Date()) # Default End Date
@@ -21,7 +22,7 @@ p.heatmap.plt <- function(x, s = NULL, e = NULL, size = NULL, main = NULL){
   
   c.correlation = ncol(m.correlation) # Get number of columns
   
-  new_cor <- cor(m.correlation) # Calculate correlation coefficients
+  new_cor <- cor(m.correlation, method=method) # Correlation coefficients
   
   # Create appropriate colour for each pair of correlation for heatmap
   k.c <- round((10 * length(unique(as.vector(new_cor))))/2)
